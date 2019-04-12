@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/htab_maincontent"
+    android:layout_width="wrap_content"
+    android:layout_height="555dp">
+
+    <RelativeLayout
+        android:layout_width="384dp"
+        android:layout_height="550dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="135dp"
+            android:id="@+id/TitleContainer">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true">
+                <TextView
+                    android:id="@+id/StoreName"
+                    style="@style/Header5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="36dp"
+                    android:text="Cửa hàng Nguyễn Huệ" />
+
+                <TextView
+                    android:id="@+id/StorePhoneNo"
+                    style="@style/Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/StoreName"
+                    android:text="(454) 604-2556" />
+            </RelativeLayout>
+
+            <ImageButton
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentEnd="true"
+                style="@style/SubHeaderButtonInactive"
+                android:background="@drawable/ic_edit" />
+        </RelativeLayout>
+
+        <com.google.android.gms.maps.MapView
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/mapPreview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="28dp"
+            map:cameraZoom="18.5"
+            map:liteMode="true"
+            map:mapType="normal"
+            android:layout_below="@+id/TitleContainer"/>
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/mapPreview">
+        </View>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/CardMainFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/divider"
+            android:layout_alignEnd="@id/divider"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/ic_phone"
+            app:borderWidth="0dp"
+            android:elevation="1dp"
+            android:backgroundTint="@color/colorAccent"/>
+        <TextView
+            android:id="@+id/AddressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:layout_below="@id/CardMainFAB"
+            android:drawableStart="@drawable/ic_location"
+            android:layout_marginStart="36dp"
+            style="@style/Subtitle1WithDrawable"
+            android:text="Nguyễn Huệ, Q.1"/>
+        <TextView
+            android:id="@+id/ActiveStaff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/AddressTextView"
+            android:drawableStart="@drawable/ic_people"
+            android:layout_marginStart="36dp"
+            style="@style/Subtitle1WithDrawable"
+            android:text="1"/>
+        <TextView
+            android:id="@+id/IsActive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ActiveStaff"
+            android:drawableLeft="@drawable/ic_active"
+            android:layout_marginStart="36dp"
+            style="@style/Subtitle1WithDrawable"
+            android:text="Đang Hoạt Động"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

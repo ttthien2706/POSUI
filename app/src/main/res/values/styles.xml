@@ -1,0 +1,50 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="TextHeaderMargin">
+        <item name="android:layout_marginStart">18dp</item>
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+    <style name="TextSubtitleMargin">
+        <item name="android:layout_marginStart">18dp</item>
+        <item name="android:layout_marginBottom">18dp</item>
+    </style>
+    <style name="Header5" parent="TextHeaderMargin">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+    <style name="Subtitle1" parent="TextSubtitleMargin">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+    <style name="Subtitle1WithDrawable" parent="Subtitle1">
+        <item name="android:drawableTint">@color/VectorColorActiveUnfocused</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="SubHeaderButtonFocused">
+        <item name="android:backgroundTint">@color/VectorColorActiveFocused</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+    <style name="SubHeaderButtonUnfocused">
+        <item name="android:backgroundTint">@color/VectorColorActiveUnfocused</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+    <style name="SubHeaderButtonInactive">
+        <item name="android:backgroundTint">@color/VectorColorInactive</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+    <style name="DialogInput">
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
+</resources>

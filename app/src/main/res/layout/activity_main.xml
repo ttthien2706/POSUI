@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/createOrderButton"
+                android:src="@drawable/ic_launcher_foreground"
+                android:background="@drawable/ic_launcher_background"
+                android:layout_margin="32dp" />
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/createReturnOrderButton"
+                android:src="@drawable/ic_launcher_foreground"
+                android:background="@drawable/ic_launcher_background"
+                android:layout_margin="32dp"/>
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/importButton"
+                android:src="@drawable/ic_launcher_foreground"
+                android:background="@drawable/ic_launcher_background"
+                android:layout_margin="32dp" />
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/exportButton"
+                android:src="@drawable/ic_launcher_foreground"
+                android:background="@drawable/ic_launcher_background"
+                android:layout_margin="32dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/customerButton"
+                android:src="@drawable/ic_launcher_foreground"
+                android:background="@drawable/ic_launcher_background"
+                android:layout_margin="32dp" />
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/manageProductsButton"
+                android:src="@drawable/ic_launcher_foreground"
+                android:background="@drawable/ic_launcher_background"
+                android:layout_margin="32dp"/>
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/reportButton"
+                android:src="@drawable/ic_launcher_foreground"
+                android:background="@drawable/ic_launcher_background"
+                android:layout_margin="32dp" />
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/settingsButton"
+                android:src="@drawable/ic_launcher_foreground"
+                android:background="@drawable/ic_launcher_background"
+                android:layout_margin="32dp" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
