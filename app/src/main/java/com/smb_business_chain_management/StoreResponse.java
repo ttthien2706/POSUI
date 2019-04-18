@@ -1,6 +1,5 @@
 package com.smb_business_chain_management;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -18,9 +17,13 @@ public class StoreResponse {
     String address;
     @SerializedName("phone")
     String phoneNumber;
-//    @SerializedName()
-    LatLng latLng;
-//    @SerializedName()
+    @SerializedName("latitude")
+    private
+    double latitude;
+    @SerializedName("longitude")
+    private
+    double longitude;
+//    @SerializedName("")
     int activeStaff;
 //    @SerializedName()
     boolean isActive;
@@ -65,12 +68,20 @@ public class StoreResponse {
         this.activeStaff = activeStaff;
     }
 
-    public LatLng getLatLng() {
-        return latLng;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getPhoneNumber() {

@@ -34,8 +34,8 @@ public class StoreActivity extends FragmentActivity{
     private static final String TAG = StoreActivity.class.getSimpleName();
 
     public static final int RECYCLER_VIEW_ITEM_HORIZONTAL_PADDING = 64;
-    public static final String  BASE_URL = "http://192.168.20.100:44372/pos/";
-    private static Retrofit retrofit = null;
+    public static final String  BASE_URL = "https://192.168.20.197:5001";
+    BusinessChainRESTService businessChainRESTService;
 
     private RecyclerView storesRecyclerView;
     private RecyclerView.Adapter rvAdapter;
@@ -59,30 +59,29 @@ public class StoreActivity extends FragmentActivity{
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store);
         storesRecyclerView = (RecyclerView) findViewById(R.id.storeRV);
 
-//        connectAndGetData();
+        connectAndGetData();
 
         storesRecyclerView.setHasFixedSize(true);
         rvLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         storesRecyclerView.setLayoutManager(rvLayoutManager);
         storesRecyclerView.addItemDecoration(new HorizontalSpaceItemDecoration(RECYCLER_VIEW_ITEM_HORIZONTAL_PADDING));
 
-        Store temp = new Store(1, "Cửa hàng Nguyễn Huệ là anh của Quang Trung, the man the myth the legend", "(454) 604-2556", "Nguyễn Huệ, Q.1", 1, true);
-        Store temp2 = new Store(2, "Cửa hàng Đồng Khởi", "(454) 314-8116", "Đồng Khởi, Q.1", 4, true);
-        Store temp3 = new Store(3, "Cửa hàng Hai Bà Trưng", "(454) 573-7138", "Hai Bà Trưng, Q.1", 0, false);
-        Store temp4 = new Store(4, "Cửa hàng Điện Biên Phủ", "(454) 573-7138", "231, Điện Biên Phủ, phường 6 , Q.3", 0, false);
-
-        testData.add(temp);
-        testData.add(temp2);
-        testData.add(temp4);
-        testData.add(temp3);
-        testData.add(temp2);
+//        Store temp = new Store(1, "Cửa hàng Nguyễn Huệ là anh của Quang Trung, the man the myth the legend", "(454) 604-2556", "Nguyễn Huệ, Q.1", 1, true);
+//        Store temp2 = new Store(2, "Cửa hàng Đồng Khởi", "(454) 314-8116", "Đồng Khởi, Q.1", 4, true);
+//        Store temp3 = new Store(3, "Cửa hàng Hai Bà Trưng", "(454) 573-7138", "Hai Bà Trưng, Q.1", 0, false);
+//        Store temp4 = new Store(4, "Cửa hàng Điện Biên Phủ", "(454) 573-7138", "231, Điện Biên Phủ, phường 6 , Q.3", 0, false);
+//
+//        testData.add(temp);
+//        testData.add(temp2);
+//        testData.add(temp4);
+//        testData.add(temp3);
+//        testData.add(temp2);
 
         FloatingActionButton createStoreFab = (FloatingActionButton) findViewById(R.id.ButtonAddStore);
         createStoreFab.setOnClickListener(new View.OnClickListener() {
@@ -97,25 +96,19 @@ public class StoreActivity extends FragmentActivity{
     }
 
     public void createButtonClicked(){
-        CreateDialogFragment createDialog = new CreateDialogFragment();
+        CreateStoreDialogFragment createDialog = new CreateStoreDialogFragment();
         createDialog.show(getFragmentManager(), "createDialog");
     }
 
     public void connectAndGetData(){
-        if (retrofit == null){
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-        }
-        BusinessChainRESTService businessChainRESTService = retrofit.create(BusinessChainRESTService.class);
+        businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
         Call<StoreResponse> call = businessChainRESTService.getAllShops();
 
         call.enqueue(new Callback<StoreResponse>(){
             @Override
             public void onResponse(Call<StoreResponse> call, Response<StoreResponse> response) {
                 testData = response.body().getResults();
-                Log.d(TAG, "Number of movies received: " + testData.size());
+                Log.d(TAG, "Number of stores received: " + testData.size());
             }
             @Override
             public void onFailure(Call<StoreResponse> call, Throwable throwable) {

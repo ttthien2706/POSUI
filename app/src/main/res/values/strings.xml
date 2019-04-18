@@ -9,4 +9,10 @@
     <string name="inActiveStore">Không hoạt động</string>
     <string name="addEmployeeMenu">Thêm nhân viên</string>
     <string name="addStoreMenu">Thêm cửa hàng</string>
+    <string name="text_hint_phone_numb">SĐT</string>
+    <string name="text_hint_address">Địa chỉ cửa hàng</string>
+    <string name="text_hint_store_name">Tên cửa hàng</string>
+    <string name="is_active_label_text">Đang hoạt động</string>
+    <string name="text_hint_username">Tên Đăng Nhập</string>
+    <string name="text_hint_employee_name">Tên Nhân Viên</string>
 </resources>
