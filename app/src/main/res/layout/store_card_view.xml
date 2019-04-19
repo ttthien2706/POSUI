@@ -40,6 +40,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_alignParentEnd="true"
+                android:id="@+id/EditButton"
                 style="@style/SubHeaderButtonInactive"
                 android:background="@drawable/ic_edit" />
         </RelativeLayout>

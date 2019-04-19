@@ -1,6 +1,7 @@
 package com.smb_business_chain_management;
 
 import com.google.gson.annotations.SerializedName;
+import com.smb_business_chain_management.model.Store;
 
 import java.util.List;
 

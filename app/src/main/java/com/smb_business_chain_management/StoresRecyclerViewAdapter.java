@@ -1,41 +1,39 @@
 package com.smb_business_chain_management;
 
 import android.content.Context;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.Rect;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.w3c.dom.Text;
+import com.smb_business_chain_management.model.Store;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-class storesRecyclerViewAdapter extends RecyclerView.Adapter<storesRecyclerViewAdapter.storesViewHolder> {
-
+class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewAdapter.storesViewHolder> {
     private Context context;
     private List<Store> storeList;
 
     public static class storesViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
         public TextView storeName, storePhoneNo, storeAddress, storeActiveStaff, storeActive;
+        private ImageButton editStoreButton;
         private GoogleMap mMap;
         private MapView mapView;
 
@@ -46,6 +44,7 @@ class storesRecyclerViewAdapter extends RecyclerView.Adapter<storesRecyclerViewA
             storeAddress = (TextView) v.findViewById(R.id.AddressTextView);
             storeActiveStaff = (TextView) v.findViewById(R.id.ActiveStaff);
             storeActive = (TextView) v.findViewById(R.id.IsActive);
+            editStoreButton = (ImageButton) v.findViewById(R.id.EditButton) ;
             mapView = (MapView) v.findViewById(R.id.mapPreview);
             if (mapView != null){
                 mapView.onCreate(null);
@@ -60,8 +59,12 @@ class storesRecyclerViewAdapter extends RecyclerView.Adapter<storesRecyclerViewA
             mMap.getUiSettings().setMapToolbarEnabled(false);
 
             LatLng storeLocation = getLocationFromAddress(storeActive.getContext(), storeAddress.getText().toString());
-            Marker TP = mMap.addMarker(new MarkerOptions().position(storeLocation).title(storeName.getText().toString()));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(storeLocation));
+            if (storeLocation != null){
+                Marker TP = mMap.addMarker(new MarkerOptions().position(storeLocation).title(storeName.getText().toString()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(storeLocation));
+            } else{
+                Toast.makeText(storeAddress.getContext(), "Location not found", Toast.LENGTH_SHORT);
+            }
         }
 
         public LatLng getLocationFromAddress(Context context, String sAddress){
@@ -91,7 +94,7 @@ class storesRecyclerViewAdapter extends RecyclerView.Adapter<storesRecyclerViewA
 
     }
 
-    public storesRecyclerViewAdapter(Context context, List<Store> myData){
+    public StoresRecyclerViewAdapter(Context context, List<Store> myData){
         this.storeList = myData;
         this.context = context;
     }
@@ -106,11 +109,11 @@ class storesRecyclerViewAdapter extends RecyclerView.Adapter<storesRecyclerViewA
     @Override
     public void onBindViewHolder(storesViewHolder holder, int position){
         Store store = storeList.get(position);
-        holder.storeName.setText(store.getStoreName());
-        holder.storePhoneNo.setText(store.getStorePhoneNumber());
-        holder.storeAddress.setText(store.getStoreAddress());
-        holder.storeActiveStaff.setText(store.getStoreActiveStaff().toString());
-        if (store.isStoreActive()){
+        holder.storeName.setText(store.getName());
+        holder.storePhoneNo.setText(store.getPhone());
+        holder.storeAddress.setText(store.getAddress());
+        holder.storeActiveStaff.setText(store.getStaff().toString());
+        if (store.isActive()){
             holder.storeActive.setText(R.string.activeStore);
             Drawable drawable = holder.storeActive.getCompoundDrawables()[0];
             drawable.setTint(ContextCompat.getColor(holder.storeActive.getContext(), R.color.colorStoreActive));
@@ -119,6 +122,29 @@ class storesRecyclerViewAdapter extends RecyclerView.Adapter<storesRecyclerViewA
             Drawable drawable = holder.storeActive.getCompoundDrawables()[0];
             drawable.setTint(ContextCompat.getColor(holder.storeActive.getContext(), R.color.colorStoreInActive));
         }
+        holder.editStoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(view.getContext(), view);
+                popup.getMenuInflater().inflate(R.menu.store_card_edit_pupup_menu, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                        Toast.makeText(
+//                                view.getContext(),
+//                                "You Clicked : " + menuItem.getTitle(),
+//                                Toast.LENGTH_SHORT
+//                        ).show();
+                        switch (menuItem.getItemId()){
+//                            case menuItem.getItemId()
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
     }
 
     @Override
