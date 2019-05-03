@@ -18,7 +18,7 @@ public class BusinessChainRESTClient {
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-    static Retrofit getClient() {
+    public static Retrofit getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 

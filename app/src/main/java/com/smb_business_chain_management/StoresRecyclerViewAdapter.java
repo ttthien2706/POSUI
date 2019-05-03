@@ -1,11 +1,13 @@
 package com.smb_business_chain_management;
 
+import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,12 +26,65 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.smb_business_chain_management.model.Store;
 
-import java.io.IOException;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
+import static com.smb_business_chain_management.Settings.utils;
 
 class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewAdapter.storesViewHolder> {
     private Context context;
     private List<Store> storeList;
+    private FragmentManager fragmentManager;
+
+    class MenuItemListener implements View.OnClickListener {
+        private int position;
+        Store data;
+        FragmentManager fragmentManager;
+
+        MenuItemListener(int position, Store data, FragmentManager fragmentManager) {
+            this.position = position;
+            this.data = data;
+            this.fragmentManager = fragmentManager;
+        }
+
+        @SuppressLint("UseValueOf")
+        @Override
+        public void onClick(View v) {
+            PopupMenu popup = new PopupMenu(v.getContext(), v);
+            popup.getMenuInflater().inflate(R.menu.store_card_edit_pupup_menu, popup.getMenu());
+
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    Log.d(TAG, Integer.toString(position));
+                    switch (menuItem.getTitle().toString().toLowerCase()){
+                        case "edit":{
+                            Bundle storeBundle = new Bundle();
+                            storeBundle.putString("name", data.getName());
+                            storeBundle.putString("address", data.getAddress());
+                            storeBundle.putString("phone", data.getPhone());
+                            storeBundle.putBoolean("isActive", data.isActive());
+                            storeBundle.putLong("cityId", data.getCityId());
+                            storeBundle.putLong("districtId", data.getDistrictId());
+                            storeBundle.putLong("wardId", data.getWardId());
+
+                            EditStoreDialogFragment editDialog = new EditStoreDialogFragment();
+
+                            editDialog.setArguments(storeBundle);
+                            editDialog.show(fragmentManager, "editDialog");
+
+                            break;
+                        }
+                        case "delete":{
+                            break;
+                        }
+                    }
+                    return true;
+                }
+            });
+            popup.show();
+        }
+    }
 
     public static class storesViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
         public TextView storeName, storePhoneNo, storeAddress, storeActiveStaff, storeActive;
@@ -58,45 +113,20 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
 //            mMap.setPadding(300, 0, 0, 0 );
             mMap.getUiSettings().setMapToolbarEnabled(false);
 
-            LatLng storeLocation = getLocationFromAddress(storeActive.getContext(), storeAddress.getText().toString());
+            LatLng storeLocation = utils.getLocationFromAddress(storeActive.getContext(), storeAddress.getText().toString());
             if (storeLocation != null){
                 Marker TP = mMap.addMarker(new MarkerOptions().position(storeLocation).title(storeName.getText().toString()));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(storeLocation));
             } else{
-                Toast.makeText(storeAddress.getContext(), "Location not found", Toast.LENGTH_SHORT);
+                Toast.makeText(storeAddress.getContext(), "Location not found", Toast.LENGTH_SHORT).show();
             }
         }
-
-        public LatLng getLocationFromAddress(Context context, String sAddress){
-            Geocoder coder = new Geocoder(context);
-            List<Address> addresses;
-            LatLng returnLatLng = null;
-            if (sAddress.length() < 1){
-                return null;
-            }
-            else{
-                try{
-                    addresses = coder.getFromLocationName(sAddress, 5);
-                    if (addresses == null){
-                        return null;
-                    }
-
-                    Address location = addresses.get(0);
-                    returnLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-                }
-                catch (IOException io){
-                    io.printStackTrace();
-                }
-            }
-            return returnLatLng;
-        }
-
     }
 
-    public StoresRecyclerViewAdapter(Context context, List<Store> myData){
+    public StoresRecyclerViewAdapter(Context context, List<Store> myData, FragmentManager fragmentManager){
         this.storeList = myData;
         this.context = context;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -111,8 +141,18 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
         Store store = storeList.get(position);
         holder.storeName.setText(store.getName());
         holder.storePhoneNo.setText(store.getPhone());
-        holder.storeAddress.setText(store.getAddress());
-        holder.storeActiveStaff.setText(store.getStaff().toString());
+        try {
+            holder.storeAddress.setText(store.getAddress());
+        } catch (NullPointerException e) {
+//            holder.storeAddress.setText('0');
+            e.printStackTrace();
+        }
+        try {
+            holder.storeActiveStaff.setText(store.getAmountUser().toString());
+        } catch (NullPointerException e) {
+//            holder.storeActiveStaff.setText(0);
+            e.printStackTrace();
+        }
         if (store.isActive()){
             holder.storeActive.setText(R.string.activeStore);
             Drawable drawable = holder.storeActive.getCompoundDrawables()[0];
@@ -122,29 +162,7 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
             Drawable drawable = holder.storeActive.getCompoundDrawables()[0];
             drawable.setTint(ContextCompat.getColor(holder.storeActive.getContext(), R.color.colorStoreInActive));
         }
-        holder.editStoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(view.getContext(), view);
-                popup.getMenuInflater().inflate(R.menu.store_card_edit_pupup_menu, popup.getMenu());
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                        Toast.makeText(
-//                                view.getContext(),
-//                                "You Clicked : " + menuItem.getTitle(),
-//                                Toast.LENGTH_SHORT
-//                        ).show();
-                        switch (menuItem.getItemId()){
-//                            case menuItem.getItemId()
-                        }
-                        return true;
-                    }
-                });
-                popup.show();
-            }
-        });
+        holder.editStoreButton.setOnClickListener(new MenuItemListener(position, store, fragmentManager));
     }
 
     @Override

@@ -28,24 +28,27 @@ import com.smb_business_chain_management.model.Ward;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateStoreDialogFragment extends DialogFragment {
-    private static final String TAG = CreateStoreDialogFragment.class.getSimpleName();
+public class EditStoreDialogFragment extends DialogFragment {
+    private static final String TAG = EditStoreDialogFragment.class.getSimpleName();
     TextInputEditText nameInput;
     TextInputEditText addressInput;
     TextInputEditText phoneInput;
     SwitchCompat isActiveSwitch;
-    AppUtils utils = new AppUtils();
-    private CreateShopDialogListener listener;
 
+    boolean IS_NEW_EDIT = true;
     boolean IS_VALIDATED_NAME, IS_VALIDATED_ADDRESS = false;
+
+    AppUtils utils = new AppUtils();
+
+    private EditStoreDialogListener listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            listener = (CreateShopDialogListener) context;
+            listener = (EditStoreDialogListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "implement CreateShopDialogListener");
+            throw new ClassCastException(context.toString() + "implement EditShopDialogListener");
         }
     }
 
@@ -55,8 +58,28 @@ public class CreateStoreDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
+        Bundle storeBundle = getArguments();
+
+        String storeName = storeBundle.getString("name");
+        String storePhone = storeBundle.getString("phone");
+        String storeAddress = storeBundle.getString("address").split(",")[0].trim();
+        Long cityId = storeBundle.getLong("cityId");
+        Long districtId = storeBundle.getLong("districtId");
+        Long wardId = storeBundle.getLong("wardId");
+        Boolean isActive = storeBundle.getBoolean("isActive");
+
         final View dialogView = inflater.inflate(R.layout.create_store_dialog, null);
         builder.setView(dialogView);
+
+        nameInput = dialogView.findViewById(R.id.Name);
+        phoneInput = dialogView.findViewById(R.id.Phone);
+        addressInput = dialogView.findViewById(R.id.Address);
+        isActiveSwitch = dialogView.findViewById(R.id.isActiveSwitch);
+
+        nameInput.setText(storeName);
+        phoneInput.setText(storePhone);
+        addressInput.setText(storeAddress);
+        isActiveSwitch.setChecked(isActive);
 
         final Spinner citySpinner = dialogView.findViewById(R.id.city);
         final Spinner districtSpinner = dialogView.findViewById(R.id.district);
@@ -79,14 +102,31 @@ public class CreateStoreDialogFragment extends DialogFragment {
         citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                City curCity = (City) adapterView.getAdapter().getItem((int) id);
-                curDistricts.clear();
-                curDistricts.addAll(curCity.getDistricts());
-                districtAdapter.notifyDataSetChanged();
+                if (!IS_NEW_EDIT) {
+                    City curCity = (City) adapterView.getAdapter().getItem((int) id);
+                    curDistricts.clear();
+                    curDistricts.addAll(curCity.getDistricts());
+                    districtAdapter.notifyDataSetChanged();
 
-                curWards.clear();
-                curWards.addAll(curDistricts.get(0).getWards());
-                wardAdapter.notifyDataSetChanged();
+                    curWards.clear();
+                    curWards.addAll(curDistricts.get(0).getWards());
+                    wardAdapter.notifyDataSetChanged();
+                } else {
+                    City curCity = (City) adapterView.getAdapter().getItem(cityId.intValue() - 1);
+                    curDistricts.clear();
+                    curDistricts.addAll(curCity.getDistricts());
+                    districtAdapter.notifyDataSetChanged();
+
+                    curWards.clear();
+                    curWards.addAll(curDistricts.get(curDistricts.indexOf(curCity.findDistrictById(districtId))).getWards());
+                    wardAdapter.notifyDataSetChanged();
+
+                    citySpinner.setSelection(cityId.intValue() - 1);
+                    districtSpinner.setSelection(curDistricts.indexOf(curCity.findDistrictById(districtId)));
+                    wardSpinner.setSelection(curWards.indexOf(curCity.findDistrictById(districtId).findWardById(wardId)));
+
+                    IS_NEW_EDIT = false;
+                }
             }
 
             @Override
@@ -111,14 +151,31 @@ public class CreateStoreDialogFragment extends DialogFragment {
             }
         });
 
-        builder.setTitle("TẠO CỬA HÀNG")
+
+        builder.setTitle("SỬA THÔNG TIN CỬA HÀNG")
                 .setPositiveButton("ĐỒNG Ý", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
-//                        nameInput = ((AlertDialog) dialogInterface).findViewById(R.id.Name);
-//                        addressInput = ((AlertDialog) dialogInterface).findViewById(R.id.Address);
-                        phoneInput = ((AlertDialog) dialogInterface).findViewById(R.id.Phone);
-                        isActiveSwitch = ((AlertDialog) dialogInterface).findViewById(R.id.isActiveSwitch);
+                        Log.d(TAG, "DEBUG-----------");
+                        Log.d(TAG, getActivity().toString());
+                        Log.d(TAG, dialogInterface.toString());
 
+//                        nameInput = (TextInputEditText) ((AlertDialog) dialogInterface).findViewById(R.id.Name);
+//                        addressInput = (TextInputEditText) ((AlertDialog) dialogInterface).findViewById(R.id.Address);
+//                        phoneInput = (TextInputEditText) ((AlertDialog) dialogInterface).findViewById(R.id.Phone);
+//                        isActiveSwitch = ((AlertDialog) dialogInterface).findViewById(R.id.isActiveSwitch);
+//
+//                        String storeName = nameInput.getText().toString();
+//                        String storeAddress = addressInput.getText().toString();
+//                        String storePhone = phoneInput.getText().toString();
+//                        String district = districtSpinner.getSelectedItem().toString();
+//                        String ward = wardSpinner.getSelectedItem().toString();
+//                        Boolean isActive = isActiveSwitch.isChecked();
+//
+//                        listener.editShop(storeName, storePhone, storeAddress + ", " + ward + ", " + district, 0, isActive);
+                    }
+                })
+                .setNegativeButton("HUỶ", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         String storeName = nameInput.getText().toString();
                         String storeAddress = addressInput.getText().toString();
                         String storePhone = phoneInput.getText().toString();
@@ -132,46 +189,15 @@ public class CreateStoreDialogFragment extends DialogFragment {
                         Long wardId = curWards.get((int) wardSpinner.getSelectedItemId()).getId();
 
                         boolean storeIsActive = isActiveSwitch.isChecked();
-
-                        listener.addNewStore(storeName, storePhone, storeAddress + ", " + ward + ", " + district + ", " + city, 0, storeIsActive, cityId, districtId, wardId);
-                    }
-                })
-                .setNegativeButton("HUỶ", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
+                        listener.editShop(storeName, storePhone, storeAddress + ", " + ward + ", " + district + ", " + city, 0, storeIsActive, cityId, districtId, wardId);
                     }
                 });
         AlertDialog dialog = builder.create();
 
-        nameInput = dialogView.findViewById(R.id.Name);
-        addressInput = dialogView.findViewById(R.id.Address);
-//        phoneInput = dialogView.findViewById(R.id.Phone);
-        nameInput.setOnFocusChangeListener((view, hasFocus) -> {
-            TextValidator validator = new TextValidator((TextView)view) {
-                @Override
-                public void validate(TextView textView, String text) {
-                    validateName(dialog, textView, text);
-                }
-            };
-            validator.validate((TextView)view, ((TextView) view).getText().toString());
-        });
         nameInput.addTextChangedListener(new TextValidator(nameInput) {
             @Override
             public void validate(TextView textView, String text) {
                 validateName(dialog, textView, text);
-            }
-        });
-
-        addressInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                TextValidator validator = new TextValidator((TextView)view) {
-                    @Override
-                    public void validate(TextView textView, String text) {
-                        validateAddress(dialog, textView, text);
-                    }
-                };
-                validator.validate((TextView)view, ((TextView) view).getText().toString());
             }
         });
         addressInput.addTextChangedListener(new TextValidator(addressInput) {
@@ -180,8 +206,6 @@ public class CreateStoreDialogFragment extends DialogFragment {
                 validateAddress(dialog, textView, text);
             }
         });
-
-        dialog.setOnShowListener(dialogInterface -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
     }
@@ -213,7 +237,7 @@ public class CreateStoreDialogFragment extends DialogFragment {
         }
     }
 
-    public interface CreateShopDialogListener {
-        void addNewStore(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId);
+    public interface EditStoreDialogListener {
+        void editShop(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId);
     }
 }

@@ -15,4 +15,6 @@
     <string name="is_active_label_text">Đang hoạt động</string>
     <string name="text_hint_username">Tên Đăng Nhập</string>
     <string name="text_hint_employee_name">Tên Nhân Viên</string>
+    <string name="storeNameMaximumSizeExceeded">Tên cửa hàng không được dài hơn 50 ký tự!</string>
+    <string name="requiredTextIsEmpty">\u0020không được để trống!</string>
 </resources>

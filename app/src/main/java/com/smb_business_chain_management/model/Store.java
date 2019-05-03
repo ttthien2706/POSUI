@@ -4,7 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Store {
-
+    @SerializedName("id")
+    @Expose
+    private long id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -23,15 +25,40 @@ public class Store {
     @SerializedName("isActive")
     @Expose
     private Boolean isActive;
+    @SerializedName("amountUser")
+    @Expose
+    private Integer amountUser;
+    @SerializedName("cityId")
+    @Expose
+    private Long cityId;
+    @SerializedName("districtId")
+    @Expose
+    private Long districtId;
+    @SerializedName("wardId")
+    @Expose
+    private Long wardId;
 
-    private Integer staff;
-
-    public Store(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive){
+    public Store(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId){
         this.name = name;
         this.phone = phoneNumber;
         this.address = address;
-        this.staff = staffNumber;
+        this.amountUser = staffNumber;
         this.isActive = isActive;
+        this.cityId = cityId;
+        this.districtId = districtId;
+        this.wardId = wardId;
+    }
+
+    public Store(long id, String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId){
+        this.id = id;
+        this.name = name;
+        this.phone = phoneNumber;
+        this.address = address;
+        this.amountUser = staffNumber;
+        this.isActive = isActive;
+        this.cityId = cityId;
+        this.districtId = districtId;
+        this.wardId = wardId;
     }
 
     public String getName() {
@@ -82,11 +109,43 @@ public class Store {
         this.isActive = isActive;
     }
 
-    public Integer getStaff() {
-        return staff;
+    public Integer getAmountUser() {
+        return amountUser;
     }
 
-    public void setStaff(Integer staff) {
-        this.staff = staff;
+    public void setAmountUser(Integer amountUser) {
+        this.amountUser = amountUser;
+    }
+
+    public Long getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Long cityId) {
+        this.cityId = cityId;
+    }
+
+    public Long getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(Long districtId) {
+        this.districtId = districtId;
+    }
+
+    public Long getWardId() {
+        return wardId;
+    }
+
+    public void setWardId(Long wardId) {
+        this.wardId = wardId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
