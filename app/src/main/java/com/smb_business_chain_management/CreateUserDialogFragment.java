@@ -22,13 +22,13 @@ import java.util.List;
 
 public class CreateUserDialogFragment extends DialogFragment {
     private static final String TAG = CreateUserDialogFragment.class.getSimpleName();
-    private CreateUserDialogListener listener;
+    private ShopListenerInterface listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            listener = (CreateUserDialogListener) context;
+            listener = (ShopListenerInterface) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "implement CreateUserDialogListener");
         }
@@ -55,20 +55,20 @@ public class CreateUserDialogFragment extends DialogFragment {
             }
         }
 
-        final Spinner storeSpinner = (Spinner) dialogView.findViewById(R.id.store);
+        final Spinner storeSpinner = dialogView.findViewById(R.id.store);
         ArrayAdapter<String> storeAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, allNames);
         storeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         storeSpinner.setAdapter(storeAdapter);
 
-        builder.setMessage("TẠO TÀI KHOẢN NHÂN VIÊN")
+        builder.setTitle("TẠO TÀI KHOẢN NHÂN VIÊN")
                 .setPositiveButton("ĐỒNG Ý", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d(TAG, "DEBUG-----------");
                 Log.d(TAG, getActivity().toString());
                 Log.d(TAG, dialogInterface.toString());
 
-                TextInputEditText usernameInput = (TextInputEditText) ((AlertDialog) dialogInterface).findViewById(R.id.Username);
-                TextInputEditText empNameInput = (TextInputEditText) ((AlertDialog) dialogInterface).findViewById(R.id.EmployeeName);
+                TextInputEditText usernameInput = ((AlertDialog) dialogInterface).findViewById(R.id.Username);
+                TextInputEditText empNameInput = ((AlertDialog) dialogInterface).findViewById(R.id.EmployeeName);
 
                 String storeName = usernameInput.getText().toString();
                 String storeAddress = empNameInput.getText().toString();
@@ -91,11 +91,5 @@ public class CreateUserDialogFragment extends DialogFragment {
             }
         }
         return allNames;
-    }
-
-    public interface CreateUserDialogListener{
-        List<Store> getAllStores();
-        Store findStoreByName(String storeName);
-        void addOneStaffMember(Store store);
     }
 }

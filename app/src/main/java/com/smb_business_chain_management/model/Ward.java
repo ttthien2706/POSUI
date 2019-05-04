@@ -46,6 +46,6 @@ public class Ward {
 
     public String toString()
     {
-        return String.format("Phường %s", name);
+        return String.format("%s", name);
     }
 }

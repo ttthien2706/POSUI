@@ -11,7 +11,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,15 +34,15 @@ public class CreateStoreDialogFragment extends DialogFragment {
     TextInputEditText phoneInput;
     SwitchCompat isActiveSwitch;
     AppUtils utils = new AppUtils();
-    private CreateShopDialogListener listener;
+    private ShopListenerInterface listener;
 
-    boolean IS_VALIDATED_NAME, IS_VALIDATED_ADDRESS = false;
+    boolean IS_VALIDATED_NAME = false, IS_VALIDATED_ADDRESS = false;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            listener = (CreateShopDialogListener) context;
+            listener = (ShopListenerInterface) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "implement CreateShopDialogListener");
         }
@@ -133,7 +132,7 @@ public class CreateStoreDialogFragment extends DialogFragment {
 
                         boolean storeIsActive = isActiveSwitch.isChecked();
 
-                        listener.addNewStore(storeName, storePhone, storeAddress + ", " + ward + ", " + district + ", " + city, 0, storeIsActive, cityId, districtId, wardId);
+                        listener.RESTAddNewStore(storeName, storePhone, storeAddress, 0, storeIsActive, cityId, districtId, wardId);
                     }
                 })
                 .setNegativeButton("HUỶ", new DialogInterface.OnClickListener() {
@@ -213,7 +212,4 @@ public class CreateStoreDialogFragment extends DialogFragment {
         }
     }
 
-    public interface CreateShopDialogListener {
-        void addNewStore(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId);
-    }
 }

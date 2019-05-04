@@ -3,9 +3,11 @@ package com.smb_business_chain_management;
 import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +31,7 @@ import com.smb_business_chain_management.model.Store;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
-import static com.smb_business_chain_management.Settings.utils;
+import static com.smb_business_chain_management.SettingsActivity.utils;
 
 class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewAdapter.storesViewHolder> {
     private Context context;
@@ -51,7 +53,7 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
         @Override
         public void onClick(View v) {
             PopupMenu popup = new PopupMenu(v.getContext(), v);
-            popup.getMenuInflater().inflate(R.menu.store_card_edit_pupup_menu, popup.getMenu());
+            popup.getMenuInflater().inflate(R.menu.store_card_edit_popup_menu, popup.getMenu());
 
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
@@ -60,6 +62,7 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
                     switch (menuItem.getTitle().toString().toLowerCase()){
                         case "edit":{
                             Bundle storeBundle = new Bundle();
+                            storeBundle.putInt("id", data.getId());
                             storeBundle.putString("name", data.getName());
                             storeBundle.putString("address", data.getAddress());
                             storeBundle.putString("phone", data.getPhone());
@@ -76,6 +79,15 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
                             break;
                         }
                         case "delete":{
+                            Bundle storeBundle = new Bundle();
+                            storeBundle.putInt("id", data.getId());
+                            storeBundle.putInt("position", position);
+
+                            ConfirmDeleteDialogFragment deleteDialog = new ConfirmDeleteDialogFragment();
+
+                            deleteDialog.setArguments(storeBundle);
+                            deleteDialog.show(fragmentManager, "confirmDeleteDialog");
+
                             break;
                         }
                     }
@@ -85,15 +97,35 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
             popup.show();
         }
     }
+    class CardItemListener implements View.OnClickListener {
+        private int position;
+        Store data;
+        FragmentManager fragmentManager;
 
+        CardItemListener(int position, Store data, FragmentManager fragmentManager) {
+            this.position = position;
+            this.data = data;
+            this.fragmentManager = fragmentManager;
+        }
+
+        @SuppressLint("UseValueOf")
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(view.getContext(), UserListActivity.class);
+            intent.putExtra("selectedStore", data);
+            view.getContext().startActivity(intent);
+        }
+    }
     public static class storesViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
-        public TextView storeName, storePhoneNo, storeAddress, storeActiveStaff, storeActive;
+        private CardView cardView;
+        private TextView storeName, storePhoneNo, storeAddress, storeActiveStaff, storeActive;
         private ImageButton editStoreButton;
         private GoogleMap mMap;
         private MapView mapView;
 
         public storesViewHolder(View v){
             super(v);
+            cardView = v.findViewById(R.id.mainContent);
             storeName = (TextView) v.findViewById(R.id.StoreName);
             storePhoneNo = (TextView) v.findViewById(R.id.StorePhoneNo);
             storeAddress = (TextView) v.findViewById(R.id.AddressTextView);
@@ -142,7 +174,7 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
         holder.storeName.setText(store.getName());
         holder.storePhoneNo.setText(store.getPhone());
         try {
-            holder.storeAddress.setText(store.getAddress());
+            holder.storeAddress.setText(store.getFullAddress());
         } catch (NullPointerException e) {
 //            holder.storeAddress.setText('0');
             e.printStackTrace();
@@ -162,6 +194,16 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
             Drawable drawable = holder.storeActive.getCompoundDrawables()[0];
             drawable.setTint(ContextCompat.getColor(holder.storeActive.getContext(), R.color.colorStoreInActive));
         }
+        if (holder.mMap != null) {
+            LatLng storeLocation = utils.getLocationFromAddress(holder.storeActive.getContext(), holder.storeAddress.getText().toString());
+            if (storeLocation != null){
+                Marker TP = holder.mMap.addMarker(new MarkerOptions().position(storeLocation).title(holder.storeName.getText().toString()));
+                holder.mMap.moveCamera(CameraUpdateFactory.newLatLng(storeLocation));
+            } else{
+                Toast.makeText(holder.storeAddress.getContext(), "Location not found", Toast.LENGTH_SHORT).show();
+            }
+        }
+        holder.cardView.setOnClickListener(new CardItemListener(position, store, fragmentManager));
         holder.editStoreButton.setOnClickListener(new MenuItemListener(position, store, fragmentManager));
     }
 

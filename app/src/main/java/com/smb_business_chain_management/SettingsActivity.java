@@ -1,6 +1,5 @@
 package com.smb_business_chain_management;
 
-import android.app.AlertDialog;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -12,7 +11,6 @@ import android.view.View;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.maps.model.LatLng;
 import com.smb_business_chain_management.Utils.AppUtils;
-import com.smb_business_chain_management.model.City;
 import com.smb_business_chain_management.model.Store;
 
 import java.util.ArrayList;
@@ -22,20 +20,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Settings extends FragmentActivity implements CreateStoreDialogFragment.CreateShopDialogListener, CreateUserDialogFragment.CreateUserDialogListener, EditStoreDialogFragment.EditStoreDialogListener {
-    private static final String TAG = Settings.class.getSimpleName();
+public class SettingsActivity extends FragmentActivity implements ShopListenerInterface {
+    private static final String TAG = SettingsActivity.class.getSimpleName();
     protected  static final AppUtils utils = new AppUtils();
 
     public static final int RECYCLER_VIEW_ITEM_HORIZONTAL_PADDING = 64;
-    public static final String  BASE_URL = "https://192.168.20.197:5001";
     BusinessChainRESTService businessChainRESTService;
 
     private RecyclerView storesRecyclerView;
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayoutManager;
 
-    public List<Store> testData = new ArrayList<Store>(0);
-    public Store newStore = null;
+    public List<Store> testData = new ArrayList<>(0);
 
     public class HorizontalSpaceItemDecoration extends RecyclerView.ItemDecoration{
         private final int horizontalWidthSpace;
@@ -57,29 +53,17 @@ public class Settings extends FragmentActivity implements CreateStoreDialogFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        storesRecyclerView = (RecyclerView) findViewById(R.id.storeRV);
+        storesRecyclerView = findViewById(R.id.storeRV);
 
         fetchAllStores();
-//        fetchAllAdministrativeUnits();
 
         storesRecyclerView.setHasFixedSize(true);
         rvLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         storesRecyclerView.setLayoutManager(rvLayoutManager);
         storesRecyclerView.addItemDecoration(new HorizontalSpaceItemDecoration(RECYCLER_VIEW_ITEM_HORIZONTAL_PADDING));
 
-        Store temp = new Store("Cửa hàng Nguyễn Huệ là anh của Quang Trung, the man the myth the legend", "(454) 604-2556", "Nguyễn Huệ, p.2, Q.1", 1, true, Long.valueOf(0), Long.valueOf(0) ,Long.valueOf(0));
-//        Store temp2 = new Store("Cửa hàng Đồng Khởi", "(454) 314-8116", "Đồng Khởi, p.1, Q.1", 4, true, wardId);
-//        Store temp3 = new Store("Cửa hàng Hai Bà Trưng", "(454) 573-7138", "Hai Bà Trưng, p.1, Q.1", 0, false, wardId);
-//        Store temp4 = new Store("Cửa hàng Điện Biên Phủ", "(454) 573-7138", "231, Điện Biên Phủ, phường 6 , Q.3", 0, false, wardId);
-//
-        testData.add(temp);
-//        testData.add(temp2);
-//        testData.add(temp4);
-//        testData.add(temp3);
-//        testData.add(temp2);
-
-        FloatingActionButton createStoreFab = (FloatingActionButton) findViewById(R.id.ButtonAddStore);
-        FloatingActionButton createUserFab = (FloatingActionButton) findViewById(R.id.ButtonAddEmployee);
+        FloatingActionButton createStoreFab = findViewById(R.id.ButtonAddStore);
+        FloatingActionButton createUserFab = findViewById(R.id.ButtonAddEmployee);
         createStoreFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,6 +85,26 @@ public class Settings extends FragmentActivity implements CreateStoreDialogFragm
         testData.add(newStore);
         rvAdapter.notifyDataSetChanged();
     }
+    public void editAStore(Store modifiedStore){
+        Store store = findStoreById(modifiedStore.getId());
+        testData.stream().filter(store::equals).findFirst().ifPresent(storeToUpdate -> {
+            storeToUpdate.setName(modifiedStore.getName());
+            storeToUpdate.setPhone(modifiedStore.getPhone());
+            storeToUpdate.setAddress(modifiedStore.getAddress());
+            storeToUpdate.setFullAddress(modifiedStore.getFullAddress());
+            storeToUpdate.setIsActive(modifiedStore.isActive());
+            storeToUpdate.setCityId(modifiedStore.getCityId());
+            storeToUpdate.setDistrictId(modifiedStore.getDistrictId());
+            storeToUpdate.setWardId(modifiedStore.getWardId());
+        });
+        rvAdapter.notifyDataSetChanged();
+    }
+    private void deleteAStore(int position) {
+        testData.remove(position);
+        storesRecyclerView.removeViewAt(position);
+        rvAdapter.notifyItemRemoved(position);
+        rvAdapter.notifyItemRangeChanged(position, testData.size());
+    }
 
     public void createShopButtonClicked(){
         CreateStoreDialogFragment createDialog = new CreateStoreDialogFragment();
@@ -112,7 +116,7 @@ public class Settings extends FragmentActivity implements CreateStoreDialogFragm
     }
 
     @Override
-    public void addNewStore(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId) {
+    public void RESTAddNewStore(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId) {
         Store newStore = new Store(name, phoneNumber, address, staffNumber, isActive, cityId, districtId, wardId);
 
         LatLng storeLatLng  = utils.getLocationFromAddress(getApplicationContext(), newStore.getAddress());
@@ -126,7 +130,38 @@ public class Settings extends FragmentActivity implements CreateStoreDialogFragm
             @Override
             public void onResponse(Call<Store> call, Response<Store> response) {
                 if (response.code() == 200) {
-                    addAStore(newStore);
+                    Store retStore = response.body();
+                    addAStore(retStore);
+                } else {
+                    Log.d(TAG, Integer.toString(response.code()));
+                    Log.d(TAG, response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<Store> call, Throwable throwable) {
+                Log.e(TAG, throwable.toString());
+            }
+        });
+    }
+
+    @Override
+    public void RESTEditStore(int id, String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId) {
+        Store modifiedStore = new Store(id, name, phoneNumber, address, staffNumber, isActive, cityId, districtId, wardId);
+
+        LatLng storeLatLng  = utils.getLocationFromAddress(getApplicationContext(), modifiedStore.getAddress());
+        modifiedStore.setLatitude(storeLatLng.latitude);
+        modifiedStore.setLongitude(storeLatLng.longitude);
+
+        businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
+
+        Call<Store> call = businessChainRESTService.updateStore(id, modifiedStore);
+
+        call.enqueue(new Callback<Store>(){
+            @Override
+            public void onResponse(Call<Store> call, Response<Store> response) {
+                if (response.code() == 200) {
+                    Store modifiedStore = response.body();
+                    editAStore(modifiedStore);
                 } else {
                     Log.d(TAG, Integer.toString(response.code()));
                     Log.d(TAG, response.message());
@@ -141,8 +176,26 @@ public class Settings extends FragmentActivity implements CreateStoreDialogFragm
     }
 
     @Override
-    public void editShop(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId) {
+    public void RESTDeleteStore(int id, int position) {
+        businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
 
+        Call<Store> call = businessChainRESTService.deleteStore(id);
+
+        call.enqueue(new Callback<Store>(){
+            @Override
+            public void onResponse(Call<Store> call, Response<Store> response) {
+                if (response.code() == 200) {
+                    deleteAStore(position);
+                } else {
+                    Log.d(TAG, Integer.toString(response.code()));
+                    Log.d(TAG, response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<Store> call, Throwable throwable) {
+                Log.e(TAG, throwable.toString());
+            }
+        });
     }
 
     @Override
@@ -154,6 +207,11 @@ public class Settings extends FragmentActivity implements CreateStoreDialogFragm
     public void addOneStaffMember(Store store) {
         testData.stream().filter(store::equals).findFirst().ifPresent(storeToUpdate -> storeToUpdate.setAmountUser(storeToUpdate.getAmountUser() + 1));
         rvAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public Store findStoreById(int id) {
+        return testData.stream().filter(store -> id == store.getId()).findFirst().orElse(null);
     }
 
     @Override
@@ -169,12 +227,10 @@ public class Settings extends FragmentActivity implements CreateStoreDialogFragm
             @Override
             public void onResponse(Call<List<Store>> call, Response<List<Store>> response) {
                 if (response.code() == 200) {
-                    Log.d(TAG, response.body().toString());
                     List<Store> storeList = response.body();
                     testData.clear();
                     testData.addAll(storeList);
                     rvAdapter.notifyDataSetChanged();
-//                Log.d(TAG, "Number of stores received: " + testData.size());
                 }
                 else Log.e(TAG, response.message());
             }

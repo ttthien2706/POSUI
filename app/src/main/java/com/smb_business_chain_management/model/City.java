@@ -61,11 +61,11 @@ public class City {
 
     public String toString()
     {
-        return String.format("Thành Phố %s", name);
+        return String.format("%s", name);
     }
 
     public District findDistrictById(Long districtId){
-        District ret = new District();
+        District ret;
         ret = districts.stream()
                 .filter(district -> districtId.equals(district.getId()))
                 .findFirst().orElse(getDistricts().get(0));

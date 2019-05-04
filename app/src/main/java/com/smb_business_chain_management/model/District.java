@@ -61,7 +61,7 @@ public class District {
 
     public String toString()
     {
-        return String.format("Quận %s", name);
+        return String.format("%s", name);
     }
 
     public Ward findWardById(Long wardId){

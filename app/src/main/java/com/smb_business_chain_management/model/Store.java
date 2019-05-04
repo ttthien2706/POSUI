@@ -1,12 +1,15 @@
 package com.smb_business_chain_management.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Store {
+public class Store implements Parcelable {
     @SerializedName("id")
     @Expose
-    private long id;
+    private int id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -25,7 +28,7 @@ public class Store {
     @SerializedName("isActive")
     @Expose
     private Boolean isActive;
-    @SerializedName("amountUser")
+    @SerializedName("count")
     @Expose
     private Integer amountUser;
     @SerializedName("cityId")
@@ -37,6 +40,9 @@ public class Store {
     @SerializedName("wardId")
     @Expose
     private Long wardId;
+    @SerializedName("fullAddress")
+    @Expose
+    private String fullAddress;
 
     public Store(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId){
         this.name = name;
@@ -49,7 +55,7 @@ public class Store {
         this.wardId = wardId;
     }
 
-    public Store(long id, String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId){
+    public Store(int id, String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId){
         this.id = id;
         this.name = name;
         this.phone = phoneNumber;
@@ -60,6 +66,109 @@ public class Store {
         this.districtId = districtId;
         this.wardId = wardId;
     }
+
+    protected Store(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        address = in.readString();
+        phone = in.readString();
+        if (in.readByte() == 0) {
+            latitude = null;
+        } else {
+            latitude = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            longitude = null;
+        } else {
+            longitude = in.readDouble();
+        }
+        byte tmpIsActive = in.readByte();
+        isActive = tmpIsActive == 0 ? null : tmpIsActive == 1;
+        if (in.readByte() == 0) {
+            amountUser = null;
+        } else {
+            amountUser = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            cityId = null;
+        } else {
+            cityId = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            districtId = null;
+        } else {
+            districtId = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            wardId = null;
+        } else {
+            wardId = in.readLong();
+        }
+        fullAddress = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(address);
+        dest.writeString(phone);
+        if (latitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(latitude);
+        }
+        if (longitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(longitude);
+        }
+        dest.writeByte((byte) (isActive == null ? 0 : isActive ? 1 : 2));
+        if (amountUser == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(amountUser);
+        }
+        if (cityId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(cityId);
+        }
+        if (districtId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(districtId);
+        }
+        if (wardId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(wardId);
+        }
+        dest.writeString(fullAddress);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Store> CREATOR = new Creator<Store>() {
+        @Override
+        public Store createFromParcel(Parcel in) {
+            return new Store(in);
+        }
+
+        @Override
+        public Store[] newArray(int size) {
+            return new Store[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -141,11 +250,15 @@ public class Store {
         this.wardId = wardId;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public String getFullAddress() {
+        return fullAddress;
+    }
+
+    public void setFullAddress(String fullAddress) {
+        this.fullAddress = fullAddress;
     }
 }

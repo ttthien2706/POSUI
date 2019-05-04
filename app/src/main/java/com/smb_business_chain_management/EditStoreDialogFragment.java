@@ -11,7 +11,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,19 +35,19 @@ public class EditStoreDialogFragment extends DialogFragment {
     SwitchCompat isActiveSwitch;
 
     boolean IS_NEW_EDIT = true;
-    boolean IS_VALIDATED_NAME, IS_VALIDATED_ADDRESS = false;
+    boolean IS_VALIDATED_NAME = true, IS_VALIDATED_ADDRESS = true;
 
     AppUtils utils = new AppUtils();
 
-    private EditStoreDialogListener listener;
+    private ShopListenerInterface listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            listener = (EditStoreDialogListener) context;
+            listener = (ShopListenerInterface) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "implement EditShopDialogListener");
+            throw new ClassCastException(context.toString() + "implement ShopListenerInterface");
         }
     }
 
@@ -60,13 +59,14 @@ public class EditStoreDialogFragment extends DialogFragment {
 
         Bundle storeBundle = getArguments();
 
+        int storeId = storeBundle.getInt("id");
         String storeName = storeBundle.getString("name");
         String storePhone = storeBundle.getString("phone");
         String storeAddress = storeBundle.getString("address").split(",")[0].trim();
         Long cityId = storeBundle.getLong("cityId");
         Long districtId = storeBundle.getLong("districtId");
         Long wardId = storeBundle.getLong("wardId");
-        Boolean isActive = storeBundle.getBoolean("isActive");
+        boolean isActive = storeBundle.getBoolean("isActive");
 
         final View dialogView = inflater.inflate(R.layout.create_store_dialog, null);
         builder.setView(dialogView);
@@ -155,41 +155,25 @@ public class EditStoreDialogFragment extends DialogFragment {
         builder.setTitle("SỬA THÔNG TIN CỬA HÀNG")
                 .setPositiveButton("ĐỒNG Ý", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d(TAG, "DEBUG-----------");
-                        Log.d(TAG, getActivity().toString());
-                        Log.d(TAG, dialogInterface.toString());
-
-//                        nameInput = (TextInputEditText) ((AlertDialog) dialogInterface).findViewById(R.id.Name);
-//                        addressInput = (TextInputEditText) ((AlertDialog) dialogInterface).findViewById(R.id.Address);
-//                        phoneInput = (TextInputEditText) ((AlertDialog) dialogInterface).findViewById(R.id.Phone);
-//                        isActiveSwitch = ((AlertDialog) dialogInterface).findViewById(R.id.isActiveSwitch);
-//
-//                        String storeName = nameInput.getText().toString();
-//                        String storeAddress = addressInput.getText().toString();
-//                        String storePhone = phoneInput.getText().toString();
-//                        String district = districtSpinner.getSelectedItem().toString();
-//                        String ward = wardSpinner.getSelectedItem().toString();
-//                        Boolean isActive = isActiveSwitch.isChecked();
-//
-//                        listener.editShop(storeName, storePhone, storeAddress + ", " + ward + ", " + district, 0, isActive);
-                    }
-                })
-                .setNegativeButton("HUỶ", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
                         String storeName = nameInput.getText().toString();
                         String storeAddress = addressInput.getText().toString();
                         String storePhone = phoneInput.getText().toString();
 
-                        String city = citySpinner.getSelectedItem().toString();
-                        String district = districtSpinner.getSelectedItem().toString();
-                        String ward = wardSpinner.getSelectedItem().toString();
+//                        String city = citySpinner.getSelectedItem().toString();
+//                        String district = districtSpinner.getSelectedItem().toString();
+//                        String ward = wardSpinner.getSelectedItem().toString();
 
                         Long cityId = allCities.get((int) citySpinner.getSelectedItemId()).getId();
                         Long districtId = curDistricts.get((int) districtSpinner.getSelectedItemId()).getId();
                         Long wardId = curWards.get((int) wardSpinner.getSelectedItemId()).getId();
 
                         boolean storeIsActive = isActiveSwitch.isChecked();
-                        listener.editShop(storeName, storePhone, storeAddress + ", " + ward + ", " + district + ", " + city, 0, storeIsActive, cityId, districtId, wardId);
+                        listener.RESTEditStore(storeId, storeName, storePhone, storeAddress, 0, storeIsActive, cityId, districtId, wardId);
+                    }
+                })
+                .setNegativeButton("HUỶ", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
                     }
                 });
         AlertDialog dialog = builder.create();
@@ -235,9 +219,5 @@ public class EditStoreDialogFragment extends DialogFragment {
             IS_VALIDATED_ADDRESS = true;
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(IS_VALIDATED_ADDRESS && IS_VALIDATED_NAME);
         }
-    }
-
-    public interface EditStoreDialogListener {
-        void editShop(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId);
     }
 }
