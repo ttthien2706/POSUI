@@ -1,10 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/user_detail"
-    style="?android:attr/textAppearanceLarge"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:textIsSelectable="true"
-    tools:context=".UserDetailFragment" />
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/UsernameInputLayout"
+        style="@style/DialogInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/EmployeeNameInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/text_hint_username">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/Username"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/EmployeeNameInputLayout"
+        style="@style/DialogInput"
+        app:layout_constraintBottom_toTopOf="@id/role"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/text_hint_employee_name">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/EmployeeName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textCapWords" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/store"
+        style="@style/DialogInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/role"
+        style="@style/DialogInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
+        app:layout_constraintStart_toEndOf="@id/store"/>
+
+    <View
+        android:id="@+id/vertical_center_anchor"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/AddressInputLayout"
+        style="@style/DialogInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vertical_center_anchor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/text_hint_address">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/Address"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPostalAddress" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/ward"
+        style="@style/DialogInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AddressInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.AppCompatSpinner>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/district"
+        style="@style/DialogInput"
+        app:layout_constraintStart_toEndOf="@id/ward"
+        app:layout_constraintTop_toBottomOf="@id/AddressInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.AppCompatSpinner>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/city"
+        style="@style/DialogInput"
+        app:layout_constraintStart_toEndOf="@id/district"
+        app:layout_constraintTop_toBottomOf="@id/AddressInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.AppCompatSpinner>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/PhoneInputLayout"
+        style="@style/DialogInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ward"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/text_hint_phone_numb">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/Phone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="phone" />
+    </android.support.design.widget.TextInputLayout>
+</android.support.constraint.ConstraintLayout>

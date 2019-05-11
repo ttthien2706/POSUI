@@ -33,7 +33,7 @@
             android:name=".UserListActivity"
             android:label="@string/title_user_list"
             android:parentActivityName=".SettingsActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.smb_business_chain_management.SettingsActivity" />
@@ -42,7 +42,7 @@
             android:name=".UserDetailActivity"
             android:label="@string/title_user_detail"
             android:parentActivityName=".UserListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.smb_business_chain_management.UserListActivity" />

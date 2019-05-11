@@ -1,11 +1,16 @@
-package com.smb_business_chain_management.model;
+package com.smb_business_chain_management.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class City {
+public class City implements Parcelable {
 
     @SerializedName("name")
     @Expose
@@ -15,7 +20,7 @@ public class City {
     private List<District> districts = null;
     @SerializedName("id")
     @Expose
-    private Long id;
+    private int id;
 
     /**
      * No args constructor for use in serialization
@@ -28,12 +33,43 @@ public class City {
      * @param name
      * @param districts
      */
-    public City(String name, List<District> districts, Long id) {
+    public City(String name, List<District> districts, int id) {
         super();
         this.name = name;
         this.districts = districts;
         this.id = id;
     }
+
+    protected City(Parcel in) {
+        name = in.readString();
+        id = in.readInt();
+        districts = new ArrayList<>();
+        in.readList(districts, District.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeInt(id);
+        dest.writeList(districts);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<City> CREATOR = new Creator<City>() {
+        @Override
+        public City createFromParcel(Parcel in) {
+            return new City(in);
+        }
+
+        @Override
+        public City[] newArray(int size) {
+            return new City[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -51,11 +87,11 @@ public class City {
         this.districts = districts;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -71,4 +107,5 @@ public class City {
                 .findFirst().orElse(getDistricts().get(0));
         return ret;
     }
+
 }

@@ -1,9 +1,23 @@
-package com.smb_business_chain_management.model;
+package com.smb_business_chain_management.models;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+public class User implements Parcelable {
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private int id;
@@ -37,6 +51,45 @@ public class User {
     @SerializedName("fullAddress")
     @Expose
     private String fullAddress;
+
+    public User(String name, String phone, String address, int roleId, int shopId, int wardId, int districtId, int cityId, String roleName) {
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.roleId = roleId;
+        this.shopId = shopId;
+        this.wardId = wardId;
+        this.districtId = districtId;
+        this.cityId = cityId;
+        this.roleName = roleName;
+    }
+
+    public User(int id, String name, String phone, String address, int roleId, int shopId, int wardId, int districtId, int cityId, String roleName) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.roleId = roleId;
+        this.shopId = shopId;
+        this.wardId = wardId;
+        this.districtId = districtId;
+        this.cityId = cityId;
+        this.roleName = roleName;
+    }
+
+    protected User(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        phone = in.readString();
+        address = in.readString();
+        roleId = in.readInt();
+        shopId = in.readInt();
+        wardId = in.readInt();
+        districtId = in.readInt();
+        cityId = in.readInt();
+        roleName = in.readString();
+        fullAddress = in.readString();
+    }
 
     public int getId() {
         return id;
@@ -120,5 +173,25 @@ public class User {
 
     public String getFullAddress() {
         return fullAddress;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeString(phone);
+        parcel.writeString(address);
+        parcel.writeInt(roleId);
+        parcel.writeInt(shopId);
+        parcel.writeInt(wardId);
+        parcel.writeInt(districtId);
+        parcel.writeInt(cityId);
+        parcel.writeString(roleName);
+        parcel.writeString(fullAddress);
     }
 }

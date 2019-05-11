@@ -1,27 +1,21 @@
 package com.smb_business_chain_management;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 
-import com.smb_business_chain_management.dummy.DummyContent;
-import com.smb_business_chain_management.model.Store;
-import com.smb_business_chain_management.model.User;
+import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.Role;
+import com.smb_business_chain_management.models.Store;
+import com.smb_business_chain_management.models.User;
+import com.smb_business_chain_management.views.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,18 +32,20 @@ import retrofit2.Response;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class UserListActivity extends AppCompatActivity {
+public class UserListActivity extends BaseActivity implements ShopListenerInterface{
     private static final String TAG = UserListActivity.class.getSimpleName();
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
-    private Intent mIntent = getIntent();
+    private Intent mIntent;
 
-    private RecyclerView userRecyclerView;
+    private static List<Store> mStoreList;
+    private static List<City> mCityList;
+    private static List<Role> mRoleList;
+
     private RecyclerView.Adapter userRecyclerViewAdapter;
-    private RecyclerView.LayoutManager userRecyclerViewLayoutManager;
 
     List<User> userList = new ArrayList<>(0);
 
@@ -58,28 +54,33 @@ public class UserListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
         setContentView(R.layout.activity_user_list);
-        userRecyclerView = findViewById(R.id.user_list);
+        RecyclerView userRecyclerView = findViewById(R.id.user_list);
         assert userRecyclerView != null;
+        mIntent = getIntent();
         Store selectedStore = mIntent.getParcelableExtra("selectedStore");
+        mStoreList = mIntent.getParcelableArrayListExtra("storeList");
+        mCityList = mIntent.getParcelableArrayListExtra("cityList");
+        mRoleList = mIntent.getParcelableArrayListExtra("roleList");
 
         fetchAllUsersOfSelectedStore(selectedStore.getId());
 
-        userRecyclerViewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager userRecyclerViewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         userRecyclerView.setLayoutManager(userRecyclerViewLayoutManager);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -95,6 +96,7 @@ public class UserListActivity extends AppCompatActivity {
         }
 
         userRecyclerViewAdapter = new UserItemRecyclerViewAdapter(this, userList, mTwoPane);
+        userRecyclerView.setAdapter(userRecyclerViewAdapter);
     }
 
     @Override
@@ -116,7 +118,6 @@ public class UserListActivity extends AppCompatActivity {
 
 
     public void fetchAllUsersOfSelectedStore(int storeId){
-        businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
         Call<List<User>> call = businessChainRESTService.getAllUsersOfStore(storeId);
 
         call.enqueue(new Callback<List<User>>(){
@@ -137,4 +138,71 @@ public class UserListActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void RESTAddNewStore(Store store) {
+
+    }
+
+    @Override
+    public void RESTEditStore(int id, String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, int cityId, int districtId, int wardId) {
+
+    }
+    @Override
+    public void RESTDeleteStore(int id, int position) {
+
+    }
+    @Override
+    public void RESTAddNewUser(User user) {
+
+    }
+    @Override
+    public Store findStoreByName(String storeName) {
+        return null;
+    }
+    @Override
+    public Store findStoreById(int id) {
+        return null;
+    }
+    @Override
+    public void addOneStaffMember(Store store) {
+
+    }
+
+    @Override
+    public List<Store> getAllStores() {
+        return mStoreList;
+    }
+
+    @Override
+    public List<City> getAllCities() {
+        return mCityList;
+    }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return mRoleList;
+    }
+
+    @Override
+    public void RESTEditUser(User user, int storeId, Fragment currentFragment) {
+        Call<User> call = businessChainRESTService.updateUser(user.getId(), user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 200) {
+                    fetchAllUsersOfSelectedStore(storeId);
+                } else {
+                    Log.d(TAG, Integer.toString(response.code()));
+                    Log.d(TAG, response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable throwable) {
+                Log.e(TAG, throwable.toString());
+            }
+        });
+        this.getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
+        this.getSupportFragmentManager().popBackStackImmediate();
+    }
 }

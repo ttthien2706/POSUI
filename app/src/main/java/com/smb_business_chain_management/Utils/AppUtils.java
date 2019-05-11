@@ -3,22 +3,21 @@ package com.smb_business_chain_management.Utils;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.smb_business_chain_management.BusinessChainRESTClient;
 import com.smb_business_chain_management.BusinessChainRESTService;
-import com.smb_business_chain_management.model.City;
-import com.smb_business_chain_management.model.District;
-import com.smb_business_chain_management.model.Store;
+import com.smb_business_chain_management.R;
+import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.District;
+import com.smb_business_chain_management.models.Role;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -28,8 +27,6 @@ import retrofit2.Response;
 public class AppUtils {
     private static final String TAG = AppUtils.class.getSimpleName();
 
-//    List<City> allCities = new ArrayList<>(0);
-
     public void fetchAllAdministrativeUnits(List<City> allCities, ArrayAdapter<City> cityAdapter){
         BusinessChainRESTService businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
         Call<List<City>> call = businessChainRESTService.getCities();
@@ -38,9 +35,9 @@ public class AppUtils {
             @Override
             public void onResponse(Call<List<City>> call, Response<List<City>> response) {
                 if (response.code() == 200) {
-                    List<City> citiesList = response.body();
+                    List<City> responseList = response.body();
                     allCities.clear();
-                    allCities.addAll(citiesList);
+                    allCities.addAll(responseList);
                     cityAdapter.notifyDataSetChanged();
                 }
             }
@@ -62,7 +59,7 @@ public class AppUtils {
         else{
             try{
                 addresses = coder.getFromLocationName(sAddress, 5);
-                if (addresses == null){
+                if (addresses == null || addresses.size() == 0){
                     return null;
                 }
 
@@ -76,17 +73,4 @@ public class AppUtils {
         }
         return returnLatLng;
     }
-
-    public List<String> getAllCityName(List<City> cities){
-        List<String> returnNames = new ArrayList<>(0);
-        for (int index = 0; index < cities.size(); ++index){
-            returnNames.add(cities.get(index).getName());
-        }
-        return returnNames;
-    }
-
-    public List<District> getDistrictsOfCity(City city){
-        return null;
-    }
-
 }

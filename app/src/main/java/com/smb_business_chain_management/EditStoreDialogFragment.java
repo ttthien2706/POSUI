@@ -20,9 +20,9 @@ import android.widget.TextView;
 
 import com.smb_business_chain_management.Utils.AppUtils;
 import com.smb_business_chain_management.Utils.TextValidator;
-import com.smb_business_chain_management.model.City;
-import com.smb_business_chain_management.model.District;
-import com.smb_business_chain_management.model.Ward;
+import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.District;
+import com.smb_business_chain_management.models.Ward;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,9 +163,9 @@ public class EditStoreDialogFragment extends DialogFragment {
 //                        String district = districtSpinner.getSelectedItem().toString();
 //                        String ward = wardSpinner.getSelectedItem().toString();
 
-                        Long cityId = allCities.get((int) citySpinner.getSelectedItemId()).getId();
-                        Long districtId = curDistricts.get((int) districtSpinner.getSelectedItemId()).getId();
-                        Long wardId = curWards.get((int) wardSpinner.getSelectedItemId()).getId();
+                        int cityId = allCities.get((int) citySpinner.getSelectedItemId()).getId();
+                        int districtId = curDistricts.get((int) districtSpinner.getSelectedItemId()).getId();
+                        int wardId = curWards.get((int) wardSpinner.getSelectedItemId()).getId();
 
                         boolean storeIsActive = isActiveSwitch.isChecked();
                         listener.RESTEditStore(storeId, storeName, storePhone, storeAddress, 0, storeIsActive, cityId, districtId, wardId);

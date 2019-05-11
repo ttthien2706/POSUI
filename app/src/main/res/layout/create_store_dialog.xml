@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="45dp"
     android:paddingBottom="45dp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -45,7 +45,6 @@
                 android:id="@+id/Name"/>
         </android.support.design.widget.TextInputLayout>
 
-            app:layout_constraintStart_toStartOf="parent"
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,7 +67,7 @@
             android:id="@+id/ward"
             style="@style/DialogInput"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/AddressInputLayout">
 
@@ -78,7 +77,7 @@
             android:id="@+id/district"
             style="@style/DialogInput"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/ward"
             app:layout_constraintTop_toBottomOf="@id/AddressInputLayout">
 
@@ -88,7 +87,7 @@
             android:id="@+id/city"
             style="@style/DialogInput"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/district"
             app:layout_constraintTop_toBottomOf="@id/AddressInputLayout">
 

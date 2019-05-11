@@ -1,4 +1,4 @@
-package com.smb_business_chain_management.model;
+package com.smb_business_chain_management.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -33,18 +33,18 @@ public class Store implements Parcelable {
     private Integer amountUser;
     @SerializedName("cityId")
     @Expose
-    private Long cityId;
+    private int cityId;
     @SerializedName("districtId")
     @Expose
-    private Long districtId;
+    private int districtId;
     @SerializedName("wardId")
     @Expose
-    private Long wardId;
+    private int wardId;
     @SerializedName("fullAddress")
     @Expose
     private String fullAddress;
 
-    public Store(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId){
+    public Store(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, int cityId, int districtId, int wardId){
         this.name = name;
         this.phone = phoneNumber;
         this.address = address;
@@ -55,7 +55,20 @@ public class Store implements Parcelable {
         this.wardId = wardId;
     }
 
-    public Store(int id, String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, Long cityId, Long districtId, Long wardId){
+
+    public Store(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, int cityId, int districtId, int wardId, String fullAddress){
+        this.name = name;
+        this.phone = phoneNumber;
+        this.address = address;
+        this.amountUser = staffNumber;
+        this.isActive = isActive;
+        this.cityId = cityId;
+        this.districtId = districtId;
+        this.wardId = wardId;
+        this.fullAddress = fullAddress;
+    }
+
+    public Store(int id, String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, int cityId, int districtId, int wardId){
         this.id = id;
         this.name = name;
         this.phone = phoneNumber;
@@ -89,73 +102,10 @@ public class Store implements Parcelable {
         } else {
             amountUser = in.readInt();
         }
-        if (in.readByte() == 0) {
-            cityId = null;
-        } else {
-            cityId = in.readLong();
-        }
-        if (in.readByte() == 0) {
-            districtId = null;
-        } else {
-            districtId = in.readLong();
-        }
-        if (in.readByte() == 0) {
-            wardId = null;
-        } else {
-            wardId = in.readLong();
-        }
+        cityId = in.readInt();
+        districtId = in.readInt();
+        wardId = in.readInt();
         fullAddress = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
-        dest.writeString(address);
-        dest.writeString(phone);
-        if (latitude == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(latitude);
-        }
-        if (longitude == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(longitude);
-        }
-        dest.writeByte((byte) (isActive == null ? 0 : isActive ? 1 : 2));
-        if (amountUser == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(amountUser);
-        }
-        if (cityId == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(cityId);
-        }
-        if (districtId == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(districtId);
-        }
-        if (wardId == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(wardId);
-        }
-        dest.writeString(fullAddress);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<Store> CREATOR = new Creator<Store>() {
@@ -226,27 +176,27 @@ public class Store implements Parcelable {
         this.amountUser = amountUser;
     }
 
-    public Long getCityId() {
+    public int getCityId() {
         return cityId;
     }
 
-    public void setCityId(Long cityId) {
+    public void setCityId(int cityId) {
         this.cityId = cityId;
     }
 
-    public Long getDistrictId() {
+    public int getDistrictId() {
         return districtId;
     }
 
-    public void setDistrictId(Long districtId) {
+    public void setDistrictId(int districtId) {
         this.districtId = districtId;
     }
 
-    public Long getWardId() {
+    public int getWardId() {
         return wardId;
     }
 
-    public void setWardId(Long wardId) {
+    public void setWardId(int wardId) {
         this.wardId = wardId;
     }
 
@@ -260,5 +210,46 @@ public class Store implements Parcelable {
 
     public void setFullAddress(String fullAddress) {
         this.fullAddress = fullAddress;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Cửa hàng %s", this.getName());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeString(address);
+        parcel.writeString(phone);
+        if (latitude == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(latitude);
+        }
+        if (longitude == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(longitude);
+        }
+        parcel.writeByte((byte) (isActive == null ? 0 : isActive ? 1 : 2));
+        if (amountUser == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(amountUser);
+        }
+        parcel.writeInt(cityId);
+        parcel.writeInt(districtId);
+        parcel.writeInt(wardId);
+        parcel.writeString(fullAddress);
     }
 }

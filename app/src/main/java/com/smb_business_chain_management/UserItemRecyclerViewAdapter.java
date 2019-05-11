@@ -9,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.smb_business_chain_management.dummy.DummyContent;
-import com.smb_business_chain_management.model.User;
+import com.smb_business_chain_management.models.User;
 
 import java.util.List;
 
@@ -23,19 +22,21 @@ class UserItemRecyclerViewAdapter extends RecyclerView.Adapter<UserItemRecyclerV
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+            User mCurrentUser = (User) view.getTag();
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
-                arguments.putString(UserDetailFragment.ARG_ITEM_ID, item.id);
+                arguments.putInt(UserDetailFragment.ARG_ITEM_ID, mCurrentUser.getId());
+                arguments.putParcelable(UserDetailFragment.ARG_CURRENT_USER, mCurrentUser);
                 UserDetailFragment fragment = new UserDetailFragment();
                 fragment.setArguments(arguments);
+                mParentActivity.invalidateOptionsMenu();
                 mParentActivity.getSupportFragmentManager().beginTransaction()
                         .replace(R.id.user_detail_container, fragment)
                         .commit();
             } else {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, UserDetailActivity.class);
-                intent.putExtra(UserDetailFragment.ARG_ITEM_ID, item.id);
+                intent.putExtra(UserDetailFragment.ARG_ITEM_ID, mCurrentUser.getId());
 
                 context.startActivity(intent);
             }
@@ -59,7 +60,7 @@ class UserItemRecyclerViewAdapter extends RecyclerView.Adapter<UserItemRecyclerV
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mIdView.setText(mUserList.get(position).getId());
+        holder.mIdView.setText(String.valueOf(mUserList.get(position).getId()));
         holder.mContentView.setText(mUserList.get(position).getName());
 
         holder.itemView.setTag(mUserList.get(position));
@@ -77,8 +78,8 @@ class UserItemRecyclerViewAdapter extends RecyclerView.Adapter<UserItemRecyclerV
 
         ViewHolder(View view) {
             super(view);
-            mIdView = (TextView) view.findViewById(R.id.id_text);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = view.findViewById(R.id.id_text);
+            mContentView = view.findViewById(R.id.content);
         }
     }
 }

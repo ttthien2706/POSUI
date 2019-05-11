@@ -1,8 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="actionBarStyle">@style/AppTheme.AppBarOverlay</item>
+        <!--<item name="android:actionMenuTextColor">@color/white</item>-->
     </style>
 
     <style name="TextHeaderMargin">
@@ -51,10 +53,22 @@
         <item name="android:layout_marginEnd">16dp</item>
     </style>
 
+    <style name="ProgressText" parent="Subtitle1">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ProgressStyle">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+    </style>
+
     <style name="DialogInput">
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginBottom">16dp</item>
+    </style>
+    
+    <style name="MaterialButton">
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -62,7 +76,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:titleTextColor">@color/white</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.AppBarOverlay.AppBarTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    
+    <style name="AppTheme.PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light">
+    </style>
 </resources>

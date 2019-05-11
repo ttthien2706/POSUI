@@ -1,8 +1,8 @@
 package com.smb_business_chain_management;
 
-import com.smb_business_chain_management.model.City;
-import com.smb_business_chain_management.model.Store;
-import com.smb_business_chain_management.model.User;
+import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.Store;
+import com.smb_business_chain_management.models.User;
 
 import java.util.List;
 
@@ -13,7 +13,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Url;
 
 public interface BusinessChainRESTService {
     @GET("api/shops")
@@ -27,6 +26,11 @@ public interface BusinessChainRESTService {
     @GET("api/cities")
     Call<List<City>> getCities();
 
-    @GET("api/shop/{storeId}")
-    Call<List<User>> getAllUsersOfStore(@Path(value = "storeID", encoded = true) int storeId);
+    @GET("api/shops/{storeId}")
+    Call<List<User>> getAllUsersOfStore(@Path(value = "storeId", encoded = true) int storeId);
+
+    @POST("api/users")
+    Call<User> createUser(@Body User user);
+    @PUT("api/users/{userId}")
+    Call<User> updateUser(@Path(value = "userId" , encoded = true) int userId, @Body User user);
 }

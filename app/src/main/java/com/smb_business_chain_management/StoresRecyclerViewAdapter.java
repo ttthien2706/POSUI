@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -26,8 +27,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.smb_business_chain_management.model.Store;
+import com.smb_business_chain_management.Utils.DataUtils;
+import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.Role;
+import com.smb_business_chain_management.models.Store;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -36,6 +41,8 @@ import static com.smb_business_chain_management.SettingsActivity.utils;
 class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewAdapter.storesViewHolder> {
     private Context context;
     private List<Store> storeList;
+    private List<Role> roleList;
+    private List<City> cityList;
     private FragmentManager fragmentManager;
 
     class MenuItemListener implements View.OnClickListener {
@@ -100,9 +107,10 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
     class CardItemListener implements View.OnClickListener {
         private int position;
         Store data;
+
         FragmentManager fragmentManager;
 
-        CardItemListener(int position, Store data, FragmentManager fragmentManager) {
+        CardItemListener(int position, Store data, List<Store> storeList, List<City> cityList, List<Role> roleList, FragmentManager fragmentManager) {
             this.position = position;
             this.data = data;
             this.fragmentManager = fragmentManager;
@@ -113,6 +121,9 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
         public void onClick(View view) {
             Intent intent = new Intent(view.getContext(), UserListActivity.class);
             intent.putExtra("selectedStore", data);
+            intent.putParcelableArrayListExtra("storeList", (ArrayList<? extends Parcelable>) storeList);
+            intent.putParcelableArrayListExtra("cityList", (ArrayList<? extends Parcelable>) cityList);
+            intent.putParcelableArrayListExtra("roleList", (ArrayList<? extends Parcelable>) roleList);
             view.getContext().startActivity(intent);
         }
     }
@@ -155,8 +166,10 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
         }
     }
 
-    public StoresRecyclerViewAdapter(Context context, List<Store> myData, FragmentManager fragmentManager){
+    public StoresRecyclerViewAdapter(Context context, List<Store> myData, List<City> myCityData, List<Role> mRoleList, FragmentManager fragmentManager){
         this.storeList = myData;
+        this.cityList = myCityData;
+        this.roleList = mRoleList;
         this.context = context;
         this.fragmentManager = fragmentManager;
     }
@@ -203,7 +216,7 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
                 Toast.makeText(holder.storeAddress.getContext(), "Location not found", Toast.LENGTH_SHORT).show();
             }
         }
-        holder.cardView.setOnClickListener(new CardItemListener(position, store, fragmentManager));
+        holder.cardView.setOnClickListener(new CardItemListener(position, store, storeList, cityList, roleList, fragmentManager));
         holder.editStoreButton.setOnClickListener(new MenuItemListener(position, store, fragmentManager));
     }
 

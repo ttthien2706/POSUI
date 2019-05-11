@@ -25,6 +25,8 @@ public abstract class TextValidator implements TextWatcher {
         validate(textView, text);
     }
 
+
+
     @Override
     final public void onTextChanged(CharSequence s, int start, int before, int count) {
     }

@@ -19,4 +19,7 @@
     <string name="requiredTextIsEmpty">\u0020không được để trống!</string>
     <string name="title_user_list">Users</string>
     <string name="title_user_detail">User Detail</string>
+    <string name="activity_settings_name">Cài đặt</string>
+    <string name="confirm_dialog_text">ĐỒNG Ý</string>
+    <string name="progress_waiting">Ứng dụng đang tải dữ liệu</string>
 </resources>
