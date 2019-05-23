@@ -15,15 +15,15 @@
         <include layout="@layout/user_list" />
     </FrameLayout>
 
-    <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_save"
-        app:fab_colorNormal="@color/colorPrimary"
-        app:fab_colorPressed="@color/colorPrimaryDark"
-        tools:menu_backgroundColor="@color/colorFabMenuBackground" />
+    <!--<com.github.clans.fab.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:src="@drawable/ic_save"-->
+        <!--app:fab_colorNormal="@color/colorPrimary"-->
+        <!--app:fab_colorPressed="@color/colorPrimaryDark"-->
+        <!--tools:menu_backgroundColor="@color/colorFabMenuBackground" />-->
 
 </android.support.design.widget.CoordinatorLayout>

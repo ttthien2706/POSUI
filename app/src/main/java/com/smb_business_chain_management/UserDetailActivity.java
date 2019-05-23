@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.github.clans.fab.FloatingActionMenu;
 import com.smb_business_chain_management.models.City;
 import com.smb_business_chain_management.models.Role;
+import com.smb_business_chain_management.views.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,16 +25,16 @@ import java.util.List;
  * item details are presented side-by-side with a list of items
  * in a {@link UserListActivity}.
  */
-public class UserDetailActivity extends AppCompatActivity {
+public class UserDetailActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
-        Toolbar toolbar = findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.detail_toolbar);
+//        setSupportActionBar(toolbar);
 
-        FloatingActionMenu fab = findViewById(R.id.fab);
+//        FloatingActionMenu fab = findViewById(R.id.fab);
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();

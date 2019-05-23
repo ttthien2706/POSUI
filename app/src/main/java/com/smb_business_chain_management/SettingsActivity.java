@@ -43,7 +43,6 @@ public class SettingsActivity extends BaseActivity implements ShopListenerInterf
     BusinessChainRESTService businessChainRESTService;
     private RecyclerView storesRecyclerView;
     private RecyclerView.Adapter rvAdapter;
-    private RecyclerView.LayoutManager rvLayoutManager;
     private DialogFragment createDialog;
 
     @Override
@@ -51,32 +50,21 @@ public class SettingsActivity extends BaseActivity implements ShopListenerInterf
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(getResources().getString(R.string.activity_settings_name));
         setContentView(R.layout.activity_settings);
-        storesRecyclerView = findViewById(R.id.storeRV);
         businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
 
+        storesRecyclerView = findViewById(R.id.storeRV);
 
-//        utils.testFetchGlobal();
         fetchAllStores();
 
         storesRecyclerView.setHasFixedSize(true);
-        rvLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView.LayoutManager rvLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         storesRecyclerView.setLayoutManager(rvLayoutManager);
         storesRecyclerView.addItemDecoration(new HorizontalSpaceItemDecoration(RECYCLER_VIEW_ITEM_HORIZONTAL_PADDING));
 
         FloatingActionButton createStoreFab = findViewById(R.id.ButtonAddStore);
         FloatingActionButton createUserFab = findViewById(R.id.ButtonAddEmployee);
-        createStoreFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createShopButtonClicked();
-            }
-        });
-        createUserFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createUserButtonClicked();
-            }
-        });
+        createStoreFab.setOnClickListener(view -> createShopButtonClicked());
+        createUserFab.setOnClickListener(view -> createUserButtonClicked());
 
         rvAdapter = new StoresRecyclerViewAdapter(getApplicationContext(), testData, dataUtils.mCityList, dataUtils.mRoleList, getFragmentManager());
         storesRecyclerView.setAdapter(rvAdapter);
@@ -90,7 +78,7 @@ public class SettingsActivity extends BaseActivity implements ShopListenerInterf
 
     @Override
     public void onBackPressed() {
-        if (!isTaskRoot() || (createDialog != null && createDialog.getView() != null)) {
+        if (createDialog != null && createDialog.getView() != null) {
             dismissDialogAndGoUp();
         }
         super.onBackPressed();
@@ -333,6 +321,11 @@ public class SettingsActivity extends BaseActivity implements ShopListenerInterf
     @Override
     public List<Role> getAllRoles() {
         return dataUtils.mRoleList;
+    }
+
+    @Override
+    public Store getSelectedStore() {
+        return null;
     }
 
     @Override

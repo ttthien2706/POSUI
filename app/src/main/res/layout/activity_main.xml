@@ -1,81 +1,297 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <LinearLayout
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/navHostMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/newOrderMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/createOrderButton"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_margin="32dp" />
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/createReturnOrderButton"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_margin="32dp"/>
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/importButton"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_margin="32dp" />
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/exportButton"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_margin="32dp" />
-        </LinearLayout>
-        <LinearLayout
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="12dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/newOrderTextLabel"
+            app:layout_constraintEnd_toStartOf="@id/returnOrderMenu">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_margin="32dp"
+                android:src="@drawable/ic_settings" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/newOrderTextLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/customerButton"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_margin="32dp" />
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/manageProductsButton"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_margin="32dp"/>
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/reportButton"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_margin="32dp" />
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/settingsButton"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_margin="32dp" />
-        </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/menu_new_order"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
+            app:layout_constraintEnd_toEndOf="@id/newOrderMenu"
+            app:layout_constraintStart_toStartOf="@id/newOrderMenu" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/returnOrderMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toTopOf="@id/returnOrderTextLabel"
+            app:layout_constraintEnd_toStartOf="@id/horizontal_center_anchor">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_margin="32dp"
+                android:src="@drawable/ic_settings" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/returnOrderTextLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/menu_return_order"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
+            app:layout_constraintEnd_toEndOf="@id/returnOrderMenu"
+            app:layout_constraintStart_toStartOf="@id/returnOrderMenu" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/importOrderMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="12dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toTopOf="@id/importOrderTextLabel"
+            app:layout_constraintStart_toEndOf="@id/horizontal_center_anchor">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_margin="32dp"
+                android:src="@drawable/ic_settings" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/importOrderTextLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/menu_import"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
+            app:layout_constraintEnd_toEndOf="@id/importOrderMenu"
+            app:layout_constraintStart_toStartOf="@id/importOrderMenu" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/exportOrderMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="12dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toTopOf="@id/exportOrderTextLabel"
+            app:layout_constraintStart_toEndOf="@id/importOrderMenu">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_margin="32dp"
+                android:src="@drawable/ic_settings" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/exportOrderTextLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/menu_export"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
+            app:layout_constraintEnd_toEndOf="@id/exportOrderMenu"
+            app:layout_constraintStart_toStartOf="@id/exportOrderMenu" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/productsMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="8dp"
+            app:layout_constraintEnd_toStartOf="@id/horizontal_center_anchor"
+            app:layout_constraintTop_toBottomOf="@id/vertical_center_anchor">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_margin="32dp"
+                android:src="@drawable/ic_settings" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/menu_products"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/productsMenu"
+            app:layout_constraintStart_toStartOf="@id/productsMenu"
+            app:layout_constraintTop_toBottomOf="@+id/productsMenu" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/customersMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="24dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="8dp"
+            app:layout_constraintEnd_toStartOf="@id/productsMenu"
+            app:layout_constraintTop_toBottomOf="@id/vertical_center_anchor">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_margin="32dp"
+                android:src="@drawable/ic_settings" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/menu_customers"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/customersMenu"
+            app:layout_constraintStart_toStartOf="@id/customersMenu"
+            app:layout_constraintTop_toBottomOf="@+id/customersMenu" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/reportMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="8dp"
+            app:layout_constraintStart_toEndOf="@id/horizontal_center_anchor"
+            app:layout_constraintTop_toBottomOf="@id/vertical_center_anchor">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_margin="32dp"
+                android:src="@drawable/ic_settings" />
+
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/menu_report"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/reportMenu"
+            app:layout_constraintStart_toStartOf="@id/reportMenu"
+            app:layout_constraintTop_toBottomOf="@+id/reportMenu" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/settingsMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="8dp"
+            app:layout_constraintStart_toEndOf="@id/reportMenu"
+            app:layout_constraintTop_toBottomOf="@id/vertical_center_anchor">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_margin="32dp"
+                android:src="@drawable/ic_settings" />
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/activity_settings_name"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/settingsMenu"
+            app:layout_constraintStart_toStartOf="@id/settingsMenu"
+            app:layout_constraintTop_toBottomOf="@+id/settingsMenu" />
+
+        <View
+            android:id="@+id/horizontal_center_anchor"
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/vertical_center_anchor"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.DrawerLayout>
+
+    <!--<LinearLayout--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:orientation="vertical"--><!--android:layout_centerVertical="true"--><!--android:layout_centerHorizontal="true">--><!--<LinearLayout--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:orientation="horizontal">--><!--<ImageButton--><!--android:layout_width="100dp"--><!--android:layout_height="100dp"--><!--android:id="@+id/createOrderButton"--><!--android:src="@drawable/ic_launcher_foreground"--><!--android:background="@drawable/ic_launcher_background"--><!--android:layout_margin="32dp" />--><!--<ImageButton--><!--android:layout_width="100dp"--><!--android:layout_height="100dp"--><!--android:id="@+id/createReturnOrderButton"--><!--android:src="@drawable/ic_launcher_foreground"--><!--android:background="@drawable/ic_launcher_background"--><!--android:layout_margin="32dp"/>--><!--<ImageButton--><!--android:layout_width="100dp"--><!--android:layout_height="100dp"--><!--android:id="@+id/importButton"--><!--android:src="@drawable/ic_launcher_foreground"--><!--android:background="@drawable/ic_launcher_background"--><!--android:layout_margin="32dp" />--><!--<ImageButton--><!--android:layout_width="100dp"--><!--android:layout_height="100dp"--><!--android:id="@+id/exportButton"--><!--android:src="@drawable/ic_launcher_foreground"--><!--android:background="@drawable/ic_launcher_background"--><!--android:layout_margin="32dp" />--><!--</LinearLayout>--><!--<LinearLayout--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:orientation="horizontal">--><!--<ImageButton--><!--android:layout_width="100dp"--><!--android:layout_height="100dp"--><!--android:id="@+id/customerButton"--><!--android:src="@drawable/ic_launcher_foreground"--><!--android:background="@drawable/ic_launcher_background"--><!--android:layout_margin="32dp" />--><!--<ImageButton--><!--android:layout_width="100dp"--><!--android:layout_height="100dp"--><!--android:id="@+id/manageProductsButton"--><!--android:src="@drawable/ic_launcher_foreground"--><!--android:background="@drawable/ic_launcher_background"--><!--android:layout_margin="32dp"/>--><!--<ImageButton--><!--android:layout_width="100dp"--><!--android:layout_height="100dp"--><!--android:id="@+id/reportButton"--><!--android:src="@drawable/ic_launcher_foreground"--><!--android:background="@drawable/ic_launcher_background"--><!--android:layout_margin="32dp" />--><!--<ImageButton--><!--android:layout_width="100dp"--><!--android:layout_height="100dp"--><!--android:id="@+id/settingsButton"--><!--android:src="@drawable/ic_launcher_foreground"--><!--android:background="@drawable/ic_launcher_background"--><!--android:layout_margin="32dp" />--><!--</LinearLayout>--><!--</LinearLayout>-->

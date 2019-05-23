@@ -3,6 +3,7 @@ package com.smb_business_chain_management;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,8 +52,9 @@ class UserItemRecyclerViewAdapter extends RecyclerView.Adapter<UserItemRecyclerV
         mTwoPane = twoPane;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.user_list_content, parent, false);
         return new ViewHolder(view);

@@ -42,8 +42,9 @@
         style="@style/DialogInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/EmployeeNameInputLayout"
         app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/role"
@@ -51,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
-        app:layout_constraintStart_toEndOf="@id/store"/>
+        app:layout_constraintStart_toEndOf="@id/store" />
 
     <View
         android:id="@+id/vertical_center_anchor"

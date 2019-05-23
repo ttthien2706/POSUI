@@ -1,6 +1,10 @@
 package com.smb_business_chain_management;
 
+import com.smb_business_chain_management.models.Brand;
+import com.smb_business_chain_management.models.Category;
 import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.Measurement;
+import com.smb_business_chain_management.models.Product;
 import com.smb_business_chain_management.models.Store;
 import com.smb_business_chain_management.models.User;
 
@@ -13,6 +17,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface BusinessChainRESTService {
     @GET("api/shops")
@@ -25,6 +30,12 @@ public interface BusinessChainRESTService {
     Call<Store> deleteStore(@Path(value = "storeId", encoded = true) int storeId);
     @GET("api/cities")
     Call<List<City>> getCities();
+    @GET("api/categories")
+    Call<List<Category>> getCategories();
+    @GET("api/brands")
+    Call<List<Brand>> getBrands();
+    @GET("api/measurements")
+    Call<List<Measurement>> getMeasurements();
 
     @GET("api/shops/{storeId}")
     Call<List<User>> getAllUsersOfStore(@Path(value = "storeId", encoded = true) int storeId);
@@ -33,4 +44,12 @@ public interface BusinessChainRESTService {
     Call<User> createUser(@Body User user);
     @PUT("api/users/{userId}")
     Call<User> updateUser(@Path(value = "userId" , encoded = true) int userId, @Body User user);
+
+    @GET("api/products")
+    Call<List<Product>> getAllProducts();
+
+    @GET("api/products/search")
+    Call<List<Product>> searchProducts(@Query("name") String name);
+    @GET("api/products/{productId}")
+    Call<Product> getProductDetails(@Path(value = "productId", encoded = true) int productId);
 }

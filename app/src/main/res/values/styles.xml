@@ -8,29 +8,52 @@
     </style>
 
     <style name="TextHeaderMargin">
-        <item name="android:layout_marginStart">18dp</item>
-        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginBottom">4dp</item>
     </style>
 
     <style name="TextSubtitleMargin">
-        <item name="android:layout_marginStart">18dp</item>
-        <item name="android:layout_marginBottom">18dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
     </style>
 
-    <style name="Header5" parent="TextHeaderMargin">
+    <style name="Header6" parent="TextHeaderMargin">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">20sp</item>
         <item name="android:letterSpacing">0.15</item>
     </style>
 
-    <style name="Subtitle1" parent="TextSubtitleMargin">
+    <style name="Header5" parent="TextHeaderMargin">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+    
+    <style name="Overline" parent="TextSubtitleMargin">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.8</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Subtitle2" parent="TextSubtitleMargin">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:letterSpacing">0.1</item>
     </style>
 
-    <style name="Subtitle1WithDrawable" parent="Subtitle1">
+    <style name="Subtitle1">
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+
+    <style name="Caption">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.4</item>
+    </style>
+
+    <style name="Subtitle2WithDrawable" parent="Subtitle2">
         <item name="android:drawableTint">@color/VectorColorActiveUnfocused</item>
         <item name="android:gravity">center_vertical</item>
     </style>
@@ -53,7 +76,7 @@
         <item name="android:layout_marginEnd">16dp</item>
     </style>
 
-    <style name="ProgressText" parent="Subtitle1">
+    <style name="ProgressText" parent="Subtitle2">
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -67,9 +90,8 @@
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginBottom">16dp</item>
     </style>
-    
-    <style name="MaterialButton">
-    </style>
+
+    <style name="MaterialButton"></style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -83,7 +105,7 @@
     <style name="AppTheme.AppBarOverlay.AppBarTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
     </style>
-    
-    <style name="AppTheme.PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light">
-    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light"></style>
+
 </resources>

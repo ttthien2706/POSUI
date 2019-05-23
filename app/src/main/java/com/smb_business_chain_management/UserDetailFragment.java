@@ -151,6 +151,9 @@ public class UserDetailFragment extends DialogFragment {
         wardSpinner.setAdapter(wardAdapter);
         roleSpinner.setAdapter(roleAdapter);
 
+        storeSpinner.setSelection(mStoreList.indexOf(listener.getSelectedStore()));
+        roleSpinner.setSelection(mItem.getRoleId()-1);
+
         citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
@@ -235,6 +238,7 @@ public class UserDetailFragment extends DialogFragment {
             THIS_ACTION_BAR_MENU_CONFIRM_BUTTON.setEnabled(IS_VALIDATED_ADDRESS && IS_VALIDATED_NAME);
         } else {
             IS_VALIDATED_NAME = true;
+            textView.setError(null);
             THIS_ACTION_BAR_MENU_CONFIRM_BUTTON.setEnabled(IS_VALIDATED_ADDRESS && IS_VALIDATED_NAME);
         }
     }

@@ -31,6 +31,7 @@ import com.smb_business_chain_management.Utils.DataUtils;
 import com.smb_business_chain_management.models.City;
 import com.smb_business_chain_management.models.Role;
 import com.smb_business_chain_management.models.Store;
+import com.smb_business_chain_management.views.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,7 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
 
         FragmentManager fragmentManager;
 
-        CardItemListener(int position, Store data, List<Store> storeList, List<City> cityList, List<Role> roleList, FragmentManager fragmentManager) {
+        CardItemListener(int position, Store data, FragmentManager fragmentManager) {
             this.position = position;
             this.data = data;
             this.fragmentManager = fragmentManager;
@@ -121,6 +122,7 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
         public void onClick(View view) {
             Intent intent = new Intent(view.getContext(), UserListActivity.class);
             intent.putExtra("selectedStore", data);
+            intent.putExtra("isParentRoot", ((BaseActivity) view.getContext()).isTaskRoot());
             intent.putParcelableArrayListExtra("storeList", (ArrayList<? extends Parcelable>) storeList);
             intent.putParcelableArrayListExtra("cityList", (ArrayList<? extends Parcelable>) cityList);
             intent.putParcelableArrayListExtra("roleList", (ArrayList<? extends Parcelable>) roleList);
@@ -216,7 +218,7 @@ class StoresRecyclerViewAdapter extends RecyclerView.Adapter<StoresRecyclerViewA
                 Toast.makeText(holder.storeAddress.getContext(), "Location not found", Toast.LENGTH_SHORT).show();
             }
         }
-        holder.cardView.setOnClickListener(new CardItemListener(position, store, storeList, cityList, roleList, fragmentManager));
+        holder.cardView.setOnClickListener(new CardItemListener(position, store, fragmentManager));
         holder.editStoreButton.setOnClickListener(new MenuItemListener(position, store, fragmentManager));
     }
 

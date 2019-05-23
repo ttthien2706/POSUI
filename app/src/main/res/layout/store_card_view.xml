@@ -20,7 +20,7 @@
                 android:layout_centerVertical="true">
                 <TextView
                     android:id="@+id/StoreName"
-                    style="@style/Header5"
+                    style="@style/Header6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -29,7 +29,7 @@
 
                 <TextView
                     android:id="@+id/StorePhoneNo"
-                    style="@style/Subtitle1"
+                    style="@style/Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/StoreName"
@@ -80,7 +80,7 @@
             android:layout_below="@id/CardMainFAB"
             android:drawableStart="@drawable/ic_location"
             android:layout_marginStart="36dp"
-            style="@style/Subtitle1WithDrawable"
+            style="@style/Subtitle2WithDrawable"
             android:text="Nguyễn Huệ, Q.1"/>
         <TextView
             android:id="@+id/ActiveStaff"
@@ -89,7 +89,7 @@
             android:layout_below="@id/AddressTextView"
             android:drawableStart="@drawable/ic_people"
             android:layout_marginStart="36dp"
-            style="@style/Subtitle1WithDrawable"
+            style="@style/Subtitle2WithDrawable"
             android:text="1"/>
         <TextView
             android:id="@+id/IsActive"
@@ -98,7 +98,7 @@
             android:layout_below="@id/ActiveStaff"
             android:drawableLeft="@drawable/ic_active"
             android:layout_marginStart="36dp"
-            style="@style/Subtitle1WithDrawable"
+            style="@style/Subtitle2WithDrawable"
             android:text="Đang Hoạt Động"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

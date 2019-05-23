@@ -44,6 +44,7 @@ public class UserListActivity extends BaseActivity implements ShopListenerInterf
     private static List<Store> mStoreList;
     private static List<City> mCityList;
     private static List<Role> mRoleList;
+    private static Store mSelectedStore;
 
     private RecyclerView.Adapter userRecyclerViewAdapter;
 
@@ -59,28 +60,16 @@ public class UserListActivity extends BaseActivity implements ShopListenerInterf
         RecyclerView userRecyclerView = findViewById(R.id.user_list);
         assert userRecyclerView != null;
         mIntent = getIntent();
-        Store selectedStore = mIntent.getParcelableExtra("selectedStore");
+        mSelectedStore = mIntent.getParcelableExtra("selectedStore");
         mStoreList = mIntent.getParcelableArrayListExtra("storeList");
         mCityList = mIntent.getParcelableArrayListExtra("cityList");
         mRoleList = mIntent.getParcelableArrayListExtra("roleList");
 
-        fetchAllUsersOfSelectedStore(selectedStore.getId());
+        fetchAllUsersOfSelectedStore(mSelectedStore.getId());
 
         RecyclerView.LayoutManager userRecyclerViewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         userRecyclerView.setLayoutManager(userRecyclerViewLayoutManager);
 
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        toolbar.setTitle(getTitle());
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -110,7 +99,7 @@ public class UserListActivity extends BaseActivity implements ShopListenerInterf
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            NavUtils.navigateUpFromSameTask(this);
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -181,6 +170,11 @@ public class UserListActivity extends BaseActivity implements ShopListenerInterf
     @Override
     public List<Role> getAllRoles() {
         return mRoleList;
+    }
+
+    @Override
+    public Store getSelectedStore() {
+        return mSelectedStore;
     }
 
     @Override

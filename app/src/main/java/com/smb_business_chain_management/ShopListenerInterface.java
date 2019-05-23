@@ -23,6 +23,7 @@ public interface ShopListenerInterface {
 
     Store findStoreByName(String storeName);
     Store findStoreById(int id);
+    Store getSelectedStore();
 
     void addOneStaffMember(Store store);
 }
