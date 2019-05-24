@@ -151,7 +151,7 @@ public class UserDetailFragment extends DialogFragment {
         wardSpinner.setAdapter(wardAdapter);
         roleSpinner.setAdapter(roleAdapter);
 
-        storeSpinner.setSelection(mStoreList.indexOf(listener.getSelectedStore()));
+        storeSpinner.setSelection(listener.getSelectedStore().getId() - 1);
         roleSpinner.setSelection(mItem.getRoleId()-1);
 
         citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -1,8 +1,7 @@
 package com.smb_business_chain_management;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -12,7 +11,6 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.smb_business_chain_management.models.Brand;
@@ -31,6 +29,8 @@ public class ProductDetailFragment extends Fragment {
     public static final String ARG_CATEGORY = "category";
     public static final String ARG_BRAND = "brand";
     public static final String ARG_MEASUREMENT = "measurement";
+
+    private static final String TAG = ProductDetailFragment.class.getSimpleName();
 
     private static Product mItem;
     private static List<SubProduct> mSubProductList;
@@ -63,18 +63,8 @@ public class ProductDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mItem = getArguments().getParcelable(ARG_CURRENT_PRODUCT);
-            mSubProductList = mItem.getSubProducts();
-
-            SparseArray<Category> categories = getArguments().getSparseParcelableArray(ARG_CATEGORY);
-            SparseArray<Brand> brands = getArguments().getSparseParcelableArray(ARG_BRAND);
-            SparseArray<Measurement> measurements = getArguments().getSparseParcelableArray(ARG_MEASUREMENT);
-
-            categoryName = (categories != null && categories.size() > 0) ? categories.get(mItem.getCategoryId()).getName() : "N/A";
-            brandName = (brands != null && brands.size() > 0) ? brands.get(mItem.getBrandId()).getName() : "N/A";
-            measurementName = (measurements != null && measurements.size() > 0) ? measurements.get(mItem.getMeasurementId()).getName() : "N/A";
+            getArgumentsAndPopulateSupportingArrays(this);
         }
     }
 
@@ -87,7 +77,21 @@ public class ProductDetailFragment extends Fragment {
 
         handleTextViews();
         handleSubProductRecyclerView();
+
         return view;
+    }
+
+    private void getArgumentsAndPopulateSupportingArrays(@NonNull Fragment fragment){
+        mItem = fragment.getArguments().getParcelable(ARG_CURRENT_PRODUCT);
+        mSubProductList = mItem.getSubProducts();
+
+        SparseArray<Category> categories = fragment.getArguments().getSparseParcelableArray(ARG_CATEGORY);
+        SparseArray<Brand> brands = fragment.getArguments().getSparseParcelableArray(ARG_BRAND);
+        SparseArray<Measurement> measurements = fragment.getArguments().getSparseParcelableArray(ARG_MEASUREMENT);
+
+        categoryName = (categories != null && categories.size() > 0) ? categories.get(mItem.getCategoryId()).getName() : "N/A";
+        brandName = (brands != null && brands.size() > 0) ? brands.get(mItem.getBrandId()).getName() : "N/A";
+        measurementName = (measurements != null && measurements.size() > 0) ? measurements.get(mItem.getMeasurementId()).getName() : "N/A";
     }
 
     private void handleSubProductRecyclerView() {
@@ -128,7 +132,7 @@ public class ProductDetailFragment extends Fragment {
         unitTextView.setText(measurementName);
     }
 
-    private void viewLookup(View view) {
+    private void viewLookup(@NonNull View view) {
         nameTextView = view.findViewById(R.id.productDetailName);
         retailPriceTextView = view.findViewById(R.id.productDetailRetailPrice);
         wholesalePriceTextView = view.findViewById(R.id.productDetailWholesalePrice);

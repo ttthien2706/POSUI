@@ -1,10 +1,7 @@
 package com.smb_business_chain_management;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -27,9 +24,7 @@ import com.smb_business_chain_management.Utils.AppUtils;
 import com.smb_business_chain_management.Utils.TextValidator;
 import com.smb_business_chain_management.models.City;
 import com.smb_business_chain_management.models.District;
-import com.smb_business_chain_management.models.Role;
 import com.smb_business_chain_management.models.Store;
-import com.smb_business_chain_management.models.User;
 import com.smb_business_chain_management.models.Ward;
 
 import java.util.ArrayList;
@@ -91,142 +86,6 @@ public class CreateStoreDialogFragment extends DialogFragment {
         THIS_ACTION_BAR_MENU_CONFIRM_BUTTON.setOnMenuItemClickListener(confirmButtonClicked);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
-//    @Override
-//    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-//        super.onCreateDialog(savedInstanceState);
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        LayoutInflater inflater = getActivity().getLayoutInflater();
-//
-//        final View dialogView = inflater.inflate(R.layout.create_store_dialog, null);
-//        builder.setView(dialogView);
-//
-//        final Spinner citySpinner = dialogView.findViewById(R.id.city);
-//        final Spinner districtSpinner = dialogView.findViewById(R.id.district);
-//        final Spinner wardSpinner = dialogView.findViewById(R.id.ward);
-//
-//        List<City> allCities = new ArrayList(0);
-//        List<District> curDistricts = new ArrayList(0);
-//        List<Ward> curWards = new ArrayList(0);
-//
-//        ArrayAdapter<City> cityAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, allCities);
-//        utils.fetchAllAdministrativeUnits(allCities, cityAdapter);
-//        citySpinner.setAdapter(cityAdapter);
-//
-//        ArrayAdapter<District> districtAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, curDistricts);
-//        districtSpinner.setAdapter(districtAdapter);
-//
-//        ArrayAdapter<Ward> wardAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, curWards);
-//        wardSpinner.setAdapter(wardAdapter);
-//
-//        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-//                City curCity = (City) adapterView.getAdapter().getItem((int) id);
-//                curDistricts.clear();
-//                curDistricts.addAll(curCity.getDistricts());
-//                districtAdapter.notifyDataSetChanged();
-//
-//                curWards.clear();
-//                curWards.addAll(curDistricts.get(0).getWards());
-//                wardAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
-//
-//        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-//                District curDistrict = (District) adapterView.getAdapter().getItem((int) id);
-//
-//                curWards.clear();
-//                curWards.addAll(curDistrict.getWards());
-//                wardAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
-//
-//        builder.setTitle("TẠO CỬA HÀNG")
-//                .setPositiveButton("ĐỒNG Ý", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-////                        nameInput = ((AlertDialog) dialogInterface).findViewById(R.id.Name);
-////                        usernameInput = ((AlertDialog) dialogInterface).findViewById(R.id.Address);
-//                        phoneInput = ((AlertDialog) dialogInterface).findViewById(R.id.Phone);
-//
-//                        String storeName = nameInput.getText().toString();
-//                        String storeAddress = addressInput.getText().toString();
-//                        String storePhone = phoneInput.getText().toString();
-//
-//                        String city = citySpinner.getSelectedItem().toString();
-//                        String district = districtSpinner.getSelectedItem().toString();
-//                        String ward = wardSpinner.getSelectedItem().toString();
-//
-//                        int cityId = allCities.get((int) citySpinner.getSelectedItemId()).getId();
-//                        int districtId = curDistricts.get((int) districtSpinner.getSelectedItemId()).getId();
-//                        int wardId = curWards.get((int) wardSpinner.getSelectedItemId()).getId();
-//
-//                        boolean storeIsActive = isActiveSwitch.isChecked();
-//
-//                        listener.RESTAddNewStore(storeName, storePhone, storeAddress, 0, storeIsActive, cityId, districtId, wardId);
-//                    }
-//                })
-//                .setNegativeButton("HUỶ", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                    }
-//                });
-//        AlertDialog dialog = builder.create();
-//
-//        nameInput = dialogView.findViewById(R.id.Name);
-//        addressInput = dialogView.findViewById(R.id.Address);
-////        phoneInput = dialogView.findViewById(R.id.Phone);
-//        nameInput.setOnFocusChangeListener((view, hasFocus) -> {
-//            TextValidator validator = new TextValidator((TextView)view) {
-//                @Override
-//                public void validate(TextView textView, String text) {
-//                    validateName(dialog, textView, text);
-//                }
-//            };
-//            validator.validate((TextView)view, ((TextView) view).getText().toString());
-//        });
-//        nameInput.addTextChangedListener(new TextValidator(nameInput) {
-//            @Override
-//            public void validate(TextView textView, String text) {
-//                validateName(dialog, textView, text);
-//            }
-//        });
-//
-//        addressInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean b) {
-//                TextValidator validator = new TextValidator((TextView)view) {
-//                    @Override
-//                    public void validate(TextView textView, String text) {
-//                        validateAddress(dialog, textView, text);
-//                    }
-//                };
-//                validator.validate((TextView)view, ((TextView) view).getText().toString());
-//            }
-//        });
-//        addressInput.addTextChangedListener(new TextValidator(addressInput) {
-//            @Override
-//            public void validate(TextView textView, String text) {
-//                validateAddress(dialog, textView, text);
-//            }
-//        });
-//
-//        dialog.setOnShowListener(dialogInterface -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false));
-//
-//        return dialog;
-//    }
 
     @Nullable
     @Override

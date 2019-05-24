@@ -52,4 +52,7 @@ public interface BusinessChainRESTService {
     Call<List<Product>> searchProducts(@Query("name") String name);
     @GET("api/products/{productId}")
     Call<Product> getProductDetails(@Path(value = "productId", encoded = true) int productId);
+
+    @POST("api/products")
+    Call<Product> createProduct(@Body Product product);
 }

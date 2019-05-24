@@ -1,10 +1,16 @@
 package com.smb_business_chain_management;
 
+import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,21 +23,29 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.smb_business_chain_management.Utils.DataUtils;
+import com.smb_business_chain_management.models.City;
 import com.smb_business_chain_management.models.Product;
+import com.smb_business_chain_management.models.Role;
+import com.smb_business_chain_management.models.Store;
+import com.smb_business_chain_management.models.User;
 import com.smb_business_chain_management.views.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProductActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ShopListenerInterface {
 
     private static final String TAG = ProductActivity.class.getSimpleName();
     protected BusinessChainRESTService businessChainRESTService;
@@ -42,6 +56,10 @@ public class ProductActivity extends BaseActivity
     private RecyclerView productsRecyclerView;
     private RecyclerView.Adapter productRecyclerViewAdapter;
     private TextView emptyView;
+    private FloatingActionButton createButton;
+
+    private DialogFragment createDialog;
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -74,23 +92,14 @@ public class ProductActivity extends BaseActivity
         productRecyclerViewAdapter = new ProductRecyclerViewAdapter(this, mProductList, getFragmentManager());
         productsRecyclerView.setAdapter(productRecyclerViewAdapter);
 
+        createButton = findViewById(R.id.createButton);
+        createButton.setOnClickListener(createButtonClicked);
+
         getAllProducts();
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(productsRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL);
         productsRecyclerView.addItemDecoration(dividerItemDecoration);
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -166,6 +175,56 @@ public class ProductActivity extends BaseActivity
         });
     }
 
+    View.OnClickListener createButtonClicked = view -> {
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.addStoreMenu));
+        FragmentManager fragmentManager = getFragmentManager();
+        createDialog = new CreateProductDialogFragment();
+
+        Bundle fragmentArgument = new Bundle();
+
+        fragmentArgument.putSparseParcelableArray(ProductDetailFragment.ARG_CATEGORY, mDataUtils.mCategoryMap);
+        fragmentArgument.putSparseParcelableArray(ProductDetailFragment.ARG_BRAND, mDataUtils.mBranTheWheelyWheelyLegsNoFreely);
+        fragmentArgument.putSparseParcelableArray(ProductDetailFragment.ARG_MEASUREMENT, mDataUtils.mMeasurementMap);
+
+        createDialog.setArguments(fragmentArgument);
+
+        // The device is smaller, so show the fragment fullscreen
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        transaction.replace(android.R.id.content, createDialog)
+                .addToBackStack(null).commit();
+        invalidateOptionsMenu();
+        if (getSupportActionBar() != null) {
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_24px);
+        }
+
+    };
+
+    protected void dismissDialogAndGoUp(){
+        dialogDismissAnimate(createDialog.getView());
+        createDialog.dismiss();
+//        FloatingActionMenu fabMenu = findViewById(R.id.AddButton);
+//        fabMenu.close(true);
+        if(isTaskRootOrIsParentTaskRoot()) Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_menu_24px);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.activity_settings_name));
+    }
+
+    public void dialogDismissAnimate(View view) {
+        AlphaAnimation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setDuration(200);
+        view.setAnimation(fadeOut);
+        view.startAnimation(fadeOut);
+    }
+
+    protected boolean isTaskRootOrIsParentTaskRoot() {
+        if (getParent() == null) return isTaskRoot();
+        else return getParent().isTaskRoot();
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -208,6 +267,16 @@ public class ProductActivity extends BaseActivity
         else if (id == R.id.action_get_all){
             getAllProducts();
         }
+        else if (id == android.R.id.home) {
+            if (createDialog != null && createDialog.getView() != null) {
+                dismissDialogAndGoUp();
+            }
+        }
+        else if (id == R.id.confirm){
+            if (createDialog != null){
+                dismissDialogAndGoUp();
+            }
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -236,19 +305,91 @@ public class ProductActivity extends BaseActivity
         return true;
     }
 
-    public class HorizontalSpaceItemDecoration extends RecyclerView.ItemDecoration {
-        private final int horizontalWidthSpace;
+    @Override
+    public void RESTAddNewStore(Store store) {
 
-        public HorizontalSpaceItemDecoration(int verticalHeightSpace) {
-            this.horizontalWidthSpace = verticalHeightSpace;
-        }
+    }
 
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.right = horizontalWidthSpace / 2;
-            outRect.left = horizontalWidthSpace / 2;
-            outRect.bottom = horizontalWidthSpace / 2;
-            outRect.top = horizontalWidthSpace / 2;
-        }
+    @Override
+    public void RESTEditStore(int id, String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, int cityId, int districtId, int wardId) {
+
+    }
+
+    @Override
+    public void RESTDeleteStore(int id, int position) {
+
+    }
+
+    @Override
+    public void RESTAddNewUser(User user) {
+
+    }
+
+    @Override
+    public void RESTEditUser(User user, int storeId, Fragment currentFragment) {
+
+    }
+
+    @Override
+    public void RESTAddNewProduct(Product product) {
+        Call<Product> call = businessChainRESTService.createProduct(product);
+
+        call.enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if (response.code() == 200){
+                    addProduct(response.body());
+                }
+                else {
+                    Log.e(TAG, String.valueOf(response.code()));
+                    Log.e(TAG, response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
+
+    private void addProduct(Product product) {
+        mProductList.add(product);
+        productRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public List<Store> getAllStores() {
+        return null;
+    }
+
+    @Override
+    public List<City> getAllCities() {
+        return null;
+    }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return null;
+    }
+
+    @Override
+    public Store findStoreByName(String storeName) {
+        return null;
+    }
+
+    @Override
+    public Store findStoreById(int id) {
+        return null;
+    }
+
+    @Override
+    public Store getSelectedStore() {
+        return null;
+    }
+
+    @Override
+    public void addOneStaffMember(Store store) {
+
     }
 }

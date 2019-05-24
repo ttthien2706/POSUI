@@ -84,7 +84,7 @@
         <item name="android:backgroundTint">@color/colorPrimary</item>
     </style>
 
-    <style name="DialogInput">
+    <style name="DialogInputMargin">
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_marginTop">16dp</item>

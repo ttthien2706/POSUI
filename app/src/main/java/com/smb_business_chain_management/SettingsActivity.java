@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.smb_business_chain_management.Utils.AppUtils;
 import com.smb_business_chain_management.Utils.DataUtils;
 import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.Product;
 import com.smb_business_chain_management.models.Role;
 import com.smb_business_chain_management.models.Store;
 import com.smb_business_chain_management.models.User;
@@ -73,7 +74,7 @@ public class SettingsActivity extends BaseActivity implements ShopListenerInterf
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         handleActionBarBehaviour(item.getItemId());
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -365,6 +366,11 @@ public class SettingsActivity extends BaseActivity implements ShopListenerInterf
                 Log.e(TAG, throwable.toString());
             }
         });
+    }
+
+    @Override
+    public void RESTAddNewProduct(Product product) {
+
     }
 
     public class HorizontalSpaceItemDecoration extends RecyclerView.ItemDecoration {

@@ -63,4 +63,20 @@
     <string name="search_product_label">Tìm sản phẩm</string>
     <string name="product_detail_hint">Chọn một sản phẩm từ danh sách để xem chi tiết của nó.</string>
     <string name="sub_product_list_empty">Không có phiên bản nào cho sản phẩm này</string>
+    <string name="product_basic_info_label">Thông tin cơ bản</string>
+    <string name="product_info_name">Tên sản phẩm</string>
+    <string name="product_code_label">Mã</string>
+    <string name="sku_input_hint">Mã SKU (hệ thống sẽ tự tạo nếu để trống)</string>
+    <string name="barcode_input_hint">Mã vạch</string>
+    <string name="product_price_label">Giá và số lượng</string>
+    <string name="product_unit_hint">Đơn vị</string>
+    <string name="import_price_hint">Giá nhập</string>
+    <string name="retail_price_hint">Giá bán lẻ</string>
+    <string name="wholesale_price_hint">Giá bán sỉ</string>
+    <string name="product_desc_label">Mô tả</string>
+    <string name="product_detail_info_label">Thông tin chi tiết</string>
+    <string name="have_subproduct_label">Có phiên bản</string>
+    <string name="unit_label">Đơn vị</string>
+    <string name="brand_label">Nhãn hiệu</string>
+    <string name="category_label">Loại hàng</string>
 </resources>

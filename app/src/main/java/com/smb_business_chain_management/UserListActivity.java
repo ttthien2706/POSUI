@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.Product;
 import com.smb_business_chain_management.models.Role;
 import com.smb_business_chain_management.models.Store;
 import com.smb_business_chain_management.models.User;
@@ -198,5 +199,10 @@ public class UserListActivity extends BaseActivity implements ShopListenerInterf
         });
         this.getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
         this.getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void RESTAddNewProduct(Product product) {
+
     }
 }

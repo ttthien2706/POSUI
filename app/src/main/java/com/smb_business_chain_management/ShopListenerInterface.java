@@ -3,6 +3,7 @@ package com.smb_business_chain_management;
 import android.support.v4.app.Fragment;
 
 import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.Product;
 import com.smb_business_chain_management.models.Role;
 import com.smb_business_chain_management.models.Store;
 import com.smb_business_chain_management.models.User;
@@ -16,6 +17,8 @@ public interface ShopListenerInterface {
 
     void RESTAddNewUser(User user);
     void RESTEditUser(User user, int storeId, Fragment currentFragment);
+
+    void RESTAddNewProduct(Product product);
 
     List<Store> getAllStores();
     List<City> getAllCities();

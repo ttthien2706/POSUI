@@ -138,6 +138,25 @@ public class Product implements Parcelable
         this.subProducts = product.getSubProducts();
     }
 
+    public Product(int categoryId, int brandId, String description, int measurementId, boolean multipleEditions, boolean uniqueEditionPrice, String name, int quantity, boolean isActive, String sku, String barcode, int importPrice, int retailPrice, int wholesalePrice, List<Store> stores, List<SubProduct> subProducts) {
+        this.categoryId = categoryId;
+        this.brandId = brandId;
+        this.description = description;
+        this.measurementId = measurementId;
+        this.multipleEditions = multipleEditions;
+        this.uniqueEditionPrice = uniqueEditionPrice;
+        this.name = name;
+        this.quantity = quantity;
+        this.isActive = isActive;
+        this.sku = sku;
+        this.barcode = barcode;
+        this.importPrice = importPrice;
+        this.retailPrice = retailPrice;
+        this.wholesalePrice = wholesalePrice;
+        this.stores = stores;
+        this.subProducts = subProducts;
+    }
+
     public int getId() {
         return id;
     }
