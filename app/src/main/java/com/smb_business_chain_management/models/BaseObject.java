@@ -76,4 +76,8 @@ public class BaseObject implements Parcelable {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

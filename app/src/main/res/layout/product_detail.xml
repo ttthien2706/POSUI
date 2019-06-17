@@ -129,7 +129,7 @@
             android:layout_width="1px"
             android:layout_height="match_parent"
             android:id="@+id/middleConstraint"
-            android:layout_toEndOf="@id/productDetailRetailPrice"
+            android:layout_toEndOf="@id/productDetailSKU"
             android:layout_marginStart="12dp"/>
 
         <TextView
@@ -250,7 +250,8 @@
         android:scrollbars="vertical"
         android:layout_marginTop="12dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="2dp">
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="4dp">
     </android.support.v7.widget.RecyclerView>
 
 </android.support.constraint.ConstraintLayout>

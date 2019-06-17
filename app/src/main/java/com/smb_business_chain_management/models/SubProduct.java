@@ -1,5 +1,6 @@
 package com.smb_business_chain_management.models;
 
+import java.io.Serializable;
 import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,9 +8,11 @@ import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SubProduct implements Parcelable
+public class SubProduct implements Parcelable, Serializable
 {
-
+    @SerializedName("id")
+    @Expose
+    private int id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -63,6 +66,23 @@ public class SubProduct implements Parcelable
     }
 
     public SubProduct() {
+        this.id = -1;
+        this.name = "";
+        this.sku = "";
+        this.barcode = "";
+        this.importPrice = 0;
+        this.retailPrice = 0;
+        this.wholesalePrice = 0;
+        this.quantity = 0;
+        this.subProductValues = null;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

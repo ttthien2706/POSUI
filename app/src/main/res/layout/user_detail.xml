@@ -6,7 +6,7 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/UsernameInputLayout"
-        style="@style/DialogInput"
+        style="@style/DialogInputMargin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/EmployeeNameInputLayout"
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/EmployeeNameInputLayout"
-        style="@style/DialogInput"
+        style="@style/DialogInputMargin"
         app:layout_constraintBottom_toTopOf="@id/role"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,23 +39,23 @@
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/store"
-        style="@style/DialogInput"
+        style="@style/DialogInputMargin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/EmployeeNameInputLayout"
-        app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
+        app:layout_constraintBottom_toTopOf="@id/horizontal_center_anchor"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/role"
-        style="@style/DialogInput"
+        style="@style/DialogInputMargin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/vertical_center_anchor"
+        app:layout_constraintBottom_toTopOf="@id/horizontal_center_anchor"
         app:layout_constraintStart_toEndOf="@id/store" />
 
     <View
-        android:id="@+id/vertical_center_anchor"
+        android:id="@+id/horizontal_center_anchor"
         android:layout_width="match_parent"
         android:layout_height="1px"
         app:layout_constraintTop_toTopOf="parent"
@@ -65,10 +65,10 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/AddressInputLayout"
-        style="@style/DialogInput"
+        style="@style/DialogInputMargin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vertical_center_anchor"
+        app:layout_constraintTop_toBottomOf="@id/horizontal_center_anchor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/text_hint_address">
@@ -83,7 +83,7 @@
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/ward"
-        style="@style/DialogInput"
+        style="@style/DialogInputMargin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/AddressInputLayout"
         android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/district"
-        style="@style/DialogInput"
+        style="@style/DialogInputMargin"
         app:layout_constraintStart_toEndOf="@id/ward"
         app:layout_constraintTop_toBottomOf="@id/AddressInputLayout"
         android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/city"
-        style="@style/DialogInput"
+        style="@style/DialogInputMargin"
         app:layout_constraintStart_toEndOf="@id/district"
         app:layout_constraintTop_toBottomOf="@id/AddressInputLayout"
         android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/PhoneInputLayout"
-        style="@style/DialogInput"
+        style="@style/DialogInputMargin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ward"

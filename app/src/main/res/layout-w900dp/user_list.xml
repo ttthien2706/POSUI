@@ -10,7 +10,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".UserListActivity">
+    tools:context=".func_settings.UserListActivity">
 
     <!--
     This layout is a two-pane layout for the Users
@@ -27,7 +27,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.smb_business_chain_management.UserListActivity"
+        tools:context="com.smb_business_chain_management.func_settings.UserListActivity"
         tools:listitem="@layout/user_list_content" />
 
     <FrameLayout

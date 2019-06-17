@@ -6,7 +6,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Store implements Parcelable {
+import java.io.Serializable;
+
+public class Store implements Parcelable, Serializable {
     @SerializedName("id")
     @Expose
     private int id;
@@ -43,6 +45,9 @@ public class Store implements Parcelable {
     @SerializedName("fullAddress")
     @Expose
     private String fullAddress;
+    @SerializedName("shopQuantity")
+    @Expose
+    private int quantity;
 
     public Store(String name, String phoneNumber, String address, Integer staffNumber, boolean isActive, int cityId, int districtId, int wardId){
         this.name = name;
@@ -212,6 +217,13 @@ public class Store implements Parcelable {
         this.fullAddress = fullAddress;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
     @Override
     public String toString() {
         return String.format("Cửa hàng %s", this.getName());

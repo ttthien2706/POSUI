@@ -23,6 +23,8 @@ public class DataUtils {
 
     public List<City> mCityList = new ArrayList<>(0);
     public List<Role> mRoleList = new ArrayList<>(0);
+
+    public SparseArray<City> mCityMap = new SparseArray<>();
     public SparseArray<Category> mCategoryMap = new SparseArray<>();
     public SparseArray<Brand> mBranTheWheelyWheelyLegsNoFreely = new SparseArray<>();
     public SparseArray<Measurement> mMeasurementMap = new SparseArray<>();
@@ -52,8 +54,8 @@ public class DataUtils {
                 }
             }
             @Override
-            public void onFailure(Call<List<Measurement>> call, Throwable t) {
-
+            public void onFailure(Call<List<Measurement>> call, Throwable throwable) {
+                throwable.printStackTrace();
             }
         });
     }
@@ -66,8 +68,11 @@ public class DataUtils {
             public void onResponse(Call<List<City>> call, Response<List<City>> response) {
                 if (response.code() == 200) {
                     List<City> responseList = response.body();
+                    assert response.body() != null;
+                    response.body().forEach(item -> mCityMap.put(item.getId(), item));
                     mCityList.clear();
                     mCityList.addAll(responseList);
+
                 } else {
                     Log.e(TAG, response.message());
                 }
@@ -76,6 +81,7 @@ public class DataUtils {
             @Override
             public void onFailure(Call<List<City>> call, Throwable throwable) {
                 Log.e(TAG, throwable.toString());
+                throwable.printStackTrace();
             }
         });
     }
@@ -103,8 +109,9 @@ public class DataUtils {
             }
 
             @Override
-            public void onFailure(Call<List<Category>> call, Throwable t) {
-                Log.e(TAG, t.toString());
+            public void onFailure(Call<List<Category>> call, Throwable throwable) {
+                Log.e(TAG, throwable.toString());
+                throwable.printStackTrace();
             }
         });
     }
@@ -123,9 +130,16 @@ public class DataUtils {
             }
 
             @Override
-            public void onFailure(Call<List<Brand>> call, Throwable t) {
-
+            public void onFailure(Call<List<Brand>> call, Throwable throwable) {
+                throwable.printStackTrace();
             }
         });
+    }
+
+    public String getAddressString(int cityId, int districtId, int wardId){
+        String ward = mCityMap.get(cityId).findDistrictById((long) districtId).findWardById((long) wardId).getName();
+        String district = mCityMap.get(cityId).findDistrictById((long) districtId).getName();
+        String city = mCityMap.get(cityId).getName();
+        return ", " + ward + ", " + district + ", " + city;
     }
 }
