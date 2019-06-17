@@ -11,6 +11,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Order implements Parcelable, Serializable {
     private int id;
+    @SerializedName("receiptCode")
+    @Expose
+    private String receiptCode;
     @SerializedName("shopId")
     @Expose
     private int shopId;
@@ -21,6 +24,9 @@ public class Order implements Parcelable, Serializable {
     @SerializedName("payment")
     @Expose
     private String payment = "";
+    @SerializedName("receiptTotalPrice")
+    @Expose
+    private int receiptTotalPrice = 0;
     @SerializedName("productReceiptDetails")
     @Expose
     private List<Product> products = new ArrayList<>(0);
@@ -38,6 +44,7 @@ public class Order implements Parcelable, Serializable {
     protected Order(Parcel in) {
         this.shopId = ((int) in.readValue((int.class.getClassLoader())));
         this.payment = ((String) in.readValue((String.class.getClassLoader())));
+        this.receiptCode = ((String) in.readValue(String.class.getClassLoader()));
         in.readList(this.products, (com.smb_business_chain_management.models.Product.class.getClassLoader()));
     }
     /**
@@ -46,7 +53,6 @@ public class Order implements Parcelable, Serializable {
      */
     public Order() {
     }
-
     /**
      *
      * @param payment
@@ -66,6 +72,12 @@ public class Order implements Parcelable, Serializable {
     public void setId(int id) {
         this.id = id;
     }
+    public String getReceiptCode() {
+        return receiptCode;
+    }
+    public void setReceiptCode(String receiptCode) {
+        this.receiptCode = receiptCode;
+    }
     public int getShopId() {
         return shopId;
     }
@@ -84,6 +96,12 @@ public class Order implements Parcelable, Serializable {
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
+    public int getReceiptTotalPrice() {
+        return receiptTotalPrice;
+    }
+    public void setReceiptTotalPrice(int receiptTotalPrice) {
+        this.receiptTotalPrice = receiptTotalPrice;
+    }
     public String getPayment() {
         return payment;
     }
@@ -99,6 +117,7 @@ public class Order implements Parcelable, Serializable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(shopId);
         dest.writeValue(payment);
+        dest.writeValue(receiptCode);
         dest.writeList(products);
     }
     public int describeContents() {

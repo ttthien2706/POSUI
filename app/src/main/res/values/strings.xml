@@ -117,4 +117,6 @@
     <string name="pastOrderDate">Thời điểm: %s</string>
     <string name="resume_order">Tiếp tục đơn hàng</string>
     <string name="product_detail_store_quantity">Số lượng:\\u0020%s</string>
+    <string name="store_instock">%s món trong kho</string>
+    <string name="store_name">Cửa hàng %s</string>
 </resources>

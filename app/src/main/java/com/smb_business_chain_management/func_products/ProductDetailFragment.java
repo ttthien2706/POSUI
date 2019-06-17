@@ -118,7 +118,7 @@ public class ProductDetailFragment extends Fragment {
 
     private void handleTextViews(){
         nameTextView.setText(mItem.getName());
-        inStockTextView.setText(NumberFormat.getNumberInstance(Locale.FRENCH).format(mItem.getQuantity()));
+        inStockTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mItem.getQuantity()));
         skuTextView.setText(mItem.getSku());
         barcodeTextView.setText(mItem.getBarcode());
         descTextView.setText(mItem.getDescription());
@@ -157,9 +157,9 @@ public class ProductDetailFragment extends Fragment {
             wholesalePriceTextView.setText(R.string.product_price_zero);
             importPriceTextView.setText(R.string.product_price_zero);
         } else {
-            retailPriceTextView.setText(NumberFormat.getNumberInstance(Locale.FRENCH).format(mItem.getRetailPrice()));
-            wholesalePriceTextView.setText(NumberFormat.getNumberInstance(Locale.FRENCH).format(mItem.getWholesalePrice()));
-            importPriceTextView.setText(NumberFormat.getNumberInstance(Locale.FRENCH).format(mItem.getImportPrice()));
+            retailPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mItem.getRetailPrice()));
+            wholesalePriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mItem.getWholesalePrice()));
+            importPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mItem.getImportPrice()));
         }
     }
 

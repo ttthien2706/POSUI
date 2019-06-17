@@ -12,10 +12,21 @@
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/ic_cash"/>
     <TextView
-        android:id="@+id/received"
+        android:id="@+id/total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/imageCash"
+        app:layout_constraintStart_toStartOf="@id/received"
+        style="@style/Overline"
+        android:layout_marginStart="0dp"
+        android:textSize="16sp"
+        android:letterSpacing="0.1"
+        android:text="@string/order_total"/>
+    <TextView
+        android:id="@+id/received"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/total"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/receivedInput"
         android:text="@string/order_payment_cash_received"
@@ -28,7 +39,6 @@
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/received"
-        app:layout_constraintEnd_toEndOf="@id/change"
         app:layout_constraintBaseline_toBaselineOf="@id/received"
         android:backgroundTint="@color/colorPrimary"
         style="@style/Overline"

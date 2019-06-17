@@ -45,7 +45,7 @@ public class Store implements Parcelable, Serializable {
     @SerializedName("fullAddress")
     @Expose
     private String fullAddress;
-    @SerializedName("quantity")
+    @SerializedName("shopQuantity")
     @Expose
     private int quantity;
 

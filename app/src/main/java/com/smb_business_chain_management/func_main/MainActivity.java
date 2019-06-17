@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,6 +22,7 @@ import android.view.View;
 
 import com.smb_business_chain_management.R;
 import com.smb_business_chain_management.base.BaseActivity;
+import com.smb_business_chain_management.func_main.fragments.PastOrderDetailFragment;
 import com.smb_business_chain_management.func_products.ProductActivity;
 import com.smb_business_chain_management.func_selling.SellingActivity;
 import com.smb_business_chain_management.func_settings.SettingsActivity;
@@ -118,11 +119,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void continueOrder(ArrayList<Product> order, String fileName) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PastOrderDetailFragment.TAG);
+        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         Intent intent = new Intent(getBaseContext(), SellingActivity.class);
         intent.putExtra("isParentRoot", isTaskRoot());
         intent.putParcelableArrayListExtra(ARG_SAVED_ORDER, order);
         intent.putExtra(ARG_SAVED_ORDER_FILENAME, fileName);
-//                    view.getContext().startActivity(intent);
         startActivityForResult(intent, SAVE_ORDER_CODE);
     }
 

@@ -19,34 +19,21 @@
         android:layout_marginStart="0dp"
         style="@style/Overline"/>
     <TextView
-        android:id="@+id/subProductName"
+        android:id="@+id/storeName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subProductQuantity"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="0dp"
-        style="@style/Subtitle2"/>
+        style="@style/Subtitle2"
+        android:text="@string/store_name"/>
     <TextView
-        android:id="@+id/subProductRetailPrice"
+        android:id="@+id/storeInStockQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/placeholder_text"
-        style="@style/Caption"/>
-    <TextView
-        android:id="@+id/subProductWholesalePrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/subProductRetailPrice"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/Caption"/>
-    <TextView
-        android:id="@+id/subProductImportPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/subProductWholesalePrice"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/Caption"/>
 </android.support.constraint.ConstraintLayout>

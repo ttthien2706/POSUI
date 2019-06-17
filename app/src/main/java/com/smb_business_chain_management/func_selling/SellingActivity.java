@@ -1,13 +1,10 @@
 package com.smb_business_chain_management.func_selling;
 
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +26,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smb_business_chain_management.BusinessChainRESTClient;
 import com.smb_business_chain_management.BusinessChainRESTService;
@@ -38,15 +36,11 @@ import com.smb_business_chain_management.func_main.MainActivity;
 import com.smb_business_chain_management.func_selling.fragments.OrderCompleteDialogFragment;
 import com.smb_business_chain_management.models.Order;
 import com.smb_business_chain_management.models.Product;
-import com.smb_business_chain_management.models.SubProduct;
 import com.smb_business_chain_management.base.BaseActivity;
 
-import net.posprinter.posprinterface.IMyBinder;
 import net.posprinter.posprinterface.ProcessData;
 import net.posprinter.posprinterface.UiExecute;
-import net.posprinter.service.PosprinterService;
 import net.posprinter.utils.DataForSendToPrinterPos80;
-import net.posprinter.utils.PosPrinterDev;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -56,7 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -333,17 +326,20 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
             public void onResponse(Call<Product> call, Response<Product> response) {
                 if (response.code() == 200) {
                     Product curProduct = response.body();
-                    if (Integer.parseInt(quantityTextInput.getText().toString()) < curProduct.getQuantity()) {
-                        curProduct.setQuantity(Integer.parseInt(quantityTextInput.getText().toString()));
+                    curProduct.setLimQuantity(curProduct.getQuantity());
+                    if (curProduct.getQuantity() > 0){
+                        if (Integer.parseInt(quantityTextInput.getText().toString()) < curProduct.getQuantity()) {
+                            curProduct.setQuantity(Integer.parseInt(quantityTextInput.getText().toString()));
+                        }
+                        if (isWholeSale(curProduct.getQuantity())) {
+                            curProduct.setPrice(curProduct.getWholesalePrice());
+                        } else{
+                            curProduct.setPrice(curProduct.getRetailPrice());
+                        }
+                        addToOrder(curProduct);
+                        quantityTextInput.setText("1");
+                        if (!fromScan) mSelectedProduct = curProduct;
                     }
-                    if (isWholeSale(curProduct.getQuantity())) {
-                        curProduct.setPrice(curProduct.getWholesalePrice());
-                    } else{
-                        curProduct.setPrice(curProduct.getRetailPrice());
-                    }
-                    addToOrder(curProduct);
-                    quantityTextInput.setText("1");
-                    if (!fromScan) mSelectedProduct = curProduct;
                     dataLoadingDialog.hide();
                 } else {
                     Log.e(TAG, String.valueOf(response.code()));
@@ -377,6 +373,9 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
                 .findFirst()
                 .ifPresent(tProduct -> {
                     tProduct.setQuantity(Integer.parseInt(quantityTextInput.getText().toString()) + tProduct.getQuantity());
+                    if (isWholeSale(tProduct.getQuantity())){
+                        tProduct.setPrice(tProduct.getWholesalePrice());
+                    }
                 });
         orderListRecyclerViewAdapter.notifyDataSetChanged();
         orderTotalTextView.setText(Html.fromHtml(getString(R.string.order_total, calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
@@ -431,7 +430,7 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
         for (Product product : mOrderList) {
             totalPrice = totalPrice.add(BigInteger.valueOf((long) product.getRetailPrice() * product.getQuantity()));
         }
-        return NumberFormat.getNumberInstance(Locale.FRENCH).format(totalPrice);
+        return NumberFormat.getNumberInstance(Locale.GERMANY).format(totalPrice);
     }
     public BigInteger calculateOrderTotalPriceNumber() {
         BigInteger totalPrice = BigInteger.ZERO;
@@ -472,6 +471,7 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
             e.printStackTrace();
         }
     }
+
     private void hideButton(Button button) {
         if (button.getAlpha() == (float) 1) {
             AlphaAnimation fadeOut = new AlphaAnimation((float) 1, (float) 0.15);
@@ -481,14 +481,18 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
             button.setAlpha((float) 0.15);
         }
     }
-    private String getBill() {
-        String bill = "\u0009Cua hang Nguyen Hue\n\u0020\u0020\u0020\u0020Dia chi: 92 Nguyen Hue, P. Ben Nghe, Q. 1, TP. HCM\n\u0020\u0020\u0020\u0020So: 1\n\u0020\u0020\u0020\u0020Ngay: " + "14/06/2019 13:11" +"\n\u0020\u0020\u0020\u0020Cashier: Ta Huy Hoang\n\u0020\u0020\u0020===================================\n";
+    private String getBill(String received, String change) {
+        String bill = "\u0009Cua hang Nguyen Hue\n\u0020\u0020\u0020\u0020Dia chi: 92 Nguyen Hue, P. Ben Nghe, Q. 1, TP. HCM\n\u0020\u0020\u0020\u0020So: " + mCurrentOrder.getReceiptCode() + "\n\u0020\u0020\u0020\u0020Ngay: " + AppUtils.getCurrentFormattedDate() +"\n\u0020\u0020\u0020\u0020Cashier: Ta Huy Hoang\n\u0020\u0020\u0020===================================\n";
         bill = bill.concat(AppUtils.formattedOrderItem("STT", "Don gia", "Slg", "Thanh tien"));
         int index = 0;
         for (Product product : mOrderList){
             bill = bill.concat(AppUtils.cutAndAddNewLine(product.getName(), 48)).concat("\n");
-            bill = bill.concat(AppUtils.formattedOrderItem(String.valueOf(index++), String.valueOf(product.getPrice()), String.valueOf(product.getQuantity()), String.valueOf(product.getPrice()*product.getQuantity())));
+            bill = bill.concat(AppUtils.formattedOrderItem(String.valueOf(index++), AppUtils.formattedStringMoneyString(String.valueOf(product.getPrice())), String.valueOf(product.getQuantity()), AppUtils.formattedStringMoneyString(String.valueOf(product.getPrice()*product.getQuantity()))));
         }
+        bill = bill.concat("\u0020\u0020\u0020===================================\n")
+                .concat(AppUtils.formattedOrderItem("", "Tong tien: ", "", AppUtils.formattedBigIntegerMoneyString(calculateOrderTotalPriceNumber())))
+                .concat(AppUtils.formattedOrderItem("", "Tien khach tra: ", "", AppUtils.formattedStringMoneyString(received)))
+                .concat(AppUtils.formattedOrderItem("", "Tien thua: ", "", AppUtils.formattedStringMoneyString(change)));
         return bill;
     }
     private void printBill(String str){
@@ -565,19 +569,24 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
 
     @Override
     public void saveAndClearOrder() {
-        int currentSavedId = 1;
-        String[] localFileList = fileList();
-        for (String filename : localFileList){
-            if (filename.contains("order")){
-                if (Integer.parseInt(filename.split("order")[1]) == currentSavedId)
-                    currentSavedId++;
-                else break;
+        if (mCurrentOrder.getOrderDate().isEmpty()) mCurrentOrder.setOrderDate(AppUtils.getCurrentFormattedDate());
+        mCurrentOrder.setProducts(mOrderList);
+        if (getIntent().getExtras().containsKey(MainActivity.ARG_SAVED_ORDER)){
+            createCachedFile(this, String.valueOf(getIntent().getExtras().getString(MainActivity.ARG_SAVED_ORDER_FILENAME)) ,mCurrentOrder);
+        }
+        else {
+            int currentSavedId = 1;
+            String[] localFileList = fileList();
+            for (String filename : localFileList) {
+                if (filename.contains("order")) {
+                    if (Integer.parseInt(filename.split("order")[1]) == currentSavedId)
+                        currentSavedId++;
+                    else break;
+                }
             }
+            createCachedFile(this, String.valueOf(currentSavedId) ,mCurrentOrder);
         }
 //        mCurrentOrder.setId(currentSavedId);
-        if (mCurrentOrder.getOrderDate().isEmpty()) mCurrentOrder.setOrderDate(appUtil.getCurrentFormattedDate());
-        mCurrentOrder.setProducts(mOrderList);
-        createCachedFile(this, String.valueOf(currentSavedId) ,mCurrentOrder);
         clearOrder();
     }
 
@@ -589,27 +598,40 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
     }
 
     @Override
-    public void completeOrderAndSubmit() {
+    public void completeOrderAndSubmit(String received, String change, PaymentDialog dismissFragment) {
         mCurrentOrder.setShopId(1);
         mCurrentOrder.setUserId(1);
-        mCurrentOrder.setOrderDate(appUtil.getCurrentFormattedDate());
+        mCurrentOrder.setOrderDate(AppUtils.getCurrentFormattedDate());
+        mCurrentOrder.setReceiptTotalPrice(calculateOrderTotalPriceNumber().intValue());
         mCurrentOrder.setProducts(mOrderList);
         Call<Order> call = businessChainRESTService.submitOrder(mCurrentOrder);
-
+        dataLoadingDialog.show();
         call.enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 if (response.code() == 200){
-                    Snackbar.make(orderProductSearchView, "Done", Snackbar.LENGTH_INDEFINITE);
+                    Snackbar.make(orderProductSearchView, "Done", Snackbar.LENGTH_LONG);
+                    mCurrentOrder.setReceiptCode(response.body().getReceiptCode());
+                    if (getIntent().getExtras().containsKey(MainActivity.ARG_SAVED_ORDER_FILENAME)){
+                        Log.d(TAG, "deleted");
+                        deleteFile("order".concat(getIntent().getExtras().getString(MainActivity.ARG_SAVED_ORDER_FILENAME)));
+                    }
+                    showDoneDialog(received, change);
+                    clearOrder();
+                    dismissFragment.dismiss();
+                    dataLoadingDialog.dismiss();
                 }
                 else {
-                    Snackbar.make(orderProductSearchView, response.message(), Snackbar.LENGTH_INDEFINITE);
+                    Log.d(TAG, response.code() + ": " + response.message());
+                    Toast.makeText(getBaseContext(), "Có lỗi xảy ra!\n" + response.code() + ": " + response.message(), Toast.LENGTH_LONG).show();
+                    dataLoadingDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(Call<Order> call, Throwable throwable) {
                 Log.e(TAG, throwable.toString());
+                Snackbar.make(null, "Có lỗi xảy ra và server không thể nhận được đơn hàng.", Snackbar.LENGTH_INDEFINITE).show();
                 throwable.printStackTrace();
             }
         });
@@ -637,8 +659,8 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
     }
 
     @Override
-    public void showDoneDialog() {
-        String bill = getBill();
+    public void showDoneDialog(String received, String change) {
+        String bill = getBill(received, change);
         printBill(bill);
         doneDialog.show();
     }

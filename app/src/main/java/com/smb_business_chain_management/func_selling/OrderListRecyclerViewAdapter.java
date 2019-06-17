@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smb_business_chain_management.R;
 import com.smb_business_chain_management.models.Product;
@@ -57,48 +58,29 @@ class OrderListRecyclerViewAdapter extends RecyclerView.Adapter<OrderListRecycle
             totalPriceTextView = itemView.findViewById(R.id.subTotalPrice);
             quantityText = itemView.findViewById(R.id.subQuantityText);
             removeButton = itemView.findViewById(R.id.removeButton);
-//            quantityText.addTextChangedListener(new TextWatcher() {
-//                @Override
-//                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//                }
-//
-//                @Override
-//                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//                }
-//
-//                @Override
-//                public void afterTextChanged(Editable editable) {
-//                    if(quantityText.isFocused()) {
-//                        Log.d(TAG, String.valueOf(quantityText.isFocused()));
-//                        mOrderList.get(getAdapterPosition()).setQuantity(Integer.parseInt(quantityText.getText().toString()));
-//                        totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.FRENCH).format(calculateSubTotalPrice(mOrderList.get(getAdapterPosition()).getRetailPrice(), mOrderList.get(getAdapterPosition()).getQuantity())));
-//                        notifyDataSetChanged();
-//                        mOrderTotalText.setText(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()));
-//                        Log.d(TAG, String.valueOf(quantityText.isFocused()));
-//                    }
-//                }
-//            });
             incrementButton = itemView.findViewById(R.id.increment);
             decrementButton = itemView.findViewById(R.id.decrement);
             incrementButton.setOnClickListener(view -> {
                 Log.d(TAG, "increase");
-                quantityText.setText(String.valueOf(Integer.parseInt(quantityText.getText().toString())+1));
-                mOrderList.get(getAdapterPosition()).setQuantity(Integer.parseInt(quantityText.getText().toString()));
-                totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.FRENCH).format(calculateSubTotalPrice(mOrderList.get(getAdapterPosition()).getRetailPrice(), mOrderList.get(getAdapterPosition()).getQuantity())));
-                notifyDataSetChanged();
-                mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()),Html.FROM_HTML_MODE_LEGACY));
+                if (Integer.parseInt(quantityText.getText().toString())+1 <= mOrderList.get(getAdapterPosition()).getLimQuantity()) {
+                    quantityText.setText(String.valueOf(Integer.parseInt(quantityText.getText().toString())+1));
+                    mOrderList.get(getAdapterPosition()).setQuantity(Integer.parseInt(quantityText.getText().toString()));
+                    totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(calculateSubTotalPrice(mOrderList.get(getAdapterPosition()).getRetailPrice(), mOrderList.get(getAdapterPosition()).getQuantity())));
+                    notifyDataSetChanged();
+                    mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()),Html.FROM_HTML_MODE_LEGACY));
+                } else {
+                    Toast.makeText(context, "Hàng trong kho không đủ!", Toast.LENGTH_LONG).show();
+                }
             });
             decrementButton.setOnClickListener(view -> {
                 Log.d(TAG, "decrease");
                 if (Integer.parseInt(quantityText.getText().toString())-1 > 0){
                     quantityText.setText(String.valueOf(Integer.parseInt(quantityText.getText().toString())-1));
+                    mOrderList.get(getAdapterPosition()).setQuantity(Integer.parseInt(quantityText.getText().toString()));
+                    totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(calculateSubTotalPrice(mOrderList.get(getAdapterPosition()).getRetailPrice(), mOrderList.get(getAdapterPosition()).getQuantity())));
+                    notifyDataSetChanged();
+                    mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
                 }
-                mOrderList.get(getAdapterPosition()).setQuantity(Integer.parseInt(quantityText.getText().toString()));
-                totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.FRENCH).format(calculateSubTotalPrice(mOrderList.get(getAdapterPosition()).getRetailPrice(), mOrderList.get(getAdapterPosition()).getQuantity())));
-                notifyDataSetChanged();
-                mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
             });
             removeButton.setOnClickListener(view -> {
                 int position = getAdapterPosition();
@@ -120,9 +102,9 @@ class OrderListRecyclerViewAdapter extends RecyclerView.Adapter<OrderListRecycle
     @Override
     public void onBindViewHolder(@NonNull OrderListRecyclerViewAdapter.OrderListViewHolder holder, int position) {
         holder.nameTextView.setText(mOrderList.get(position).getName());
-        holder.retailPriceTextView.setText(NumberFormat.getNumberInstance(Locale.FRENCH).format(mOrderList.get(position).getRetailPrice()));
+        holder.retailPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mOrderList.get(position).getRetailPrice()));
         holder.quantityText.setText(String.valueOf(mOrderList.get(position).getQuantity()));
-        holder.totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.FRENCH).format(calculateSubTotalPrice(mOrderList.get(position).getRetailPrice(), mOrderList.get(position).getQuantity())));
+        holder.totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(calculateSubTotalPrice(mOrderList.get(position).getRetailPrice(), mOrderList.get(position).getQuantity())));
         holder.quantityText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
         holder.quantityText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
 

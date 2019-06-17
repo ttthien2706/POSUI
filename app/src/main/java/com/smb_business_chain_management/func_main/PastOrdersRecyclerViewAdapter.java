@@ -34,12 +34,12 @@ public class PastOrdersRecyclerViewAdapter extends RecyclerView.Adapter<PastOrde
         Bundle arguments = new Bundle();
         arguments.putParcelable(ARG_ORDER, currentOrder);
         arguments.putParcelableArrayList("productList", (ArrayList<? extends Parcelable>) currentOrder.getProducts());
-        arguments.putString(ARG_FILENAME, "order".concat(String.valueOf(view.getTag(R.id.orderId))));
+        arguments.putString(ARG_FILENAME, String.valueOf(view.getTag(R.id.orderId)));
         PastOrderDetailFragment fragment = new PastOrderDetailFragment();
         fragment.setArguments(arguments);
         mParentActivity.getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.pastOrderContent, fragment)
+                .replace(R.id.pastOrderContent, fragment, PastOrderDetailFragment.TAG)
                 .commit();
     };
 
@@ -67,7 +67,7 @@ public class PastOrdersRecyclerViewAdapter extends RecyclerView.Adapter<PastOrde
         holder.itemView.setTag(R.id.orderId, mOrderList.keyAt(position));
         holder.orderId.setText(String.valueOf(order.getId()));
         holder.orderDate.setText(mParentActivity.getResources().getString(R.string.pastOrderDate, order.getOrderDate()));
-        Spanned formattedOrderTotal = AppUtils.formattedStringResource(mParentActivity.getResources().getString(R.string.pastOrdersTotalPrice, AppUtils.formattedMoneyString(order.getTotalPrice())));
+        Spanned formattedOrderTotal = AppUtils.formatStringToHTMLSpanned(mParentActivity.getResources().getString(R.string.pastOrdersTotalPrice, AppUtils.formattedBigIntegerMoneyString(order.getTotalPrice())));
         holder.orderTotalPrice.setText(formattedOrderTotal);
         holder.itemView.setOnClickListener(mOnclickListener);
     }

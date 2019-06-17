@@ -129,7 +129,7 @@
             android:layout_width="1px"
             android:layout_height="match_parent"
             android:id="@+id/middleConstraint"
-            android:layout_toEndOf="@id/productDetailRetailPrice"
+            android:layout_toEndOf="@id/productDetailSKU"
             android:layout_marginStart="12dp"/>
 
         <TextView

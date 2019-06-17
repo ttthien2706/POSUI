@@ -84,15 +84,17 @@ public class AppUtils {
         return returnLatLng;
     }
 
-    public static Spanned formattedStringResource(String stringResource){
+    public static Spanned formatStringToHTMLSpanned(String stringResource){
         return Html.fromHtml(stringResource, Html.FROM_HTML_MODE_LEGACY);
     }
 
-    public static String formattedMoneyString(BigInteger string){
-        return NumberFormat.getNumberInstance(Locale.FRENCH).format(string);
+    public static String formattedBigIntegerMoneyString(BigInteger bigInteger){
+        return NumberFormat.getNumberInstance(Locale.GERMANY).format(bigInteger);
     }
-
-    public String getCurrentFormattedDate(){
+    public static String formattedStringMoneyString(String string){
+        return NumberFormat.getNumberInstance(Locale.GERMANY).format(Integer.parseInt(string));
+    }
+    public static String getCurrentFormattedDate(){
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date date = new Date();
         return dateFormat.format(date);

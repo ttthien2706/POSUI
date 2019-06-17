@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 
 public class PastOrderDetailFragment extends Fragment {
+    public static final String TAG = PastOrderDetailFragment.class.getSimpleName();
     private static Order mOrder;
     TextView orderPrice;
     ListView orderItemListView;
@@ -68,7 +69,7 @@ public class PastOrderDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.past_order_detail_fragment, container, false);
         viewLookup(view);
         setUpViews();
-        orderPrice.setText(AppUtils.formattedStringResource(getString(R.string.order_total, AppUtils.formattedMoneyString(mOrder.getTotalPrice()))));
+        orderPrice.setText(AppUtils.formatStringToHTMLSpanned(getString(R.string.order_total, AppUtils.formattedBigIntegerMoneyString(mOrder.getTotalPrice()))));
         return view;
     }
 

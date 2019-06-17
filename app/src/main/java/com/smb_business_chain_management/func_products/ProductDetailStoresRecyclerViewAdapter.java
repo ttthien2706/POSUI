@@ -34,10 +34,9 @@ class ProductDetailStoresRecyclerViewAdapter extends RecyclerView.Adapter<Produc
 
     @Override
     public void onBindViewHolder(@NonNull ProductDetailStoreViewHolder holder, int position) {
-        holder.subProductNameTextView.setText(mSubProductList.get(position).getName());
-
-//        holder.subProductQuantityTextView.setText(String.format("%s %s", NumberFormat.getNumberInstance(Locale.FRENCH).format(mSubProductList.get(position).getQuantity()), mParentFragment.measurementName));
-        holder.storeQuantityTextView.setText(String.format("%s %s", NumberFormat.getNumberInstance(Locale.FRENCH).format(mSubProductList.get(position).getQuantity()), mParentFragment.measurementName));
+        holder.storeNameTextView.setText(mParentFragment.getString(R.string.store_name, mSubProductList.get(position).getName()));
+//        holder.subProductQuantityTextView.setText(String.format("%s %s", NumberFormat.getNumberInstance(Locale.GERMANY).format(mSubProductList.get(position).getQuantity()), mParentFragment.measurementName));
+        holder.storeQuantityTextView.setText(mParentFragment.getString(R.string.store_instock, NumberFormat.getNumberInstance(Locale.GERMANY).format(mSubProductList.get(position).getQuantity())));
     }
 
     @Override
@@ -46,8 +45,7 @@ class ProductDetailStoresRecyclerViewAdapter extends RecyclerView.Adapter<Produc
     }
 
     public static class ProductDetailStoreViewHolder extends RecyclerView.ViewHolder {
-        private TextView subProductNameTextView;
-        private TextView subProductQuantityTextView;
+        private TextView storeNameTextView;
         private TextView storeQuantityTextView;
 
         public ProductDetailStoreViewHolder(View itemView) {
@@ -56,9 +54,8 @@ class ProductDetailStoresRecyclerViewAdapter extends RecyclerView.Adapter<Produc
         }
 
         private void viewLookup(View view){
-            subProductNameTextView = view.findViewById(R.id.subProductName);
-            subProductQuantityTextView = view.findViewById(R.id.subProductQuantity);
-            storeQuantityTextView = view.findViewById(R.id.subProductWholesalePrice);
+            storeNameTextView = view.findViewById(R.id.storeName);
+            storeQuantityTextView = view.findViewById(R.id.storeInStockQuantity);
         }
     }
 }

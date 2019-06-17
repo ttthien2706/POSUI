@@ -35,9 +35,10 @@ public class Product implements Parcelable, Serializable
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("totalQuantity")
+    @SerializedName("quantity")
     @Expose
     private int quantity;
+    private int limQuantity;
     @SerializedName("isActive")
     @Expose
     private boolean isActive;
@@ -94,6 +95,7 @@ public class Product implements Parcelable, Serializable
         this.importPrice = ((int) in.readValue((int.class.getClassLoader())));
         this.retailPrice = ((int) in.readValue((int.class.getClassLoader())));
         this.wholesalePrice = ((int) in.readValue((int.class.getClassLoader())));
+        this.price = ((int) in.readValue((int.class.getClassLoader())));
         in.readList(this.stores, (com.smb_business_chain_management.models.Store.class.getClassLoader()));
         in.readList(this.subProducts, (com.smb_business_chain_management.models.SubProduct.class.getClassLoader()));
     }
@@ -133,6 +135,7 @@ public class Product implements Parcelable, Serializable
         this.importPrice = product.getImportPrice();
         this.retailPrice = product.getRetailPrice();
         this.wholesalePrice = product.getWholesalePrice();
+        this.price = product.getPrice();
         this.stores = product.getStores();
         this.subProducts = product.getSubProducts();
         this.isSub = false;
@@ -310,6 +313,14 @@ public class Product implements Parcelable, Serializable
         this.price = price;
     }
 
+    public int getLimQuantity() {
+        return limQuantity;
+    }
+
+    public void setLimQuantity(int limQuantity) {
+        this.limQuantity = limQuantity;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(categoryId);
@@ -326,6 +337,7 @@ public class Product implements Parcelable, Serializable
         dest.writeValue(importPrice);
         dest.writeValue(retailPrice);
         dest.writeValue(wholesalePrice);
+        dest.writeValue(price);
         dest.writeList(stores);
         dest.writeList(subProducts);
     }
@@ -335,18 +347,6 @@ public class Product implements Parcelable, Serializable
     }
 
     public String getDetails(){
-        return String.valueOf(this.getQuantity()) + " in-stock";
-    }
-
-    public boolean isSub() {
-        return isSub;
-    }
-
-    public void setSub(boolean sub) {
-        this.isSub = sub;
-    }
-
-    public int getParentId() {
-        return parentId;
+        return this.getQuantity() + " in-stock";
     }
 }

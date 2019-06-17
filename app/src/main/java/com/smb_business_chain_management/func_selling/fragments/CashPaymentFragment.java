@@ -29,10 +29,12 @@ import java.math.BigInteger;
 
 public class CashPaymentFragment extends Fragment {
     private static final String TAG = CashPaymentFragment.class.getSimpleName();
+    TextView totalAmountTextView;
     EditText receivedAmountTextInput;
     TextView changeAmountTextView;
     ImageView imageView;
     Button doneButton;
+    Button cancelButton;
 
     AppUtils appUtils = new AppUtils();
 
@@ -43,22 +45,29 @@ public class CashPaymentFragment extends Fragment {
     private Button.OnClickListener onDoneButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            listener.completeOrderAndSubmit();
+            PaymentDialog parentFragment = (PaymentDialog) getParentFragment();
+            listener.completeOrderAndSubmit(receivedAmountTextInput.getText().toString(), calculateChange().toString(), parentFragment);
             imageView.setImageResource(R.drawable.ic_payment_done);
             imageView.setColorFilter(getResources().getColor(R.color.colorStoreActive, mContext.getTheme()));
 //            animateDrawable(imageView);
-            new android.os.Handler().postDelayed(
-                    () -> {
-                        try {
-                            ((PaymentDialog) getParentFragment()).dismiss();
-                            listener.showDoneDialog();
-                            listener.clearOrder();
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getContext(), "Fragment Null", Toast.LENGTH_LONG).show();
-                        }
-                    },
-                    600);
+//            new android.os.Handler().postDelayed(
+//                    () -> {
+//                        try {
+//                            ((PaymentDialog) getParentFragment()).dismiss();
+//                            listener.showDoneDialog(receivedAmountTextInput.getText().toString(), calculateChange().toString());
+//                            listener.clearOrder();
+//                        } catch (NullPointerException e) {
+//                            e.printStackTrace();
+//                            Toast.makeText(getContext(), "Fragment Null", Toast.LENGTH_LONG).show();
+//                        }
+//                    },
+//                    600);
+        }
+    };
+    private Button.OnClickListener onCancelButtonClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((PaymentDialog) getParentFragment()).dismiss();
         }
     };
 
@@ -95,16 +104,19 @@ public class CashPaymentFragment extends Fragment {
     }
 
     private  void viewLookup(View view){
+        totalAmountTextView = view.findViewById(R.id.total);
         receivedAmountTextInput = view.findViewById(R.id.receivedInput);
         changeAmountTextView = view.findViewById(R.id.change);
         imageView = view.findViewById(R.id.imageCash);
         doneButton = view.findViewById(R.id.done);
+        cancelButton = view.findViewById(R.id.cancel);
     }
     private void setupViews(){
         receivedAmountTextInput.setTransformationMethod(new NumericKeyBoardTransformationMethod());
         receivedAmountTextInput.setSelection(receivedAmountTextInput.getText().length());
         changeAmountTextView.setText(R.string.order_payment_cash_received_invalid);
         orderTotal = ((SellingActivity) mContext).calculateOrderTotalPriceNumber();
+        totalAmountTextView.setText(AppUtils.formatStringToHTMLSpanned(getString(R.string.order_total, AppUtils.formattedBigIntegerMoneyString(orderTotal))));
         changeAmountTextView.setText(R.string.order_payment_cash_received_invalid);
         doneButton.setBackground(getResources().getDrawable(R.drawable.inactive_outlined_button, mContext.getTheme()));
         doneButton.setTextColor(getResources().getColor(R.color.VectorColorActiveUnfocused, mContext.getTheme()));
@@ -122,7 +134,7 @@ public class CashPaymentFragment extends Fragment {
                     doneButton.setEnabled(false);
                 }
                 else {
-                    changeAmountTextView.setText(AppUtils.formattedStringResource(getString(R.string.order_payment_cash_change, AppUtils.formattedMoneyString(calculateChange()))));
+                    changeAmountTextView.setText(AppUtils.formatStringToHTMLSpanned(getString(R.string.order_payment_cash_change, AppUtils.formattedBigIntegerMoneyString(calculateChange()))));
                     doneButton.setBackground(getResources().getDrawable(R.drawable.ripple_outlined_button, mContext.getTheme()));
                     doneButton.setTextColor(getResources().getColor(R.color.colorPrimary, mContext.getTheme()));
                     doneButton.setCompoundDrawableTintList(getResources().getColorStateList(R.color.colorPrimary, mContext.getTheme()));
@@ -132,6 +144,7 @@ public class CashPaymentFragment extends Fragment {
         };
         receivedAmountTextInput.addTextChangedListener(receivedTextWatcher);
         doneButton.setOnClickListener(onDoneButtonClicked);
+        cancelButton.setOnClickListener(onCancelButtonClicked);
     }
     private BigInteger calculateChange() {
         String receivedString = receivedAmountTextInput.getText().toString();
@@ -141,20 +154,6 @@ public class CashPaymentFragment extends Fragment {
         else received = new BigInteger(receivedAmountTextInput.getText().toString());
 
         return received.subtract(orderTotal);
-    }
-
-
-    protected void animateDrawable(View view){
-        ImageView v = (ImageView) view;
-        Drawable drawable = v.getDrawable();
-        if (drawable instanceof AnimatedVectorDrawable){
-            AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) drawable;
-            animatedVectorDrawable.start();
-        }
-        else if (drawable instanceof AnimatedVectorDrawableCompat){
-            AnimatedVectorDrawableCompat animatedVectorDrawableCompat = (AnimatedVectorDrawableCompat) drawable;
-            animatedVectorDrawableCompat.start();
-        }
     }
 
     private class NumericKeyBoardTransformationMethod extends PasswordTransformationMethod {
