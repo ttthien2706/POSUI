@@ -21,13 +21,15 @@ public abstract class TextValidator implements TextWatcher {
 
     @Override
     final public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        String text = textView.getText().toString();
-        validate(textView, text);
+//        String text = textView.getText().toString();
+//        validate(textView, text);
     }
 
 
 
     @Override
     final public void onTextChanged(CharSequence s, int start, int before, int count) {
+//        String text = textView.getText().toString();
+//        validate(textView, text);
     }
 }

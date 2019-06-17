@@ -1,5 +1,7 @@
 package com.smb_business_chain_management.models;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,9 +9,8 @@ import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Product implements Parcelable
+public class Product implements Parcelable, Serializable
 {
-
     @SerializedName("id")
     @Expose
     private int id;
@@ -34,7 +35,7 @@ public class Product implements Parcelable
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("quantity")
+    @SerializedName("totalQuantity")
     @Expose
     private int quantity;
     @SerializedName("isActive")
@@ -55,29 +56,28 @@ public class Product implements Parcelable
     @SerializedName("wholesalePrice")
     @Expose
     private int wholesalePrice;
-    @SerializedName("shops")
+    @SerializedName("price")
     @Expose
-    private List<Store> stores = null;
+    private int price;
+    @SerializedName("productShops")
+    @Expose
+    private List<Store> stores = new ArrayList<>(0);
     @SerializedName("subProducts")
     @Expose
-    private List<SubProduct> subProducts = null;
+    private List<SubProduct> subProducts = new ArrayList<>(0);
+    private boolean isSub = false;
+    private int parentId = -1;
     public final static Parcelable.Creator<Product> CREATOR = new Creator<Product>() {
-
-
         @SuppressWarnings({
                 "unchecked"
         })
         public Product createFromParcel(Parcel in) {
             return new Product(in);
         }
-
         public Product[] newArray(int size) {
             return (new Product[size]);
         }
-
-    }
-            ;
-
+    };
     protected Product(Parcel in) {
         this.id = ((int) in.readValue((int.class.getClassLoader())));
         this.categoryId = ((int) in.readValue((int.class.getClassLoader())));
@@ -97,7 +97,6 @@ public class Product implements Parcelable
         in.readList(this.stores, (com.smb_business_chain_management.models.Store.class.getClassLoader()));
         in.readList(this.subProducts, (com.smb_business_chain_management.models.SubProduct.class.getClassLoader()));
     }
-
     public Product() {
         this.id = -1;
         this.categoryId = -1;
@@ -136,6 +135,8 @@ public class Product implements Parcelable
         this.wholesalePrice = product.getWholesalePrice();
         this.stores = product.getStores();
         this.subProducts = product.getSubProducts();
+        this.isSub = false;
+        this.parentId = -1;
     }
 
     public Product(int categoryId, int brandId, String description, int measurementId, boolean multipleEditions, boolean uniqueEditionPrice, String name, int quantity, boolean isActive, String sku, String barcode, int importPrice, int retailPrice, int wholesalePrice, List<Store> stores, List<SubProduct> subProducts) {
@@ -155,6 +156,14 @@ public class Product implements Parcelable
         this.wholesalePrice = wholesalePrice;
         this.stores = stores;
         this.subProducts = subProducts;
+    }
+
+    public Product(SubProduct subProduct, int parentId){
+        this.parentId = parentId;
+        this.name = subProduct.getName();
+        this.id = subProduct.getId();
+        this.barcode = subProduct.getBarcode() != null ? subProduct.getBarcode() : "";
+        this.isSub = true;
     }
 
     public int getId() {
@@ -293,6 +302,14 @@ public class Product implements Parcelable
         this.subProducts = subProducts;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(categoryId);
@@ -318,6 +335,18 @@ public class Product implements Parcelable
     }
 
     public String getDetails(){
-        return String.valueOf(this.getSubProducts().size()) + " sub-products";
+        return String.valueOf(this.getQuantity()) + " in-stock";
+    }
+
+    public boolean isSub() {
+        return isSub;
+    }
+
+    public void setSub(boolean sub) {
+        this.isSub = sub;
+    }
+
+    public int getParentId() {
+        return parentId;
     }
 }

@@ -6,20 +6,60 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!--<uses-permission android:name="android.hardware.usb.UsbAccessory" />-->
+    <!--<uses-permission android:name="android.permission.INTERNET" />-->
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
 
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-
+    <!--<uses-feature-->
+        <!--android:name="android.hardware.usb.host"-->
+        <!--android:required="true" />-->
     <permission
         android:name="com.smb_business_chain_management.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.smb_business_chain_management.permission.MAPS_RECEIVE" />
+
+
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="true" />
+
+    <uses-permission android:name="android.hardware.usb.UsbAccessory" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
         android:allowBackup="true"
@@ -28,14 +68,15 @@
         android:roundIcon="@mipmap/ic_placeholderimage_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".func_selling.SellingActivity"></activity>
         <activity
-            android:name=".ProductActivity"
+            android:name=".func_products.ProductActivity"
             android:label="ProductActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".func_main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.smb_business_chain_management.MainActivity" />
+                android:value="com.smb_business_chain_management.func_main.MainActivity" />
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchableActivity" />
@@ -48,22 +89,40 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserListActivity"
+            android:name=".func_settings.UserListActivity"
             android:label="@string/title_user_list"
-            android:parentActivityName=".SettingsActivity"
+            android:parentActivityName=".func_settings.SettingsActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.smb_business_chain_management.SettingsActivity" />
+                android:value="com.smb_business_chain_management.func_settings.SettingsActivity" />
         </activity>
         <activity
-            android:name=".UserDetailActivity"
+            android:name=".func_settings.UserDetailActivity"
             android:label="@string/title_user_detail"
-            android:parentActivityName=".UserListActivity"
+            android:parentActivityName=".func_settings.UserListActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.smb_business_chain_management.UserListActivity" />
+                android:value="com.smb_business_chain_management.func_settings.UserListActivity" />
+        </activity>
+        <activity
+            android:name=".func_settings.SettingsActivity"
+            android:label="@string/title_activity_store"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.smb_business_chain_management.func_main.MainActivity" />
+        </activity>
+        <activity
+            android:name=".func_main.MainActivity"
+            android:label="MainActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -76,24 +135,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_store"
-            android:screenOrientation="landscape">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.smb_business_chain_management.MainActivity" />
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="MainActivity"
-            android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <service android:name="net.posprinter.service.PosprinterService" />
     </application>
 
 </manifest>

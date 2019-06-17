@@ -1,9 +1,12 @@
 package com.smb_business_chain_management;
 
+import android.preference.PreferenceManager;
+
 import com.smb_business_chain_management.models.Brand;
 import com.smb_business_chain_management.models.Category;
 import com.smb_business_chain_management.models.City;
 import com.smb_business_chain_management.models.Measurement;
+import com.smb_business_chain_management.models.Order;
 import com.smb_business_chain_management.models.Product;
 import com.smb_business_chain_management.models.Store;
 import com.smb_business_chain_management.models.User;
@@ -50,9 +53,12 @@ public interface BusinessChainRESTService {
 
     @GET("api/products/search")
     Call<List<Product>> searchProducts(@Query("name") String name);
-    @GET("api/products/{productId}")
-    Call<Product> getProductDetails(@Path(value = "productId", encoded = true) int productId);
+    @GET("api/products/searchid")
+    Call<Product> getProductDetails(@Query("id") int productId);
 
     @POST("api/products")
     Call<Product> createProduct(@Body Product product);
+
+    @POST("api/salereceipts")
+    Call<Order> submitOrder(@Body Order order);
 }
