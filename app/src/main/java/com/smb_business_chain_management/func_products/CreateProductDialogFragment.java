@@ -70,7 +70,7 @@ public class CreateProductDialogFragment extends DialogFragment{
         String description = descriptionInput.getText().toString();
         boolean isActive = isActiveSwitch.isChecked();
 
-        Product newProduct = new Product(category.getId(), brand.getId(), description, measurement.getId(), false, false, productName, quantity, isActive, sku, barcode, importPrice, retailPrice, wholesalePrice, null, null);
+        Product newProduct = new Product(category.getId(), brand.getId(), description, 0, false, false, productName, quantity, isActive, sku, barcode, importPrice, retailPrice, wholesalePrice, null, null);
         listener.RESTAddNewProduct(newProduct);
         return false;
     };

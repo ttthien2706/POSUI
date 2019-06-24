@@ -18,7 +18,7 @@
         android:tint="@color/VectorColorActiveUnfocused"/>
     <TextView
         android:id="@+id/productName"
-        android:layout_width="110dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +30,7 @@
         style="@style/Subtitle2"/>
     <TextView
         android:id="@+id/productRetailPrice"
-        android:layout_width="110dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/productName"
         app:layout_constraintBaseline_toBaselineOf="@id/productName"
@@ -56,9 +56,10 @@
     <!--</android.support.design.widget.TextInputLayout>-->
     <TextView
         android:id="@+id/subQuantityText"
-        android:layout_width="60dp"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/productRetailPrice"
+        app:layout_constraintEnd_toStartOf="@id/increment"
         app:layout_constraintBaseline_toBaselineOf="@id/productName"
         android:layout_marginStart="12dp"
         android:textAlignment="center"
@@ -66,8 +67,8 @@
     </TextView>
     <Button
         android:id="@+id/increment"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         app:layout_constraintStart_toEndOf="@id/subQuantityText"
         app:layout_constraintTop_toTopOf="@id/subQuantityText"
         app:layout_constraintBottom_toTopOf="@id/decrement"
@@ -83,8 +84,8 @@
     </Button>
     <Button
         android:id="@+id/decrement"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         app:layout_constraintStart_toEndOf="@id/subQuantityText"
         app:layout_constraintTop_toBottomOf="@id/increment"
         app:layout_constraintBottom_toBottomOf="@id/subQuantityText"
@@ -92,15 +93,10 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:background="@drawable/ic_arrow_down"
         android:backgroundTint="@color/colorPrimary">
-        <!--<Button-->
-            <!--android:layout_width="22dp"-->
-            <!--android:layout_height="22dp"-->
-            <!--android:background="@drawable/ic_arrow_down"-->
-            <!--android:backgroundTint="@color/colorPrimary"/>-->
     </Button>
     <TextView
         android:id="@+id/subTotalPrice"
-        android:layout_width="110dp"
+        android:layout_width="168dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/increment"
         app:layout_constraintBaseline_toBaselineOf="@id/productName"

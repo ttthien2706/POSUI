@@ -88,7 +88,8 @@
     <string name="activity_selling_name">Bán hàng</string>
     <string name="add">Thêm</string>
     <string name="order_title_label">Đơn hàng</string>
-    <string name="order_done_button_label">Hoàn tất hoặc lưu đơn</string>
+    <string name="order_done_button_label">Hoàn tất</string>
+    <string name="order_save_button_label">Lưu đơn</string>
     <string name="order_add_not_selected_warning">Hãy chọn một mặt hàng để thêm vào đơn hàng</string>
     <string name="REST_fail">Hệ thống không thể lấy dữ liệu, hoặc server đang không hoạt động</string>
     <string name="order_total">Tổng giá: %s\u0020&lt;u>đ&lt;/u></string>
@@ -105,6 +106,7 @@
     <string name="empty_order_warning">Đơn hàng trống!</string>
     <string name="order_complete_message">Lưu lại đơn hoặc bắt đầu thanh toán</string>
     <string name="order_payment_cash_received">Tiền nhận:\u0020</string>
+    <string name="order_payment_cash_received_suffix">\u002<u>đ</u></string>
     <string name="order_payment_cash_change">Tiền thừa: %s\u0020&lt;u>đ&lt;/u></string>
     <string name="order_payment_cash_label">Tiền mặt</string>
     <string name="order_payment_card_label">Thẻ</string>
@@ -119,4 +121,21 @@
     <string name="product_detail_store_quantity">Số lượng:\\u0020%s</string>
     <string name="store_instock">%s món trong kho</string>
     <string name="store_name">Cửa hàng %s</string>
+    <string name="vnd_currency"><u>đ</u></string>
+    <string name="bold_1"><b>1</b></string>
+    <string name="bold_2"><b>2</b></string>
+    <string name="bold_3"><b>3</b></string>
+    <string name="bold_4"><b>4</b></string>
+    <string name="bold_5"><b>5</b></string>
+    <string name="bold_6"><b>6</b></string>
+    <string name="bold_7"><b>7</b></string>
+    <string name="bold_8"><b>8</b></string>
+    <string name="bold_9"><b>9</b></string>
+    <string name="bold_00"><b>00</b></string>
+    <string name="bold_000"><b>000</b></string>
+    <string name="bold_0"><b>0</b></string>
+    <string name="activity_return_name">Trả hàng</string>
+    <string name="username_hint">Tên đăng nhập</string>
+    <string name="password_hint">Mật khẩu</string>
+    <string name="login_button_hint">Đăng nhập</string>
 </resources>

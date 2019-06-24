@@ -4,16 +4,27 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="actionBarStyle">@style/AppTheme.AppBarOverlay</item>
+        <item name="android:activatedBackgroundIndicator">@color/primary_color_state</item>
         <!--<item name="android:actionMenuTextColor">@color/white</item>-->
     </style>
 
-    <style name="TextHeaderMargin">
+    <style name="AppTheme.LoginTheme" parent="AppTheme.NoActionBar">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+    </style>
+
+    <style name="primaryTextColor">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="TextHeaderMargin" parent="primaryTextColor">
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginBottom">4dp</item>
     </style>
 
-    <style name="TextSubtitleMargin">
+    <style name="TextSubtitleMargin" parent="primaryTextColor">
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginBottom">16dp</item>
     </style>
@@ -47,7 +58,7 @@
         <item name="android:letterSpacing">0.15</item>
     </style>
 
-    <style name="Caption">
+    <style name="Caption" parent="primaryTextColor">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">12sp</item>
         <item name="android:letterSpacing">0.4</item>
@@ -83,12 +94,27 @@
     <style name="ProgressStyle">
         <item name="android:backgroundTint">@color/colorPrimary</item>
     </style>
-
+    <style name="TextAppearance.App.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/white</item>
+    </style>
     <style name="DialogInputMargin">
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginBottom">16dp</item>
+    </style>
+
+    <style name="LongNegativeFloatingActionButton">
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:background">@drawable/ripple_pill_button</item>
+        <item name="android:backgroundTint">@color/colorStoreInActive</item>
+        <item name="android:drawableTint">@color/white</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:drawablePadding">6dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:elevation">12dp</item>
+        <item name="android:shadowRadius">5.2</item>
     </style>
 
     <style name="LongFloatingActionButton">
@@ -100,6 +126,19 @@
         <item name="android:paddingEnd">16dp</item>
         <item name="android:drawablePadding">6dp</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:elevation">12dp</item>
+        <item name="android:shadowRadius">5.2</item>
+    </style>
+
+    <style name="BigLongAccentFloatingActionButton">
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:background">@drawable/pill_button</item>
+        <item name="android:backgroundTint">@color/colorAccent</item>
+        <item name="android:drawableTint">@android:color/black</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:drawablePadding">6dp</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:elevation">12dp</item>
         <item name="android:shadowRadius">5.2</item>
     </style>
@@ -157,5 +196,17 @@
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light"></style>
+
+    <style name="NumberButton">
+        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Body2">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
 </resources>

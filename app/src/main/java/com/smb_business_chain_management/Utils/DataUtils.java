@@ -1,5 +1,6 @@
 package com.smb_business_chain_management.Utils;
 
+import android.content.Context;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -31,8 +32,8 @@ public class DataUtils {
 
     private BusinessChainRESTService businessChainRESTService;
 
-    public DataUtils() {
-        businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
+    public DataUtils(Context applicationContext) {
+        businessChainRESTService = BusinessChainRESTClient.getClient(applicationContext).create(BusinessChainRESTService.class);
         initAndGetCities();
         initAndGetRoles();
         initAndGetCategories();

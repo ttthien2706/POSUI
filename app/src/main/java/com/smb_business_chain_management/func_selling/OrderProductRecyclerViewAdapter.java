@@ -30,13 +30,11 @@ class OrderProductRecyclerViewAdapter extends RecyclerView.Adapter<OrderProductR
 
     public static class OrderProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView productName;
-        private ImageView productImage;
         private CardView container;
         public OrderProductViewHolder(View itemView) {
             super(itemView);
             container = itemView.findViewById(R.id.orderProductCardContainer);
             productName = itemView.findViewById(R.id.orderProductName);
-            productImage = itemView.findViewById(R.id.orderProductImage);
             itemView.setOnClickListener(this);
             container.setOnClickListener(this);
         }

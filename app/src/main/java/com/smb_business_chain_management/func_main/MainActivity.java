@@ -1,6 +1,7 @@
 package com.smb_business_chain_management.func_main;
 
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +21,11 @@ import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.smb_business_chain_management.R;
 import com.smb_business_chain_management.base.BaseActivity;
+import com.smb_business_chain_management.func_login.SaveSharedPreference;
 import com.smb_business_chain_management.func_main.fragments.PastOrderDetailFragment;
 import com.smb_business_chain_management.func_products.ProductActivity;
 import com.smb_business_chain_management.func_selling.SellingActivity;
@@ -47,11 +51,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ARG_SAVED_ORDER = "savedOrder";
     public static final String ARG_SAVED_ORDER_FILENAME = "fileName";
+    public static final int SAVE_ORDER_CODE = 2;
 
     String BARCODE = "";
-    private static final int SAVE_ORDER_CODE = 2;
-    boolean IS_CONNECTED = false;
+    public boolean IS_CONNECTED = false;
     public static IMyBinder binder;
+    private static AlertDialog noPrinterDialog;
+
     ServiceConnection printerConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -72,7 +78,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     SparseArray<Order> orderList = new SparseArray<>(0);
     RecyclerView pastOrdersRecyclerView;
     RecyclerView.Adapter pastOrdersRecyclerViewAdapter;
-    DrawerLayout drawerLayout;
+    DrawerLayout mDrawerLayout;
     NavigationView navigationView;
 
     @Override
@@ -80,14 +86,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.app_title));
         setContentView(R.layout.activity_main);
+        initNoPrinterDialog();
         setupPrinter();
 
         viewLookup();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+                this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
         };
-        drawerLayout.addDrawerListener(toggle);
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -100,21 +107,52 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         menuNewOrder.setOnClickListener(new MenuIconListener());
 
         orderList = getSavedOrders();
-
-        initRecyclerView();
+        Log.d(getApplicationContext().toString(), "Login status: " + SaveSharedPreference.getLoggedStatus(getApplicationContext()));
+        setupViews();
     }
-
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        Intent intent;
+        if (id == R.id.navSelling) {
+            intent = new Intent(MainActivity.this, SellingActivity.class);
+            intent.putExtra("isParentRoot", isTaskRoot());
+            startActivityForResult(intent, SAVE_ORDER_CODE);
+        } else if (id == R.id.navReturn) {
+        } else if (id == R.id.navProduct) {
+            intent = new Intent(MainActivity.this, ProductActivity.class);
+            intent.putExtra("isParentRoot", isTaskRoot());
+            startActivity(intent);
+        } else if (id == R.id.navSettings) {
+            intent = new Intent(MainActivity.this, SettingsActivity.class);
+            intent.putExtra("isParentRoot", isTaskRoot());
+            startActivity(intent);
+        }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else super.onBackPressed();
+    }
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        char c = (char) event.getUnicodeChar();
+        if (keyCode != KeyEvent.KEYCODE_ENTER) BARCODE = BARCODE + (c);
+
+        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            Intent intent = new Intent(this, SellingActivity.class);
+            intent.putExtra("isParentRoot", isTaskRoot());
+            intent.putExtra("barcode", BARCODE);
+            BARCODE = "";
+            this.startActivityForResult(intent, RESULT_OK);
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     @Override
@@ -127,9 +165,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         intent.putExtra(ARG_SAVED_ORDER_FILENAME, fileName);
         startActivityForResult(intent, SAVE_ORDER_CODE);
     }
-
     class MenuIconListener implements View.OnClickListener {
-
         @Override
         public void onClick(View view) {
             Intent intent;
@@ -137,7 +173,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 case R.id.newOrderMenu:
                     intent = new Intent(view.getContext(), SellingActivity.class);
                     intent.putExtra("isParentRoot", isTaskRoot());
-//                    view.getContext().startActivity(intent);
                     startActivityForResult(intent, SAVE_ORDER_CODE);
                     break;
                 case R.id.returnOrderMenu:
@@ -165,33 +200,41 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         }
     }
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        char c = (char) event.getUnicodeChar();
-        if (keyCode != KeyEvent.KEYCODE_ENTER) BARCODE = BARCODE + (String.valueOf(c));
-
-        switch (keyCode){
-            case KeyEvent.KEYCODE_ENTER: {
-                Intent intent = new Intent(this, SellingActivity.class);
-                intent.putExtra("isParentRoot", isTaskRoot());
-                intent.putExtra("barcode", BARCODE);
-                BARCODE = "";
-                this.startActivityForResult(intent, RESULT_OK);
-            }
-        }
-        return super.onKeyUp(keyCode, event);
-    }
 
     public void viewLookup(){
         pastOrdersRecyclerView = findViewById(R.id.pastOrdersRV);
-        drawerLayout = findViewById(R.id.drawerLayout);
+        mDrawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navView);
     }
-    public void initRecyclerView(){
+    public void setupViews(){
         pastOrdersRecyclerViewAdapter = new PastOrdersRecyclerViewAdapter(orderList, this);
         RecyclerView.LayoutManager orderProductRecyclerViewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         pastOrdersRecyclerView.setLayoutManager(orderProductRecyclerViewLayoutManager);
         pastOrdersRecyclerView.setAdapter(pastOrdersRecyclerViewAdapter);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+        };
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+    private void initNoPrinterDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Kết nối máy in")
+                .setIcon(R.drawable.ic_warning)
+                .setMessage("Không tìm thấy máy in, hãy kiểm tra lại kết nối giữa máy in và máy POS")
+                .setPositiveButton("Thử lại", null)
+                .setNegativeButton("Huỷ", ((dialog, which) -> {
+                    IS_CONNECTED = false;
+                    SellingActivity.setIsPrinterConnected(IS_CONNECTED);
+                }));
+        noPrinterDialog = builder.create();
+        noPrinterDialog.setOnShowListener(dialogInterface -> {
+            Button button = noPrinterDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(view -> {
+                getUsbAddress();
+            });
+        });
     }
 
     private SparseArray<Order> getSavedOrders(){
@@ -209,26 +252,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return retOrderList;
     }
     private Order readFiles(String filename){
-        List<Product> tempProductList = new ArrayList<>(0);
         Order tempOrder = new Order();
         tempOrder.setId(Integer.parseInt(filename.split("order")[1]));
         try {
             FileInputStream fileInputStream = openFileInput(filename);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             tempOrder.setOrderDate((String) objectInputStream.readObject());
-            int orderSize = objectInputStream.readInt();
-//            for (int i = 0; i < orderSize; ++i){
-//                Object o = objectInputStream.readObject();
-//                try {
-//                    tempProductList.add((Product) o);
-//                } catch (NullPointerException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            tempOrder.setProducts(tempProductList);
             tempOrder = (Order) objectInputStream.readObject();
             objectInputStream.close();
             fileInputStream.close();
+            if (tempOrder == null){
+                deleteFile(filename);
+            }
             return tempOrder;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -261,27 +296,41 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Intent intent=new Intent(this,PosprinterService.class);
         bindService(intent, printerConnection, BIND_AUTO_CREATE);
 
-        usbAddress = PosPrinterDev.GetUsbPathNames(this).get(0);
+        getUsbAddress();
     }
+
+    private void getUsbAddress() {
+        if (PosPrinterDev.GetUsbPathNames(this) != null){
+            usbAddress = PosPrinterDev.GetUsbPathNames(this).get(0);
+            if (noPrinterDialog.isShowing()) noPrinterDialog.dismiss();
+        } else {
+            usbAddress = "";
+            noPrinterDialog.show();
+        }
+    }
+
     private void connectUsb(String usbAddress) {
         if (usbAddress.isEmpty()){
-
+            IS_CONNECTED = false;
+            SellingActivity.setIsPrinterConnected(IS_CONNECTED);
         }else {
             binder.connectUsbPort(this, usbAddress, new UiExecute() {
                 @Override
                 public void onsucess() {
-                    IS_CONNECTED =true;
+                    IS_CONNECTED = true;
+                    SellingActivity.setIsPrinterConnected(IS_CONNECTED);
                     setPortType(PosPrinterDev.PortType.USB);
                 }
                 @Override
                 public void onfailed() {
                     IS_CONNECTED =false;
+                    SellingActivity.setIsPrinterConnected(IS_CONNECTED);
                 }
             });
         }
     }
     private void setPortType(PosPrinterDev.PortType portType){
-        this.portType=portType;
+        this.portType = portType;
     }
 
     @Override

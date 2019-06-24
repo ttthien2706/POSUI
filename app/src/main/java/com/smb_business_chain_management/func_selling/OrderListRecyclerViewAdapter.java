@@ -68,6 +68,7 @@ class OrderListRecyclerViewAdapter extends RecyclerView.Adapter<OrderListRecycle
                     totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(calculateSubTotalPrice(mOrderList.get(getAdapterPosition()).getRetailPrice(), mOrderList.get(getAdapterPosition()).getQuantity())));
                     notifyDataSetChanged();
                     mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()),Html.FROM_HTML_MODE_LEGACY));
+                    ((SellingActivity) (context)).IOrderTotalListener.getOrderTotal(((SellingActivity) context).calculateOrderTotalPriceNumber());
                 } else {
                     Toast.makeText(context, "Hàng trong kho không đủ!", Toast.LENGTH_LONG).show();
                 }
@@ -80,7 +81,9 @@ class OrderListRecyclerViewAdapter extends RecyclerView.Adapter<OrderListRecycle
                     totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(calculateSubTotalPrice(mOrderList.get(getAdapterPosition()).getRetailPrice(), mOrderList.get(getAdapterPosition()).getQuantity())));
                     notifyDataSetChanged();
                     mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
+                    ((SellingActivity) (context)).IOrderTotalListener.getOrderTotal(((SellingActivity) context).calculateOrderTotalPriceNumber());
                 }
+                else removeButton.performClick();
             });
             removeButton.setOnClickListener(view -> {
                 int position = getAdapterPosition();
@@ -88,6 +91,7 @@ class OrderListRecyclerViewAdapter extends RecyclerView.Adapter<OrderListRecycle
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, mOrderList.size());
                 mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
+                ((SellingActivity) (context)).IOrderTotalListener.getOrderTotal(((SellingActivity) context).calculateOrderTotalPriceNumber());
             });
         }
     }

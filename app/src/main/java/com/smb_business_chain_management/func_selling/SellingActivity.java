@@ -5,8 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +25,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -32,11 +40,13 @@ import com.smb_business_chain_management.BusinessChainRESTClient;
 import com.smb_business_chain_management.BusinessChainRESTService;
 import com.smb_business_chain_management.R;
 import com.smb_business_chain_management.Utils.AppUtils;
+import com.smb_business_chain_management.base.BaseActivity;
+import com.smb_business_chain_management.func_login.SaveSharedPreference;
 import com.smb_business_chain_management.func_main.MainActivity;
-import com.smb_business_chain_management.func_selling.fragments.OrderCompleteDialogFragment;
+import com.smb_business_chain_management.func_products.ProductActivity;
+import com.smb_business_chain_management.func_settings.SettingsActivity;
 import com.smb_business_chain_management.models.Order;
 import com.smb_business_chain_management.models.Product;
-import com.smb_business_chain_management.base.BaseActivity;
 
 import net.posprinter.posprinterface.ProcessData;
 import net.posprinter.posprinterface.UiExecute;
@@ -56,12 +66,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SellingActivity extends BaseActivity implements RecyclerViewClickListener, OrderListenerInterface {
+public class SellingActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerViewClickListener, OrderListenerInterface {
     private static final String TAG = SellingActivity.class.getSimpleName();
     private static final AppUtils appUtil;
     static {
         appUtil = new AppUtils();
     }
+    public OrderTotalListener IOrderTotalListener;
+
     private static ProgressDialog dataLoadingDialog;
     private static AlertDialog doneDialog;
 
@@ -70,10 +82,12 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
     private RecyclerView.Adapter orderProductRecyclerViewAdapter;
     private TextInputEditText quantityTextInput;
     private Button addToOrderButton;
-    private Button completeButton;
     private RecyclerView orderListRecyclerView;
     private RecyclerView.Adapter orderListRecyclerViewAdapter;
     private TextView orderTotalTextView;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private PaymentPagerAdapter viewPagerAdapter;
 
     private List<Product> mProductList = new ArrayList<>();
     private List<Product> mDisplayProductList = new ArrayList<>();
@@ -83,6 +97,11 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
     private View selectedCard = null;
     private int selectedPos = -1;
     String BARCODE = "";
+
+    public static boolean IS_PRINTER_CONNECTED = false;
+    public static void setIsPrinterConnected(boolean isPrinterConnected){
+        IS_PRINTER_CONNECTED = isPrinterConnected;
+    }
 
     private BusinessChainRESTService businessChainRESTService;
     private SearchView.OnCloseListener searchViewCloseListener = new SearchView.OnCloseListener() {
@@ -123,6 +142,12 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
     };
     private SearchView.OnFocusChangeListener focusChangeListener = (view, focused) -> {
         if (!focused) {
+            int range = mDisplayProductList.size();
+            mDisplayProductList.clear();
+            orderProductRecyclerViewAdapter.notifyItemRangeRemoved(0, range);
+            mDisplayProductList.addAll(mProductList);
+            orderProductRecyclerViewAdapter.notifyItemRangeChanged(0, mDisplayProductList.size());
+            orderProductRecyclerViewAdapter.notifyDataSetChanged();
             hideKeypad();
         }
     };
@@ -147,21 +172,17 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
             makeSnackbar(view, R.string.order_add_not_selected_warning);
         } else {
             if(isInOrder(mSelectedProduct.getName())){
+                if (quantityTextInput.getText().toString().isEmpty()) quantityTextInput.setText("1");
                 increaseOrderQuantity(mSelectedProduct.getName());
                 quantityTextInput.setText("1");
             }
             else {
+                if (quantityTextInput.getText().toString().isEmpty()) quantityTextInput.setText("1");
                 getSelectedProductDetailAndAddToOrder(mSelectedProduct.getId(), false);
             }
         }
     };
-    private Button.OnClickListener completeButtonClickListener = view -> {
-        if (mOrderList.size() >= 1) {
-            OrderCompleteDialogFragment completeDialog = new OrderCompleteDialogFragment();
-            completeDialog.show(getSupportFragmentManager(), "completeDialog");
-        }
-        else makeSnackbar(orderListRecyclerView, R.string.empty_order_warning);
-    };
+    private DrawerLayout mDrawerLayout;
 
     @Override
     public void onBackPressed() {
@@ -170,20 +191,23 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
         setResult(RESULT_CANCELED, returnIntent);
         finish();
     }
-
     @Override
-     protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(getResources().getString(R.string.activity_selling_name));
         invalidateOptionsMenu();
         setContentView(R.layout.activity_selling);
-
+        Log.d(getApplicationContext().toString(), "Login status: " + SaveSharedPreference.getLoggedStatus(getApplicationContext()));
         viewLookup();
         viewSetup();
         setViewsListeners();
 
-        businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        NavigationView navigationView = findViewById(R.id.navView);
+        navigationView.getMenu().getItem(BaseActivity.NAV_MENU_SELLING_ID).setChecked(true);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        businessChainRESTService = BusinessChainRESTClient.getClient(getApplicationContext()).create(BusinessChainRESTService.class);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         initDialog();
         initRecyclerViews();
@@ -193,6 +217,49 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
     }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        Intent intent;
+        if (id == R.id.navSelling) {
+        } else if (id == R.id.navReturn) {
+            Intent returnIntent = new Intent();
+            setResult(RESULT_CANCELED, returnIntent);
+            finish();
+        } else if (id == R.id.navProduct) {
+            finish();
+            intent = new Intent(SellingActivity.this, ProductActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.navSettings) {
+            finish();
+            intent = new Intent(SellingActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (!orderProductSearchView.hasFocus() && !quantityTextInput.hasFocus()){
+            char c = (char) event.getUnicodeChar();
+            if (keyCode != KeyEvent.KEYCODE_ENTER) BARCODE = BARCODE + (String.valueOf(c));
+
+            switch (keyCode){
+                case KeyEvent.KEYCODE_ENTER: {
+                    scanAndAdd(BARCODE);
+                }
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dataLoadingDialog.cancel();
+        doneDialog.cancel();
+    }
 
     private void viewLookup() {
         orderProductSearchView = findViewById(R.id.orderProductSearchView);
@@ -201,11 +268,23 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
         quantityTextInput = findViewById(R.id.quantityInputText);
         orderTotalTextView = findViewById(R.id.orderTotalPrice);
         addToOrderButton = findViewById(R.id.addToListButton);
-        completeButton = findViewById(R.id.orderDoneButton);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.paymentViewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        mDrawerLayout = findViewById(R.id.drawerLayout);
+
     }
     private void viewSetup() {
         orderTotalTextView.setText(Html.fromHtml(getString(R.string.order_total, '0'), Html.FROM_HTML_MODE_LEGACY));
         quantityTextInput.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+        viewPagerAdapter = new PaymentPagerAdapter(this, getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+        };
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
     }
     private void setViewsListeners() {
         orderProductSearchView.setOnQueryTextFocusChangeListener(focusChangeListener);
@@ -224,7 +303,6 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
 //
 //        quantityTextInput.addTextChangedListener(quantityTextWatcher);
         addToOrderButton.setOnClickListener(addButtonClickListener);
-        completeButton.setOnClickListener(completeButtonClickListener);
     }
     private void initDialog() {
         dataLoadingDialog = new ProgressDialog(this);
@@ -271,6 +349,7 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
                         mOrderList.addAll(getIntent().getExtras().getParcelableArrayList(MainActivity.ARG_SAVED_ORDER));
                         orderListRecyclerViewAdapter.notifyDataSetChanged();
                         orderTotalTextView.setText(Html.fromHtml(getString(R.string.order_total, calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
+                        IOrderTotalListener.getOrderTotal(calculateOrderTotalPriceNumber());
                     }
 
                 } else {
@@ -366,6 +445,7 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
 //        orderListRecyclerViewAdapter.notifyItemRangeChanged(0, mOrderList.size());
         orderListRecyclerViewAdapter.notifyDataSetChanged();
         orderTotalTextView.setText(Html.fromHtml(getString(R.string.order_total, calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
+        IOrderTotalListener.getOrderTotal(calculateOrderTotalPriceNumber());
     }
     private void increaseOrderQuantity(String name) {
         mOrderList.stream()
@@ -379,6 +459,7 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
                 });
         orderListRecyclerViewAdapter.notifyDataSetChanged();
         orderTotalTextView.setText(Html.fromHtml(getString(R.string.order_total, calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
+        IOrderTotalListener.getOrderTotal(calculateOrderTotalPriceNumber());
     }
     private void scanAndAdd(String barcode){
         Product toAdd = mProductList.stream().filter(product -> product.getBarcode().equals(barcode)).findFirst().orElse(null);
@@ -395,21 +476,6 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
             makeSnackbar(orderProductRecyclerView, R.string.order_barcode_invalid);
         }
         BARCODE = "";
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (!orderProductSearchView.hasFocus() && !quantityTextInput.hasFocus()){
-            char c = (char) event.getUnicodeChar();
-            if (keyCode != KeyEvent.KEYCODE_ENTER) BARCODE = BARCODE + (String.valueOf(c));
-
-            switch (keyCode){
-                case KeyEvent.KEYCODE_ENTER: {
-                    scanAndAdd(BARCODE);
-                }
-            }
-        }
-        return super.onKeyUp(keyCode, event);
     }
 
     private void hideKeypad() {
@@ -457,7 +523,6 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
             outputStream = openFileOutput("order"+fileName, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(order.getOrderDate());
-            objectOutputStream.writeInt(order.getProducts().size());
 //            for (Product product : order.getProducts()){
 //                objectOutputStream.writeObject(product);
 //            }
@@ -482,52 +547,55 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
         }
     }
     private String getBill(String received, String change) {
-        String bill = "\u0009Cua hang Nguyen Hue\n\u0020\u0020\u0020\u0020Dia chi: 92 Nguyen Hue, P. Ben Nghe, Q. 1, TP. HCM\n\u0020\u0020\u0020\u0020So: " + mCurrentOrder.getReceiptCode() + "\n\u0020\u0020\u0020\u0020Ngay: " + AppUtils.getCurrentFormattedDate() +"\n\u0020\u0020\u0020\u0020Cashier: Ta Huy Hoang\n\u0020\u0020\u0020===================================\n";
-        bill = bill.concat(AppUtils.formattedOrderItem("STT", "Don gia", "Slg", "Thanh tien"));
+        String bill = "\u0009\u0009Cua hang Nguyen Hue\n\u0020\u0020Dia chi: 92 Nguyen Hue, P. Ben Nghe, Q. 1, TP. HCM\n\u0020\u0020So: " + mCurrentOrder.getReceiptCode() + "\n\u0020\u0020Ngay: " + AppUtils.getCurrentFormattedDate() +"\n\u0020\u0020Cashier: Ta Huy Hoang\n------------------------------------------------\n";
+        bill = bill.concat(AppUtils.formattedOrderItem("STT", "Don gia", "Slg", "Thanh tien", true));
         int index = 0;
         for (Product product : mOrderList){
             bill = bill.concat(AppUtils.cutAndAddNewLine(product.getName(), 48)).concat("\n");
-            bill = bill.concat(AppUtils.formattedOrderItem(String.valueOf(index++), AppUtils.formattedStringMoneyString(String.valueOf(product.getPrice())), String.valueOf(product.getQuantity()), AppUtils.formattedStringMoneyString(String.valueOf(product.getPrice()*product.getQuantity()))));
+            bill = bill.concat(AppUtils.formattedOrderItem(String.valueOf(++index), AppUtils.formattedStringMoneyString(String.valueOf(product.getPrice())), String.valueOf(product.getQuantity()), AppUtils.formattedStringMoneyString(String.valueOf(product.getPrice()*product.getQuantity())), true));
         }
-        bill = bill.concat("\u0020\u0020\u0020===================================\n")
-                .concat(AppUtils.formattedOrderItem("", "Tong tien: ", "", AppUtils.formattedBigIntegerMoneyString(calculateOrderTotalPriceNumber())))
-                .concat(AppUtils.formattedOrderItem("", "Tien khach tra: ", "", AppUtils.formattedStringMoneyString(received)))
-                .concat(AppUtils.formattedOrderItem("", "Tien thua: ", "", AppUtils.formattedStringMoneyString(change)));
+        bill = bill.concat("------------------------------------------------\n")
+                .concat(AppUtils.formattedOrderItem("", "Tong tien: ", "", AppUtils.formattedBigIntegerMoneyString(calculateOrderTotalPriceNumber()), false))
+                .concat(AppUtils.formattedOrderItem("", "Tien khach tra: ", "", AppUtils.formattedStringMoneyString(received), false))
+                .concat(AppUtils.formattedOrderItem("", "Tien thua: ", "", AppUtils.formattedStringMoneyString(change), false));
+        Log.d(TAG, bill);
         return bill;
     }
     private void printBill(String str){
-        MainActivity.binder.writeDataByYouself(
-                new UiExecute() {
-                    @Override
-                    public void onsucess() {
+        if (IS_PRINTER_CONNECTED) {
+            MainActivity.binder.writeDataByYouself(
+                    new UiExecute() {
+                        @Override
+                        public void onsucess() {
 
-                    }
-
-                    @Override
-                    public void onfailed() {
-
-                    }
-                }, new ProcessData() {
-                    @Override
-                    public List<byte[]> processDataBeforeSend() {
-                        List<byte[]> list=new ArrayList<byte[]>();
-                        if (str.equals(null)||str.equals("")){
-                        }else {
-                            //initialize the printer
-//                            list.add( DataForSendToPrinterPos58.initializePrinter());
-                            list.add(DataForSendToPrinterPos80.initializePrinter());
-
-                            byte[] data1= appUtil.strTobytes(str);
-                            list.add(data1);
-                            //should add the command of print and feed line,because print only when one line is complete, not one line, no print
-                            list.add(DataForSendToPrinterPos80.printAndFeedLine());
-                            //cut pager
-                            list.add(DataForSendToPrinterPos80.selectCutPagerModerAndCutPager(66,1));
-                            return list;
                         }
-                        return null;
-                    }
-                });
+
+                        @Override
+                        public void onfailed() {
+
+                        }
+                    }, new ProcessData() {
+                        @Override
+                        public List<byte[]> processDataBeforeSend() {
+                            List<byte[]> list = new ArrayList<byte[]>();
+                            if (str.equals(null) || str.equals("")) {
+                            } else {
+                                //initialize the printer
+//                            list.add( DataForSendToPrinterPos58.initializePrinter());
+                                list.add(DataForSendToPrinterPos80.initializePrinter());
+
+                                byte[] data1 = appUtil.strTobytes(str);
+                                list.add(data1);
+                                //should add the command of print and feed line,because print only when one line is complete, not one line, no print
+                                list.add(DataForSendToPrinterPos80.printAndFeedLine());
+                                //cut pager
+                                list.add(DataForSendToPrinterPos80.selectCutPagerModerAndCutPager(66, 1));
+                                return list;
+                            }
+                            return null;
+                        }
+                    });
+        }
     }
 
     @Override
@@ -563,10 +631,8 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
             Log.d(TAG, mSelectedProduct.getName());
         }
     }
-
     @Override
     public void recyclerViewListClickListener(View v, int position) {/*unused*/}
-
     @Override
     public void saveAndClearOrder() {
         if (mCurrentOrder.getOrderDate().isEmpty()) mCurrentOrder.setOrderDate(AppUtils.getCurrentFormattedDate());
@@ -586,19 +652,17 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
             }
             createCachedFile(this, String.valueOf(currentSavedId) ,mCurrentOrder);
         }
-//        mCurrentOrder.setId(currentSavedId);
         clearOrder();
+        IOrderTotalListener.getOrderTotal(calculateOrderTotalPriceNumber());
     }
-
     @Override
     public void paymentDialog() {
         PaymentDialog paymentDialog = new PaymentDialog();
 
         paymentDialog.show(getSupportFragmentManager(), "completeDialog");
     }
-
     @Override
-    public void completeOrderAndSubmit(String received, String change, PaymentDialog dismissFragment) {
+    public void completeOrderAndSubmit(String received, String change) {
         mCurrentOrder.setShopId(1);
         mCurrentOrder.setUserId(1);
         mCurrentOrder.setOrderDate(AppUtils.getCurrentFormattedDate());
@@ -612,13 +676,17 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
                 if (response.code() == 200){
                     Snackbar.make(orderProductSearchView, "Done", Snackbar.LENGTH_LONG);
                     mCurrentOrder.setReceiptCode(response.body().getReceiptCode());
-                    if (getIntent().getExtras().containsKey(MainActivity.ARG_SAVED_ORDER_FILENAME)){
-                        Log.d(TAG, "deleted");
-                        deleteFile("order".concat(getIntent().getExtras().getString(MainActivity.ARG_SAVED_ORDER_FILENAME)));
+                    try {
+                        if (getIntent().getExtras().containsKey(MainActivity.ARG_SAVED_ORDER_FILENAME)){
+                            Log.d(TAG, "deleted");
+                            deleteFile("order".concat(getIntent().getExtras().getString(MainActivity.ARG_SAVED_ORDER_FILENAME)));
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
                     }
                     showDoneDialog(received, change);
                     clearOrder();
-                    dismissFragment.dismiss();
+                    IOrderTotalListener.getOrderTotal(calculateOrderTotalPriceNumber());
                     dataLoadingDialog.dismiss();
                 }
                 else {
@@ -636,7 +704,6 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
             }
         });
     }
-
     @Override
     public void clearOrder() {
         int range = mOrderList.size();
@@ -650,14 +717,6 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
         orderListRecyclerViewAdapter.notifyItemRangeRemoved(0, range);
         orderTotalTextView.setText(Html.fromHtml(getString(R.string.order_total, '0'), Html.FROM_HTML_MODE_LEGACY));
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        dataLoadingDialog.cancel();
-        doneDialog.cancel();
-    }
-
     @Override
     public void showDoneDialog(String received, String change) {
         String bill = getBill(received, change);
@@ -670,5 +729,11 @@ public class SellingActivity extends BaseActivity implements RecyclerViewClickLi
         public CharSequence getTransformation(CharSequence source, View view) {
             return source;
         }
+    }
+    public interface OrderTotalListener{
+        void getOrderTotal(BigInteger orderTotal);
+    }
+    public void setOrderTotalListener(OrderTotalListener listener){
+        this.IOrderTotalListener = listener;
     }
 }

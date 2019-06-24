@@ -58,7 +58,7 @@ public class UserListActivity extends BaseActivity implements ShopListenerInterf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        businessChainRESTService = BusinessChainRESTClient.getClient().create(BusinessChainRESTService.class);
+        businessChainRESTService = BusinessChainRESTClient.getClient(getApplicationContext()).create(BusinessChainRESTService.class);
         setContentView(R.layout.activity_user_list);
         RecyclerView userRecyclerView = findViewById(R.id.user_list);
         assert userRecyclerView != null;

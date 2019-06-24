@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import com.smb_business_chain_management.models.Brand;
 import com.smb_business_chain_management.models.Category;
 import com.smb_business_chain_management.models.City;
+import com.smb_business_chain_management.models.LoginToken;
 import com.smb_business_chain_management.models.Measurement;
 import com.smb_business_chain_management.models.Order;
 import com.smb_business_chain_management.models.Product;
@@ -12,11 +13,15 @@ import com.smb_business_chain_management.models.Store;
 import com.smb_business_chain_management.models.User;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -61,4 +66,11 @@ public interface BusinessChainRESTService {
 
     @POST("api/salereceipts")
     Call<Order> submitOrder(@Body Order order);
+
+    @POST("connect/token")
+    @Headers({
+            "Content-Type: application/x-www-form-urlencoded"
+    })
+    @FormUrlEncoded
+    Call<LoginToken> login(@FieldMap Map<String,String> params);
 }

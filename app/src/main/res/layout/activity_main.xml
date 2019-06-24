@@ -5,15 +5,9 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:openDrawer="start"
     tools:context=".func_main.MainActivity">
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/navView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true" />
-    <android.support.constraint.ConstraintLayout
+   <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="12dp">
@@ -34,7 +28,7 @@
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="50dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/returnOrderMenu"
@@ -52,13 +46,12 @@
                     android:id="@+id/newOrderTextLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/menu_new_order"
-                    android:textSize="14sp"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/newOrderMenu"
-                    app:layout_constraintStart_toStartOf="@id/newOrderMenu" />
+                    app:layout_constraintStart_toStartOf="@id/newOrderMenu"
+                    style="@style/Body2" />
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/returnOrderMenu"
@@ -68,7 +61,7 @@
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="50dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/productsMenu"
@@ -86,13 +79,12 @@
                     android:id="@+id/returnOrderTextLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/menu_return_order"
-                    android:textSize="14sp"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/returnOrderMenu"
-                    app:layout_constraintStart_toStartOf="@id/returnOrderMenu" />
+                    app:layout_constraintStart_toStartOf="@id/returnOrderMenu"
+                    style="@style/Body2" />
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/productsMenu"
@@ -101,7 +93,7 @@
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="50dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="8dp"
                     app:layout_constraintStart_toEndOf="@id/returnOrderMenu"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -119,13 +111,12 @@
                     android:id="@+id/productsMenuTextLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/menu_products"
-                    android:textSize="14sp"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/productsMenu"
-                    app:layout_constraintStart_toStartOf="@id/productsMenu" />
+                    app:layout_constraintStart_toStartOf="@id/productsMenu"
+                    style="@style/Body2" />
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/settingsMenu"
@@ -134,7 +125,7 @@
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="50dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -155,12 +146,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/activity_settings_name"
-                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/settingsMenu"
-                    app:layout_constraintStart_toStartOf="@id/settingsMenu" />
+                    app:layout_constraintStart_toStartOf="@id/settingsMenu"
+                    style="@style/Body2" />
                 <View
                     android:id="@+id/vertical_center_anchor"
                     android:layout_width="1px"
@@ -237,5 +227,15 @@
             android:textSize="14sp"
             android:text="Bắt đầu scan để tạo đơn hàng mới"/>
     </android.support.constraint.ConstraintLayout>
-
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:backgroundTint="@color/primary_color_state"
+        app:itemIconTint="@color/primary_item_color_state"
+        app:itemTextColor="@color/primary_item_color_state"
+        app:itemBackground="@drawable/primary_drawable_background_color_state"
+        app:menu="@menu/side_drawer" />
 </android.support.v4.widget.DrawerLayout>

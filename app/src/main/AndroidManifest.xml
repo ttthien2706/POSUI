@@ -6,24 +6,20 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-    <!--<uses-permission android:name="android.hardware.usb.UsbAccessory" />-->
-    <!--<uses-permission android:name="android.permission.INTERNET" />-->
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
-
+    <!-- <uses-permission android:name="android.hardware.usb.UsbAccessory" /> -->
+    <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" /> <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" />
-    <!--<uses-feature-->
-        <!--android:name="android.hardware.usb.host"-->
-        <!--android:required="true" />-->
+        android:required="true" /> <!-- <uses-feature -->
+    <!-- android:name="android.hardware.usb.host" -->
+    <!-- android:required="true" /> -->
     <permission
         android:name="com.smb_business_chain_management.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.smb_business_chain_management.permission.MAPS_RECEIVE" />
-
 
     <uses-feature
         android:name="android.hardware.usb.host"
@@ -52,12 +48,12 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
@@ -68,7 +64,21 @@
         android:roundIcon="@mipmap/ic_placeholderimage_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".func_selling.SellingActivity"></activity>
+        <activity
+            android:name=".func_login.LoginActivity"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.LoginTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".func_selling.SellingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.smb_business_chain_management.func_main.MainActivity" />
+        </activity>
         <activity
             android:name=".func_products.ProductActivity"
             android:label="ProductActivity"
@@ -117,13 +127,7 @@
         <activity
             android:name=".func_main.MainActivity"
             android:label="MainActivity"
-            android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="landscape"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -135,6 +139,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <service android:name="net.posprinter.service.PosprinterService" />
     </application>
 

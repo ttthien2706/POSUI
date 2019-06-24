@@ -52,34 +52,5 @@ public class PaymentDialog extends DialogFragment {
 
     private void tabSetup(TabLayout tabLayout){
         tabLayout.setupWithViewPager(viewPager);
-//        tabLayout.getTabAt(0).select();
-//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                switch (tab.getPosition()){
-//                    case 0:
-////                        Toast.makeText(tabLayout.getContext(),"Tab 0", Toast.LENGTH_LONG).show();
-//                        break;
-//                    case 1:
-////                        Toast.makeText(tabLayout.getContext(),"Tab 1", Toast.LENGTH_LONG).show();
-//                        break;
-//                    case 2:
-////                        Toast.makeText(tabLayout.getContext(),"Tab 2", Toast.LENGTH_LONG).show();
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
     }
 }

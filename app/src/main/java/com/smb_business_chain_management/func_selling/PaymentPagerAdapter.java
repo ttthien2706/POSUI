@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.smb_business_chain_management.R;
+import com.smb_business_chain_management.func_selling.fragments.CardPaymentFragment;
 import com.smb_business_chain_management.func_selling.fragments.CashPaymentFragment;
 
 class PaymentPagerAdapter extends FragmentPagerAdapter {
@@ -23,9 +24,9 @@ class PaymentPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return CashPaymentFragment.newInstance();
             case 1:
-                return CashPaymentFragment.newInstance();
+                return CardPaymentFragment.newInstance();
             case 2:
-                return CashPaymentFragment.newInstance();
+                return CardPaymentFragment.newInstance();
 
         }
         return null;
