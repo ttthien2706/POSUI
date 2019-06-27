@@ -309,10 +309,12 @@ public class SellingActivity extends BaseActivity implements NavigationView.OnNa
         dataLoadingDialog.setMessage(getString(R.string.data_loading_message));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Đơn hàng và in bill đã hoàn tất");
-        doneDialog = builder.create();
-        doneDialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
-        doneDialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_done);
+        doneDialog = builder.setTitle("Đơn hàng và in bill đã hoàn tất")
+                .setMessage("\nBill đã được ghi nhận\n")
+                .setIcon(R.drawable.ic_payment_done)
+                .create();
+//        doneDialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
+//        doneDialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_done);
     }
     private void initRecyclerViews() {
         orderProductRecyclerViewAdapter = new OrderProductRecyclerViewAdapter(mDisplayProductList, this);
@@ -547,7 +549,7 @@ public class SellingActivity extends BaseActivity implements NavigationView.OnNa
         }
     }
     private String getBill(String received, String change) {
-        String bill = "\u0009\u0009Cua hang Nguyen Hue\n\u0020\u0020Dia chi: 92 Nguyen Hue, P. Ben Nghe, Q. 1, TP. HCM\n\u0020\u0020So: " + mCurrentOrder.getReceiptCode() + "\n\u0020\u0020Ngay: " + AppUtils.getCurrentFormattedDate() +"\n\u0020\u0020Cashier: Ta Huy Hoang\n------------------------------------------------\n";
+        String bill = "\u0009\u0009Cua hang Nguyen Hue\n\u0020\u0020Dia chi: 92 Nguyen Hue, P. Ben Nghe, Q. 1, TP. HCM\n\u0020\u0020So: " + mCurrentOrder.getReceiptCode() + "\n\u0020\u0020Ngay: " + AppUtils.getCurrentFormattedDate() +"\n\u0020\u0020Cashier: " + SaveSharedPreference.getName(getApplicationContext()) + "\n------------------------------------------------\n";
         bill = bill.concat(AppUtils.formattedOrderItem("STT", "Don gia", "Slg", "Thanh tien", true));
         int index = 0;
         for (Product product : mOrderList){
@@ -562,6 +564,7 @@ public class SellingActivity extends BaseActivity implements NavigationView.OnNa
         return bill;
     }
     private void printBill(String str){
+        printBarcode();
         if (IS_PRINTER_CONNECTED) {
             MainActivity.binder.writeDataByYouself(
                     new UiExecute() {
@@ -595,6 +598,41 @@ public class SellingActivity extends BaseActivity implements NavigationView.OnNa
                             return null;
                         }
                     });
+        }
+    }
+    private void printBarcode(){
+        if (IS_PRINTER_CONNECTED) {
+            MainActivity.binder.writeDataByYouself(new UiExecute() {
+                @Override
+                public void onsucess() {
+
+                }
+
+                @Override
+                public void onfailed() {
+
+                }
+            }, () -> {
+                List<byte[]>list=new ArrayList<byte[]>();
+                //initialize the printer
+                list.add(DataForSendToPrinterPos80.initializePrinter());
+                //select alignment
+                list.add(DataForSendToPrinterPos80.selectAlignment(1));
+                //select HRI position
+                list.add(DataForSendToPrinterPos80.selectHRICharacterPrintPosition(02));
+                //set the width
+                list.add(DataForSendToPrinterPos80.setBarcodeWidth(3));
+                //set the height ,usually 162
+                list.add(DataForSendToPrinterPos80.setBarcodeHeight(162));
+                //print barcode ,attention,there are two method for barcode.
+                //different barcode type,please refer to the programming manual
+                //UPC-A
+                list.add(DataForSendToPrinterPos80.printBarcode(69,16,mCurrentOrder.getReceiptCode()));
+
+                list.add(DataForSendToPrinterPos80.printAndFeedLine());
+
+                return list;
+            });
         }
     }
 
@@ -662,7 +700,7 @@ public class SellingActivity extends BaseActivity implements NavigationView.OnNa
         paymentDialog.show(getSupportFragmentManager(), "completeDialog");
     }
     @Override
-    public void completeOrderAndSubmit(String received, String change) {
+    public void completeOrderAndSubmit(String received, String change, TextView changeAmountTextView) {
         mCurrentOrder.setShopId(1);
         mCurrentOrder.setUserId(1);
         mCurrentOrder.setOrderDate(AppUtils.getCurrentFormattedDate());
@@ -687,6 +725,7 @@ public class SellingActivity extends BaseActivity implements NavigationView.OnNa
                     showDoneDialog(received, change);
                     clearOrder();
                     IOrderTotalListener.getOrderTotal(calculateOrderTotalPriceNumber());
+                    if (changeAmountTextView != null) changeAmountTextView.setText(AppUtils.formatStringToHTMLSpanned(getString(R.string.order_payment_cash_change, "0")));
                     dataLoadingDialog.dismiss();
                 }
                 else {

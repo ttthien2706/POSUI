@@ -16,6 +16,7 @@ import com.smb_business_chain_management.models.City;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -113,8 +114,8 @@ public class AppUtils {
     public byte[] strTobytes(String str){
         byte[] b=null,data=null;
         try {
-            b = str.getBytes("utf-8");
-            data=new String(b,"utf-8").getBytes("gbk");
+            b = str.getBytes(StandardCharsets.UTF_8);
+            data=new String(b,StandardCharsets.UTF_8).getBytes("gbk");
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

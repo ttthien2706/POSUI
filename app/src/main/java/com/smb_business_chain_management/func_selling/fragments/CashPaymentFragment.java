@@ -59,7 +59,7 @@ public class CashPaymentFragment extends Fragment implements SellingActivity.Ord
     private Button.OnClickListener onDoneButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            listener.completeOrderAndSubmit(AppUtils.removeFormattedDot(receivedAmountTextInput.getText().toString()), calculateChange().toString());
+            listener.completeOrderAndSubmit(AppUtils.removeFormattedDot(receivedAmountTextInput.getText().toString()), calculateChange().toString(), changeAmountTextView);
 //            imageView.setImageResource(R.drawable.ic_payment_done);
 //            imageView.setColorFilter(getResources().getColor(R.color.colorStoreActive, mContext.getTheme()));
             receivedAmountTextInput.setText("0");
