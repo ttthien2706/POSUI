@@ -232,11 +232,11 @@ public class SellingActivity extends BaseActivity implements NavigationView.OnNa
             finish();
             intent = new Intent(SellingActivity.this, ProductActivity.class);
             startActivity(intent);
-        } else if (id == R.id.navSettings) {
+        } /*else if (id == R.id.navSettings) {
             finish();
             intent = new Intent(SellingActivity.this, SettingsActivity.class);
             startActivity(intent);
-        }
+        }*/
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -364,8 +364,12 @@ public class SellingActivity extends BaseActivity implements NavigationView.OnNa
 
             @Override
             public void onFailure(Call<List<Product>> call, Throwable throwable) {
-                Log.e(TAG, throwable.getMessage());
-                Log.e(TAG, throwable.toString());
+                try {
+                    Log.e(TAG, throwable.getMessage());
+                    Log.e(TAG, throwable.toString());
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
                 throwable.printStackTrace();
                 makeSnackbar(orderProductRecyclerView, R.string.REST_fail);
                 dataLoadingDialog.hide();
@@ -420,6 +424,9 @@ public class SellingActivity extends BaseActivity implements NavigationView.OnNa
                         addToOrder(curProduct);
                         quantityTextInput.setText("1");
                         if (!fromScan) mSelectedProduct = curProduct;
+                    }
+                    else{
+                        Snackbar.make(orderProductRecyclerView, "Không đủ hàng trong kho", Snackbar.LENGTH_LONG).show();
                     }
                     dataLoadingDialog.hide();
                 } else {

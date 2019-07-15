@@ -420,8 +420,8 @@ public class SettingsActivity extends BaseActivity implements NavigationView.OnN
             finish();
             intent = new Intent(SettingsActivity.this, ProductActivity.class);
             startActivity(intent);
-        } else if (id == R.id.navSettings) {
-        }
+        }/* else if (id == R.id.navSettings) {
+        }*/
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

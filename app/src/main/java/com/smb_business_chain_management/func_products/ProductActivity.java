@@ -59,7 +59,7 @@ public class ProductActivity extends BaseActivity
     private RecyclerView productsRecyclerView;
     private RecyclerView.Adapter productRecyclerViewAdapter;
     private TextView emptyView;
-    private FloatingActionButton createButton;
+//    private FloatingActionButton createButton;
 
     private DialogFragment createDialog;
     private DrawerLayout mDrawerLayout;
@@ -97,8 +97,8 @@ public class ProductActivity extends BaseActivity
         productRecyclerViewAdapter = new ProductRecyclerViewAdapter(this, mProductList, getFragmentManager());
         productsRecyclerView.setAdapter(productRecyclerViewAdapter);
 
-        createButton = findViewById(R.id.createButton);
-        createButton.setOnClickListener(createButtonClicked);
+//        createButton = findViewById(R.id.createButton);
+//        createButton.setOnClickListener(createButtonClicked);
 
         getAllProducts();
 
@@ -192,11 +192,11 @@ public class ProductActivity extends BaseActivity
         } else if (id == R.id.navReturn) {
             finish();
         } else if (id == R.id.navProduct) {
-        } else if (id == R.id.navSettings) {
+        } /*else if (id == R.id.navSettings) {
             finish();
             intent = new Intent(ProductActivity.this, SettingsActivity.class);
             startActivity(intent);
-        }
+        }*/
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -229,8 +229,12 @@ public class ProductActivity extends BaseActivity
             }
             @Override
             public void onFailure(Call<List<Product>> call, Throwable throwable) {
-                Log.e(TAG, throwable.getMessage());
-                Log.e(TAG, throwable.toString());
+                try {
+                    Log.e(TAG, throwable.getMessage());
+                    Log.e(TAG, throwable.toString());
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
                 throwable.printStackTrace();
             }
         });
@@ -261,33 +265,33 @@ public class ProductActivity extends BaseActivity
             }
         });
     }
-    View.OnClickListener createButtonClicked = view -> {
-        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.addStoreMenu));
-        FragmentManager fragmentManager = getFragmentManager();
-        createDialog = new CreateProductDialogFragment();
-
-        Bundle fragmentArgument = new Bundle();
-
-        fragmentArgument.putSparseParcelableArray(ProductDetailFragment.ARG_CATEGORY, mDataUtils.mCategoryMap);
-        fragmentArgument.putSparseParcelableArray(ProductDetailFragment.ARG_BRAND, mDataUtils.mBranTheWheelyWheelyLegsNoFreely);
-        fragmentArgument.putSparseParcelableArray(ProductDetailFragment.ARG_MEASUREMENT, mDataUtils.mMeasurementMap);
-
-        createDialog.setArguments(fragmentArgument);
-
-        // The device is smaller, so show the fragment fullscreen
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        // For a little polish, specify a transition animation
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        // To make it fullscreen, use the 'content' root view as the container
-        // for the fragment, which is always the root view for the activity
-        transaction.replace(android.R.id.content, createDialog)
-                .addToBackStack(null).commit();
-        invalidateOptionsMenu();
-        if (getSupportActionBar() != null) {
-            toggle.onDrawerOpened(mDrawerLayout);
-        }
-
-    };
+//    View.OnClickListener createButtonClicked = view -> {
+//        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.addStoreMenu));
+//        FragmentManager fragmentManager = getFragmentManager();
+//        createDialog = new CreateProductDialogFragment();
+//
+//        Bundle fragmentArgument = new Bundle();
+//
+//        fragmentArgument.putSparseParcelableArray(ProductDetailFragment.ARG_CATEGORY, mDataUtils.mCategoryMap);
+//        fragmentArgument.putSparseParcelableArray(ProductDetailFragment.ARG_BRAND, mDataUtils.mBranTheWheelyWheelyLegsNoFreely);
+//        fragmentArgument.putSparseParcelableArray(ProductDetailFragment.ARG_MEASUREMENT, mDataUtils.mMeasurementMap);
+//
+//        createDialog.setArguments(fragmentArgument);
+//
+//        // The device is smaller, so show the fragment fullscreen
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        // For a little polish, specify a transition animation
+//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        // To make it fullscreen, use the 'content' root view as the container
+//        // for the fragment, which is always the root view for the activity
+//        transaction.replace(android.R.id.content, createDialog)
+//                .addToBackStack(null).commit();
+//        invalidateOptionsMenu();
+//        if (getSupportActionBar() != null) {
+//            toggle.onDrawerOpened(mDrawerLayout);
+//        }
+//
+//    };
     protected void dismissDialogAndGoUp(){
         dialogDismissAnimate(createDialog.getView());
         createDialog.dismiss();

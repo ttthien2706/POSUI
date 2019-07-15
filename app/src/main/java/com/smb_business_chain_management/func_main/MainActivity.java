@@ -1,13 +1,13 @@
 package com.smb_business_chain_management.func_main;
 
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,7 +29,6 @@ import com.smb_business_chain_management.func_login.SaveSharedPreference;
 import com.smb_business_chain_management.func_main.fragments.PastOrderDetailFragment;
 import com.smb_business_chain_management.func_products.ProductActivity;
 import com.smb_business_chain_management.func_selling.SellingActivity;
-import com.smb_business_chain_management.func_settings.SettingsActivity;
 import com.smb_business_chain_management.models.Order;
 import com.smb_business_chain_management.models.Product;
 
@@ -56,6 +55,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     String BARCODE = "";
     public boolean IS_CONNECTED = false;
     public static IMyBinder binder;
+    private static Snackbar doneDialog;
     private static AlertDialog noPrinterDialog;
 
     ServiceConnection printerConnection = new ServiceConnection() {
@@ -65,6 +65,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             binder= (IMyBinder) iBinder;
             Log.e("binder","connected");
             connectUsb(usbAddress);
+            Log.d("bind successfully, IS_CONNECTED", String.valueOf(IS_CONNECTED));
         }
 
         @Override
@@ -86,10 +87,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.app_title));
         setContentView(R.layout.activity_main);
-        initNoPrinterDialog();
+        viewLookup();
+        initDialogs();
         setupPrinter();
 
-        viewLookup();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -99,10 +100,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        CardView menuSettings = findViewById(R.id.settingsMenu);
+//        CardView menuSettings = findViewById(R.id.settingsMenu);
         CardView menuProducts = findViewById(R.id.productsMenu);
         CardView menuNewOrder = findViewById(R.id.newOrderMenu);
-        menuSettings.setOnClickListener(new MenuIconListener());
+//        menuSettings.setOnClickListener(new MenuIconListener());
         menuProducts.setOnClickListener(new MenuIconListener());
         menuNewOrder.setOnClickListener(new MenuIconListener());
 
@@ -117,19 +118,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         int id = item.getItemId();
         Intent intent;
         if (id == R.id.navSelling) {
-            intent = new Intent(MainActivity.this, SellingActivity.class);
-            intent.putExtra("isParentRoot", isTaskRoot());
-            startActivityForResult(intent, SAVE_ORDER_CODE);
+            if (!IS_CONNECTED){
+                if (!noPrinterDialog.isShowing()) noPrinterDialog.show();
+            }
+            else {
+                intent = new Intent(MainActivity.this, SellingActivity.class);
+                intent.putExtra("isParentRoot", isTaskRoot());
+                startActivityForResult(intent, SAVE_ORDER_CODE);
+            }
         } else if (id == R.id.navReturn) {
         } else if (id == R.id.navProduct) {
             intent = new Intent(MainActivity.this, ProductActivity.class);
             intent.putExtra("isParentRoot", isTaskRoot());
             startActivity(intent);
-        } else if (id == R.id.navSettings) {
+        } /*else if (id == R.id.navSettings) {
             intent = new Intent(MainActivity.this, SettingsActivity.class);
             intent.putExtra("isParentRoot", isTaskRoot());
             startActivity(intent);
-        }
+        }*/
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -146,24 +152,36 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (keyCode != KeyEvent.KEYCODE_ENTER) BARCODE = BARCODE + (c);
 
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            Intent intent = new Intent(this, SellingActivity.class);
-            intent.putExtra("isParentRoot", isTaskRoot());
-            intent.putExtra("barcode", BARCODE);
-            BARCODE = "";
-            this.startActivityForResult(intent, RESULT_OK);
+            Log.d("onKeyUp(), IS_CONNECTED", String.valueOf(IS_CONNECTED));
+            if (!IS_CONNECTED){
+                if (!noPrinterDialog.isShowing()) noPrinterDialog.show();
+                BARCODE = "";
+            }
+            else {
+                Intent intent = new Intent(this, SellingActivity.class);
+                intent.putExtra("isParentRoot", isTaskRoot());
+                intent.putExtra("barcode", BARCODE);
+                BARCODE = "";
+                this.startActivityForResult(intent, RESULT_OK);
+            }
         }
         return super.onKeyUp(keyCode, event);
     }
 
     @Override
     public void continueOrder(ArrayList<Product> order, String fileName) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PastOrderDetailFragment.TAG);
-        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-        Intent intent = new Intent(getBaseContext(), SellingActivity.class);
-        intent.putExtra("isParentRoot", isTaskRoot());
-        intent.putParcelableArrayListExtra(ARG_SAVED_ORDER, order);
-        intent.putExtra(ARG_SAVED_ORDER_FILENAME, fileName);
-        startActivityForResult(intent, SAVE_ORDER_CODE);
+        if (!IS_CONNECTED){
+            if (!noPrinterDialog.isShowing()) noPrinterDialog.show();
+        }
+        else {
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(PastOrderDetailFragment.TAG);
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            Intent intent = new Intent(getBaseContext(), SellingActivity.class);
+            intent.putExtra("isParentRoot", isTaskRoot());
+            intent.putParcelableArrayListExtra(ARG_SAVED_ORDER, order);
+            intent.putExtra(ARG_SAVED_ORDER_FILENAME, fileName);
+            startActivityForResult(intent, SAVE_ORDER_CODE);
+        }
     }
     class MenuIconListener implements View.OnClickListener {
         @Override
@@ -171,9 +189,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             Intent intent;
             switch (view.getId()) {
                 case R.id.newOrderMenu:
-                    intent = new Intent(view.getContext(), SellingActivity.class);
-                    intent.putExtra("isParentRoot", isTaskRoot());
-                    startActivityForResult(intent, SAVE_ORDER_CODE);
+                    if (!IS_CONNECTED){
+                        if (!noPrinterDialog.isShowing()) noPrinterDialog.show();
+                    }
+                    else {
+                        intent = new Intent(view.getContext(), SellingActivity.class);
+                        intent.putExtra("isParentRoot", isTaskRoot());
+                        startActivityForResult(intent, SAVE_ORDER_CODE);
+                    }
                     break;
                 case R.id.returnOrderMenu:
                     break;
@@ -190,11 +213,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     break;
 //                case R.id.reportMenu:
 //                    break;
-                case R.id.settingsMenu:
-                    intent = new Intent(view.getContext(), SettingsActivity.class);
-                    intent.putExtra("isParentRoot", isTaskRoot());
-                    view.getContext().startActivity(intent);
-                    break;
+//                case R.id.settingsMenu:
+//                    intent = new Intent(view.getContext(), SettingsActivity.class);
+//                    intent.putExtra("isParentRoot", isTaskRoot());
+//                    view.getContext().startActivity(intent);
+//                    break;
                 default:
                     break;
             }
@@ -218,7 +241,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
-    private void initNoPrinterDialog(){
+    private void initDialogs(){
+        doneDialog = Snackbar.make(pastOrdersRecyclerView, "Kết nối với máy in thành công", Snackbar.LENGTH_LONG);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Kết nối máy in")
                 .setIcon(R.drawable.ic_warning)
@@ -233,6 +258,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             Button button = noPrinterDialog.getButton(AlertDialog.BUTTON_POSITIVE);
             button.setOnClickListener(view -> {
                 getUsbAddress();
+                connectUsb(usbAddress);
             });
         });
     }
@@ -303,6 +329,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (PosPrinterDev.GetUsbPathNames(this) != null){
             usbAddress = PosPrinterDev.GetUsbPathNames(this).get(0);
             if (noPrinterDialog.isShowing()) noPrinterDialog.dismiss();
+            Log.d("getUsbAddress(), IS_CONNECTED", String.valueOf(IS_CONNECTED));
         } else {
             usbAddress = "";
             noPrinterDialog.show();
@@ -311,6 +338,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void connectUsb(String usbAddress) {
         if (usbAddress.isEmpty()){
+            Log.d("in connectUsb(), IS_CONNECTED", String.valueOf(IS_CONNECTED));
             IS_CONNECTED = false;
             SellingActivity.setIsPrinterConnected(IS_CONNECTED);
         }else {
@@ -320,11 +348,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     IS_CONNECTED = true;
                     SellingActivity.setIsPrinterConnected(IS_CONNECTED);
                     setPortType(PosPrinterDev.PortType.USB);
+                    doneDialog.show();
                 }
                 @Override
                 public void onfailed() {
                     IS_CONNECTED =false;
                     SellingActivity.setIsPrinterConnected(IS_CONNECTED);
+                    Log.d("onFailed(), IS_CONNECTED", String.valueOf(IS_CONNECTED));
                 }
             });
         }
