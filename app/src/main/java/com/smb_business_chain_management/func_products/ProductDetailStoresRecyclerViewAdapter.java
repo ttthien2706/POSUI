@@ -34,7 +34,7 @@ class ProductDetailStoresRecyclerViewAdapter extends RecyclerView.Adapter<Produc
 
     @Override
     public void onBindViewHolder(@NonNull ProductDetailStoreViewHolder holder, int position) {
-        holder.storeNameTextView.setText(mParentFragment.getString(R.string.store_name, mSubProductList.get(position).getName()));
+        holder.storeNameTextView.setText(mSubProductList.get(position).getName());
 //        holder.subProductQuantityTextView.setText(String.format("%s %s", NumberFormat.getNumberInstance(Locale.GERMANY).format(mSubProductList.get(position).getQuantity()), mParentFragment.measurementName));
         holder.storeQuantityTextView.setText(mParentFragment.getString(R.string.store_instock, NumberFormat.getNumberInstance(Locale.GERMANY).format(mSubProductList.get(position).getQuantity())));
     }

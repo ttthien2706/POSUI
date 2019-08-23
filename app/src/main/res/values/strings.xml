@@ -23,16 +23,16 @@
     <string name="confirm_dialog_text">ĐỒNG Ý</string>
     <string name="progress_waiting">Ứng dụng đang tải dữ liệu</string>
     <string name="app_title">Hệ Thống Quản Lý Cửa Hàng</string>
-    <string name="menu_new_order">Tạo Đơn Hàng Mới</string>
+    <string name="menu_new_order">Bán Hàng</string>
     <string name="menu_report">Báo Cáo</string>
     <string name="menu_customers">Khách Hàng</string>
     <string name="menu_products">Sản Phẩm</string>
     <string name="menu_export">Xuất Kho</string>
     <string name="menu_import">Nhập Kho</string>
-    <string name="menu_return_order">Tạo Đơn Trả Hàng</string>
+    <string name="menu_return_order">Trả Hàng</string>
     <string name="navigation_drawer_close">Close Nav Bar</string>
     <string name="navigation_drawer_open">Open Nav Bar</string>
-    <string name="search_product_hint"><i>Tìm sản phẩm theo tên, mã SKU, mã vạch, thuộc tính, phiên bản, …</i></string>
+    <string name="search_product_hint"><i>Tìm sản phẩm theo tên, mã SKU, mã vạch</i></string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
@@ -61,7 +61,7 @@
     <string name="product_price_zero">Xem phiên bản</string>
     <string name="action_get_all">Tìm Tất Cả</string>
     <string name="search_product_label">Tìm sản phẩm</string>
-    <string name="product_detail_hint">Chọn một sản phẩm từ danh sách để xem chi tiết của nó.</string>
+    <string name="product_detail_hint">Chọn một sản phẩm từ danh sách để xem chi tiết.</string>
     <string name="sub_product_list_empty">Không có phiên bản nào cho sản phẩm này</string>
     <string name="product_basic_info_label">Thông tin cơ bản</string>
     <string name="product_info_name">Tên sản phẩm</string>
@@ -87,11 +87,11 @@
     <string name="order_product_title">Chọn hàng</string>
     <string name="activity_selling_name">Bán hàng</string>
     <string name="add">Thêm</string>
-    <string name="order_title_label">Đơn hàng</string>
+    <string name="order_title_label">Đơn hàng (%d)</string>
     <string name="order_done_button_label">Hoàn tất</string>
     <string name="order_save_button_label">Lưu đơn</string>
     <string name="order_add_not_selected_warning">Hãy chọn một mặt hàng để thêm vào đơn hàng</string>
-    <string name="REST_fail">Hệ thống không thể lấy dữ liệu, hoặc server đang không hoạt động</string>
+    <string name="REST_fail">Không thể kết nối tới server.\nLỗi kết nối, xin hãy kiểm tra lại đường truyền hoặc liên lạc với người điều hành server.</string>
     <string name="order_total">Tổng giá: %s\u0020&lt;u>đ&lt;/u></string>
     <string name="order_complete_pay">Thanh toán</string>
     <string name="payment_cash">Thanh toán bằng tiền mặt</string>
@@ -100,7 +100,7 @@
     <string name="orderListNameColumnLabel"><i>Tên hàng</i></string>
     <string name="orderListPriceColumnLabel"><i>Đơn giá</i></string>
     <string name="orderListQuantityColumnLabel"><i>Số lượng</i></string>
-    <string name="orderListSubTotalColumnLabel"><i>Giá</i></string>
+    <string name="orderListSubTotalColumnLabel"><i>Thành tiền</i></string>
     <string name="order_barcode_invalid">Barcode không tồn tại trong cơ sở dữ liệu!</string>
     <string name="order_complete_dialog_title">HOÀN TẤT ĐƠN HÀNG</string>
     <string name="empty_order_warning">Đơn hàng trống!</string>
@@ -115,8 +115,9 @@
     <string name="order_payment_complete">Hoàn thành</string>
     <string name="order_payment_cancel">Huỷ</string>
     <string name="saved_orders_label">Đơn hàng đã lưu</string>
-    <string name="pastOrdersTotalPrice">Thành tiền: %s\u0020&lt;u>đ&lt;/u></string>
-    <string name="pastOrderDate">Thời điểm: %s</string>
+    <string name="past_order_name">Đơn hàng %s</string>
+    <string name="past_orders_total_price">Tổng tiền: %s\u0020&lt;u>đ&lt;/u></string>
+    <string name="pastOrderDate">%s</string>
     <string name="resume_order">Tiếp tục đơn hàng</string>
     <string name="product_detail_store_quantity">Số lượng:\\u0020%s</string>
     <string name="store_instock">%s món trong kho</string>
@@ -138,4 +139,7 @@
     <string name="username_hint">Tên đăng nhập</string>
     <string name="password_hint">Mật khẩu</string>
     <string name="login_button_hint">Đăng nhập</string>
+    <string name="menu_side_logout">Đăng Xuất</string>
+    <string name="action_bar_label_cashier">Thu Ngân: %s</string>
+    <string name="product_detail_at_store"><i>Tại cửa hàng</i></string>
 </resources>

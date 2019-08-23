@@ -9,6 +9,9 @@ public class SaveSharedPreference {
     public static String TOKEN_STRING = "tokenString";
     public static String TOKEN_TYPE = "tokenType";
     public static String NAME_ = "name";
+    public static String CHAIN_ID = "chainId";
+    public static String STOREHOUSE_ID = "storehouseId";
+    public static String STORE_ID = "storeId";
     public static String EXPIRE_TIME = "expire";
     private static SharedPreferences getPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
@@ -18,7 +21,7 @@ public class SaveSharedPreference {
      * @param context
      * @param loggedIn
      */
-    static void setLoggedIn(Context context, boolean loggedIn) {
+    public static void setLoggedIn(Context context, boolean loggedIn) {
         SharedPreferences.Editor editor = getPreferences(context).edit();
         editor.putBoolean(LOGGED_IN_PREF, loggedIn);
         editor.apply();
@@ -64,6 +67,36 @@ public class SaveSharedPreference {
         editor.apply();
     }
     /**
+     * Set the chainId String
+     * @param context
+     * @param chainId
+     */
+    static void setChainId(Context context, String chainId) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        editor.putString(CHAIN_ID, chainId);
+        editor.apply();
+    }
+    /**
+     * Set the storehouseId String
+     * @param context
+     * @param storehouseId
+     */
+    static void setStorehouseId(Context context, String storehouseId) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        editor.putString(STOREHOUSE_ID, storehouseId);
+        editor.apply();
+    }
+    /**
+     * Set the storeId String
+     * @param context
+     * @param storeId
+     */
+    static void setStoreId(Context context, String storeId) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        editor.putString(STORE_ID, storeId);
+        editor.apply();
+    }
+    /**
      * Get the Login Status
      * @param context
      * @return boolean: login status
@@ -102,5 +135,29 @@ public class SaveSharedPreference {
      */
     public static long getExpireTime(Context context) {
         return getPreferences(context).getLong(EXPIRE_TIME, 0);
+    }
+    /**
+     * Get the chain id of the current token
+     * @param context
+     * @return String: access token
+     */
+    public static String getChainId(Context context) {
+        return getPreferences(context).getString(CHAIN_ID, "");
+    }
+    /**
+     * Get the storehouse id of the current token
+     * @param context
+     * @return String: access token
+     */
+    public static String getStoreHouseId(Context context) {
+        return getPreferences(context).getString(STOREHOUSE_ID, "");
+    }
+    /**
+     * Get the store id of the current token
+     * @param context
+     * @return String: access token
+     */
+    public static String getStoreId(Context context) {
+        return getPreferences(context).getString(STORE_ID, "");
     }
 }

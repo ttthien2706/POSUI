@@ -414,6 +414,10 @@ public class SettingsActivity extends BaseActivity implements NavigationView.OnN
             intent = new Intent(SettingsActivity.this, SellingActivity.class);
             intent.putExtra("isParentRoot", isTaskRoot());
             startActivityForResult(intent, MainActivity.SAVE_ORDER_CODE);
+        } else if (id == R.id.navMain) {
+            finish();
+//            intent = new Intent(SettingsActivity.this, MainActivity.class);
+//            startActivity(intent);
         } else if (id == R.id.navReturn) {
             finish();
         } else if (id == R.id.navProduct) {

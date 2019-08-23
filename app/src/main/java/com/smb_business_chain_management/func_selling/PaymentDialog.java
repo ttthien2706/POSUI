@@ -12,10 +12,13 @@ import android.view.ViewGroup;
 
 import com.smb_business_chain_management.R;
 
+import java.math.BigInteger;
+
 public class PaymentDialog extends DialogFragment {
     TabLayout tabLayout;
     ViewPager viewPager;
     PaymentPagerAdapter viewPagerAdapter;
+    BigInteger orderTotal;
 
     @Nullable
     @Override
@@ -30,6 +33,7 @@ public class PaymentDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        orderTotal = (BigInteger) getArguments().getSerializable("orderTotal");
     }
 
     @Override
@@ -46,7 +50,7 @@ public class PaymentDialog extends DialogFragment {
     }
 
     private void pagerSetup(ViewPager viewPager){
-        viewPagerAdapter = new PaymentPagerAdapter(getActivity(), getChildFragmentManager());
+        viewPagerAdapter = new PaymentPagerAdapter(getActivity(), getChildFragmentManager(), orderTotal);
         viewPager.setAdapter(viewPagerAdapter);
     }
 

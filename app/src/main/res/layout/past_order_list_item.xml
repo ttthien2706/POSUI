@@ -4,33 +4,70 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="320dp"
     android:layout_height="wrap_content"
+    android:paddingStart="16dp"
     android:background="?android:attr/selectableItemBackground"
+    android:descendantFocusability="afterDescendants"
     android:clickable="true"
-    android:paddingBottom="18dp">
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingEnd="0dp"
+    android:layout_marginEnd="0dp">
+
+    <ImageView
+        android:id="@+id/removeSavedOrderButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_delete"
+        android:background="@drawable/ripple_circle"
+        android:tint="@color/colorAccentInvert"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/orderId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/removeSavedOrderButton"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/Overline"
+        android:layout_marginStart="12dp"
         android:layout_marginBottom="2dp"
-        android:letterSpacing="0.3" />
+        android:letterSpacing="0.1" />
+
     <TextView
         android:id="@+id/orderDate"
+        style="@style/Header6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/orderId"
-        style="@style/Header6"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
         android:text="@string/pastOrderDate"
-        android:layout_marginTop="2dp"/>
+        app:layout_constraintStart_toEndOf="@+id/removeSavedOrderButton"
+        app:layout_constraintTop_toBottomOf="@id/orderId" />
+
     <TextView
         android:id="@+id/orderPrice"
+        style="@style/Subtitle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/orderDate"
-        style="@style/Subtitle2"
-        android:text="@string/pastOrdersTotalPrice"/>
+        android:layout_marginStart="8dp"
+        android:text="@string/past_orders_total_price"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toEndOf="@+id/removeSavedOrderButton"
+        app:layout_constraintTop_toBottomOf="@id/orderDate" />
+
+    <ImageView
+        android:id="@+id/selectedMarker"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/triangle"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

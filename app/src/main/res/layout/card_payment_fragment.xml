@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    android:padding="12dp">
+    <ImageView
+        android:id="@+id/imageCash"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <TextView
+        android:id="@+id/total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/imageCash"
+        app:layout_constraintStart_toStartOf="@id/received"
+        style="@style/Overline"
+        android:textAllCaps="false"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="6dp"
+        android:textSize="16sp"
+        android:letterSpacing="0.1"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/order_total"/>
+
+    <TextView
+        android:id="@+id/received"
+        style="@style/Overline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
+        android:letterSpacing="0.1"
+        android:text="Chờ thu ngân thao tác với terminal chuyển khoản thẻ."
+        android:textAllCaps="false"
+        android:textStyle="italic"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/total" />
+
+    <View
+        android:id="@+id/vertical_center_anchor"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/done"
+        style="@style/LongNegativeOutlinedPillFloatingActionButton"
+        android:drawablePadding="0dp"
+        android:drawableStart="@drawable/ic_close"
+        android:text="@string/order_payment_cancel"/>
+
+    <!--<Button-->
+    <!--android:id="@+id/save"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="12dp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toStartOf="@id/done"-->
+    <!--style="@style/LongFloatingActionButton"-->
+    <!--android:text="@string/order_save_button_label"-->
+    <!--android:drawableStart="@drawable/ic_save"/>-->
+    <Button
+        android:id="@+id/done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/LongAccentFloatingActionButton"
+        android:text="@string/order_complete_pay"
+        android:drawableStart="@drawable/ic_money"/>
+
+</android.support.constraint.ConstraintLayout>

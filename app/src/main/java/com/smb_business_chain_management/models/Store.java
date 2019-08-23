@@ -21,6 +21,9 @@ public class Store implements Parcelable, Serializable {
     @SerializedName("phone")
     @Expose
     private String phone;
+    @SerializedName("email")
+    @Expose
+    private String email;
     @SerializedName("latitude")
     @Expose
     private Double latitude;
@@ -223,6 +226,14 @@ public class Store implements Parcelable, Serializable {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
     @Override
     public String toString() {

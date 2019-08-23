@@ -17,6 +17,10 @@ public abstract class TextValidator implements TextWatcher {
     final public void afterTextChanged(Editable s) {
         String text = textView.getText().toString();
         validate(textView, text);
+        textView.removeTextChangedListener(this);
+        text = AppUtils.formattedStringMoneyString(text);
+        textView.setText(text);
+        textView.addTextChangedListener(this);
     }
 
     @Override

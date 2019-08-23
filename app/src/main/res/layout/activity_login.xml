@@ -39,6 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/usernameInput"
+                    android:text="cashier_dvlam"
                     android:textColor="@color/white"
                     android:inputType="textEmailAddress"/>
             </android.support.design.widget.TextInputLayout>
@@ -60,6 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/passwordInput"
+                    android:text="123456@Xx"
                     android:textColor="@color/white"
                     android:inputType="textPassword"/>
             </android.support.design.widget.TextInputLayout>

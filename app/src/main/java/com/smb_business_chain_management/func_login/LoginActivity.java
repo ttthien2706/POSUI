@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,6 +23,8 @@ import com.smb_business_chain_management.LoginRESTService;
 import com.smb_business_chain_management.R;
 import com.smb_business_chain_management.Utils.AppUtils;
 import com.smb_business_chain_management.Utils.LoginInfo;
+import com.smb_business_chain_management.Utils.ScreenManager;
+import com.smb_business_chain_management.base.BaseCustomerScreen;
 import com.smb_business_chain_management.func_main.MainActivity;
 import com.smb_business_chain_management.models.LoginToken;
 
@@ -33,6 +36,8 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
+    private BaseCustomerScreen customerScreen;
+    private Display[] displays;
     TextInputEditText usernameInput;
     TextInputEditText passwordInput;
     Button loginButton;
@@ -67,7 +72,15 @@ public class LoginActivity extends AppCompatActivity {
         setStatusBarGradient(this);
         setContentView(R.layout.activity_login);
         viewLookup();
+        setupDisplays();
         loginButton.setOnClickListener(loginButtonOnClickListener);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (customerScreen != null) {
+            customerScreen.show();
+        }
     }
 
     private void viewLookup(){
@@ -104,6 +117,9 @@ public class LoginActivity extends AppCompatActivity {
                     SaveSharedPreference.setExpireTime(getApplicationContext(), loginInfo.getExpireTime());
                     SaveSharedPreference.setLoggedIn(getApplicationContext(), true);
                     SaveSharedPreference.setTokenString(getApplicationContext(), response.body().getAccessToken());
+                    SaveSharedPreference.setChainId(getApplicationContext(), loginInfo.getChainId());
+                    SaveSharedPreference.setStorehouseId(getApplicationContext(), loginInfo.getStorehouseId());
+                    SaveSharedPreference.setStoreId(getApplicationContext(), loginInfo.getShopId());
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -119,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<LoginToken> call, Throwable t) {
                 Log.e(TAG, "=======onFailure: " + t.toString());
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Không thể kết nối tới server.",
+                Toast.makeText(getApplicationContext(), "Không thể kết nối tới server.\nLỗi kết nối, xin hãy kiểm tra lại đường truyền hoặc liên lạc với người điều hành server.",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -133,5 +149,11 @@ public class LoginActivity extends AppCompatActivity {
         params.put("client_secret", "secret");
         params.put("scope", "api1");
         return params;
+    }
+    private void setupDisplays() {
+        ScreenManager screenManager = ScreenManager.getInstance();
+        screenManager.init(this);
+        displays = screenManager.getDisplays();
+        customerScreen = new BaseCustomerScreen(this, displays[1]); // small screen
     }
 }

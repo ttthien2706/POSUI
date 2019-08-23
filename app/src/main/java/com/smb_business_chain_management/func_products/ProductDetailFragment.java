@@ -11,8 +11,12 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.smb_business_chain_management.BusinessChainRESTClient;
 import com.smb_business_chain_management.R;
 import com.smb_business_chain_management.models.Brand;
 import com.smb_business_chain_management.models.Category;
@@ -35,7 +39,10 @@ public class ProductDetailFragment extends Fragment {
 
     private static Product mItem;
     private static List<Store> mStoreList;
-
+    protected String categoryName;
+    protected String brandName;
+    protected String measurementName;
+    private ImageView productImage;
     private TextView nameTextView;
     private TextView retailPriceTextView;
     private TextView wholesalePriceTextView;
@@ -48,16 +55,11 @@ public class ProductDetailFragment extends Fragment {
     private TextView brandTextView;
     private TextView statusTextView;
     private TextView descTextView;
-
     private RecyclerView storeRecyclerView;
     private RecyclerView.Adapter storeRecyclerViewAdapter;
     private TextView emptyView;
 
-    protected String categoryName;
-    protected String brandName;
-    protected String measurementName;
-
-    public ProductDetailFragment(){
+    public ProductDetailFragment() {
 
     }
 
@@ -76,27 +78,30 @@ public class ProductDetailFragment extends Fragment {
 
         viewLookup(view);
 
+        Glide.with(this).load(BusinessChainRESTClient.BASE_URL + "images/product/" + ((mItem.getPhotoPath() != null) ? mItem.getPhotoPath() : "default.jpg")).into(productImage);
+
         handleTextViews();
         handleSubProductRecyclerView();
 
         return view;
     }
 
-    private void getArgumentsAndPopulateSupportingArrays(@NonNull Fragment fragment){
+    private void getArgumentsAndPopulateSupportingArrays(@NonNull Fragment fragment) {
         mItem = fragment.getArguments().getParcelable(ARG_CURRENT_PRODUCT);
         mStoreList = mItem.getStores();
+        mStoreList.addAll(mItem.getStorehouses());
 
         SparseArray<Category> categories = fragment.getArguments().getSparseParcelableArray(ARG_CATEGORY);
         SparseArray<Brand> brands = fragment.getArguments().getSparseParcelableArray(ARG_BRAND);
         SparseArray<Measurement> measurements = fragment.getArguments().getSparseParcelableArray(ARG_MEASUREMENT);
 
-        categoryName = (categories != null && categories.size() > 0) ? categories.get(mItem.getCategoryId()).getName() : "N/A";
-        brandName = (brands != null && brands.size() > 0) ? brands.get(mItem.getBrandId()).getName() : "N/A";
+        categoryName = mItem.getCategory();
+        brandName = mItem.getBrand();
         measurementName = (measurements != null && measurements.size() > 0) ? measurements.get(mItem.getMeasurementId()).getName() : "N/A";
     }
 
     private void handleSubProductRecyclerView() {
-        if (mStoreList.isEmpty()) {
+        if (mStoreList == null || mStoreList.isEmpty()) {
             storeRecyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {
@@ -116,7 +121,7 @@ public class ProductDetailFragment extends Fragment {
         }
     }
 
-    private void handleTextViews(){
+    private void handleTextViews() {
         nameTextView.setText(mItem.getName());
         inStockTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mItem.getQuantity()));
         skuTextView.setText(mItem.getSku());
@@ -130,16 +135,17 @@ public class ProductDetailFragment extends Fragment {
     private void handleCategoryUnitAndBrand() {
         categoryTextView.setText(categoryName);
         brandTextView.setText(brandName);
-        unitTextView.setText(measurementName);
+//        unitTextView.setText(measurementName);
     }
 
     private void viewLookup(@NonNull View view) {
+        productImage = view.findViewById(R.id.productImage);
         nameTextView = view.findViewById(R.id.productDetailName);
         retailPriceTextView = view.findViewById(R.id.productDetailRetailPrice);
-        wholesalePriceTextView = view.findViewById(R.id.productDetailWholesalePrice);
-        importPriceTextView = view.findViewById(R.id.productDetailImportPrice);
+//        wholesalePriceTextView = view.findViewById(R.id.productDetailWholesalePrice);
+//        importPriceTextView = view.findViewById(R.id.productDetailImportPrice);
         inStockTextView = view.findViewById(R.id.productDetailInStock);
-        unitTextView = view.findViewById(R.id.productDetailUnit);
+//        unitTextView = view.findViewById(R.id.productDetailUnit);
         skuTextView = view.findViewById(R.id.productDetailSKU);
         barcodeTextView = view.findViewById(R.id.productDetailBarcode);
         categoryTextView = view.findViewById(R.id.productDetailCategory);
@@ -151,22 +157,13 @@ public class ProductDetailFragment extends Fragment {
         storeRecyclerView = view.findViewById(R.id.subProductListView);
     }
 
-    private void handlePrices(){
-        if (mItem.getRetailPrice() == 0 || mItem.getImportPrice() == 0 || mItem.getWholesalePrice() == 0){
-            retailPriceTextView.setText(R.string.product_price_zero);
-            wholesalePriceTextView.setText(R.string.product_price_zero);
-            importPriceTextView.setText(R.string.product_price_zero);
-        } else {
-            retailPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mItem.getRetailPrice()));
-            wholesalePriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mItem.getWholesalePrice()));
-            importPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mItem.getImportPrice()));
-        }
+    private void handlePrices() {
+        retailPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(mItem.getRetailPrice()));
     }
 
     private void handleStatus() {
-        if(mItem.isActive()) {
+        if (mItem.isActive()) {
             statusTextView.setText(R.string.product_isActive_true);
-        }
-        else statusTextView.setText(R.string.product_isActive_false);
+        } else statusTextView.setText(R.string.product_isActive_false);
     }
 }

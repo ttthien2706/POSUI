@@ -23,8 +23,9 @@
         android:layout_marginTop="12dp"/>
 
     <RelativeLayout
+        android:id="@+id/productDetailRelativeLayout"
         android:layout_width="wrap_content"
-        android:layout_height="225dp"
+        android:layout_height="150dp"
         app:layout_constraintStart_toEndOf="@id/productImage"
         app:layout_constraintTop_toBottomOf="@id/productDetailName"
         android:layout_marginTop="18dp"
@@ -45,44 +46,44 @@
             android:layout_alignBaseline="@id/productDetailRetailPriceLabel"
             style="@style/TextAppearance.AppCompat.Body2"/>
 
-        <TextView
-            android:id="@+id/productDetailWholesalePriceLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/product_detail_wholesale_label"
-            android:layout_below="@id/productDetailRetailPriceLabel"
-            style="@style/Subtitle2"/>
-        <TextView
-            android:id="@+id/productDetailWholesalePrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder_text"
-            android:layout_toEndOf="@id/productDetailRetailPriceLabel"
-            android:layout_alignBaseline="@id/productDetailWholesalePriceLabel"
-            style="@style/TextAppearance.AppCompat.Body2"/>
+        <!--<TextView-->
+            <!--android:id="@+id/productDetailWholesalePriceLabel"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/product_detail_wholesale_label"-->
+            <!--android:layout_below="@id/productDetailRetailPriceLabel"-->
+            <!--style="@style/Subtitle2"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/productDetailWholesalePrice"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/placeholder_text"-->
+            <!--android:layout_toEndOf="@id/productDetailRetailPriceLabel"-->
+            <!--android:layout_alignBaseline="@id/productDetailWholesalePriceLabel"-->
+            <!--style="@style/TextAppearance.AppCompat.Body2"/>-->
 
-        <TextView
-            android:id="@+id/productDetailImportPriceLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/product_detail_import_label"
-            android:layout_below="@id/productDetailWholesalePriceLabel"
-            style="@style/Subtitle2"/>
-        <TextView
-            android:id="@+id/productDetailImportPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder_text"
-            android:layout_toEndOf="@id/productDetailRetailPriceLabel"
-            android:layout_alignBaseline="@id/productDetailImportPriceLabel"
-            style="@style/TextAppearance.AppCompat.Body2"/>
+        <!--<TextView-->
+            <!--android:id="@+id/productDetailImportPriceLabel"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/product_detail_import_label"-->
+            <!--android:layout_below="@id/productDetailWholesalePriceLabel"-->
+            <!--style="@style/Subtitle2"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/productDetailImportPrice"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/placeholder_text"-->
+            <!--android:layout_toEndOf="@id/productDetailRetailPriceLabel"-->
+            <!--android:layout_alignBaseline="@id/productDetailImportPriceLabel"-->
+            <!--style="@style/TextAppearance.AppCompat.Body2"/>-->
 
         <TextView
             android:id="@+id/productDetailInStockLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/product_detail_instock_label"
-            android:layout_below="@id/productDetailImportPriceLabel"
+            android:layout_below="@id/productDetailRetailPriceLabel"
             style="@style/Subtitle2"/>
         <TextView
             android:id="@+id/productDetailInStock"
@@ -137,7 +138,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/product_detail_status_label"
-            android:layout_below="@id/productDetailWholesalePriceLabel"
+            android:layout_below="@id/productDetailRetailPriceLabel"
             android:layout_toEndOf="@id/middleConstraint"
             style="@style/Subtitle2"/>
         <TextView
@@ -149,22 +150,21 @@
             android:layout_alignBaseline="@id/productDetailStatusLabel"
             style="@style/TextAppearance.AppCompat.Body2"/>
 
-        <TextView
-            android:id="@+id/productDetailUnitLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/product_detail_unit_label"
-            android:layout_toEndOf="@id/middleConstraint"
-            android:layout_below="@id/productDetailImportPriceLabel"
-            style="@style/Subtitle2"/>
-        <TextView
-            android:id="@+id/productDetailUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder_text"
-            android:layout_toEndOf="@id/productDetailStatusLabel"
-            android:layout_alignBaseline="@id/productDetailUnitLabel"
-            style="@style/TextAppearance.AppCompat.Body2"/>
+        <!--<TextView-->
+            <!--android:id="@+id/productDetailUnitLabel"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/product_detail_unit_label"-->
+            <!--android:layout_toEndOf="@id/middleConstraint"-->
+            <!--style="@style/Subtitle2"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/productDetailUnit"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/placeholder_text"-->
+            <!--android:layout_toEndOf="@id/productDetailStatusLabel"-->
+            <!--android:layout_alignBaseline="@id/productDetailUnitLabel"-->
+            <!--style="@style/TextAppearance.AppCompat.Body2"/>-->
 
         <TextView
             android:id="@+id/productDetailBarcodeLabel"
@@ -206,8 +206,8 @@
         android:id="@+id/productDescTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/productImage"
-        app:layout_constraintStart_toStartOf="@id/productDetailName"
+        app:layout_constraintTop_toBottomOf="@id/productDetailRelativeLayout"
+        app:layout_constraintStart_toStartOf="@id/productDetailRelativeLayout"
         style="@style/Subtitle1"
         android:layout_marginTop="6dp"
         android:text="@string/product_detail_desc_title"/>
@@ -216,7 +216,7 @@
         android:layout_width="425dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/productDescTitle"
-        app:layout_constraintStart_toStartOf="@id/productDetailName"
+        app:layout_constraintStart_toStartOf="@id/productDescTitle"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at porttitor sem.  Aliquam erat volutpat. Donec placerat nisl magna, et "
         style="@style/TextAppearance.AppCompat.Body1"
         android:paddingBottom="12dp"/>
@@ -225,10 +225,11 @@
         android:id="@+id/subProductTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/productDesc"
+        app:layout_constraintTop_toBottomOf="@id/productImage"
         app:layout_constraintStart_toStartOf="@id/productDetailName"
+        android:layout_marginStart="0dp"
         style="@style/Subtitle1"
-        android:text="@string/product_detail_subproduct_title"/>
+        android:text="@string/product_detail_at_store"/>
 
     <TextView
         android:layout_width="wrap_content"

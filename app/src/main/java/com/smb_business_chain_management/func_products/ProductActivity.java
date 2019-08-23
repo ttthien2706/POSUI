@@ -1,18 +1,18 @@
 package com.smb_business_chain_management.func_products;
 
 import android.app.DialogFragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,14 +23,15 @@ import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.smb_business_chain_management.BusinessChainRESTClient;
 import com.smb_business_chain_management.BusinessChainRESTService;
 import com.smb_business_chain_management.R;
 import com.smb_business_chain_management.Utils.DataUtils;
+import com.smb_business_chain_management.Utils.ScreenManager;
+import com.smb_business_chain_management.base.BaseCustomerScreen;
+import com.smb_business_chain_management.func_login.SaveSharedPreference;
 import com.smb_business_chain_management.func_main.MainActivity;
 import com.smb_business_chain_management.func_selling.SellingActivity;
-import com.smb_business_chain_management.func_settings.SettingsActivity;
 import com.smb_business_chain_management.func_settings.listener_interface.ShopListenerInterface;
 import com.smb_business_chain_management.models.City;
 import com.smb_business_chain_management.models.Product;
@@ -41,8 +42,10 @@ import com.smb_business_chain_management.base.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+import okhttp3.Interceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,6 +68,8 @@ public class ProductActivity extends BaseActivity
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle toggle;
 
+    private BaseCustomerScreen customerScreen;
+    private Display[] displays;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -116,6 +121,8 @@ public class ProductActivity extends BaseActivity
         NavigationView navigationView = findViewById(R.id.navView);
         navigationView.getMenu().getItem(BaseActivity.NAV_MENU_PRODUCT_ID).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
+
+        setupDisplays();
     }
     @Override
     public void onBackPressed() {
@@ -146,7 +153,7 @@ public class ProductActivity extends BaseActivity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
 
-        super.onCreateOptionsMenu(menu);
+//        super.onCreateOptionsMenu(menu);
         return true;
     }
     @Override
@@ -189,6 +196,10 @@ public class ProductActivity extends BaseActivity
             intent = new Intent(ProductActivity.this, SellingActivity.class);
             intent.putExtra("isParentRoot", isTaskRoot());
             startActivityForResult(intent, MainActivity.SAVE_ORDER_CODE);
+        } else if (id == R.id.navMain) {
+            finish();
+//            intent = new Intent(ProductActivity.this, MainActivity.class);
+//            startActivity(intent);
         } else if (id == R.id.navReturn) {
             finish();
         } else if (id == R.id.navProduct) {
@@ -200,7 +211,20 @@ public class ProductActivity extends BaseActivity
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (customerScreen != null) {
+            customerScreen.show();
+        }
+    }
 
+    private void setupDisplays() {
+        ScreenManager screenManager = ScreenManager.getInstance();
+        screenManager.init(this);
+        displays = screenManager.getDisplays();
+        customerScreen = new BaseCustomerScreen(this, displays[1]); // small screen
+    }
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
@@ -208,7 +232,7 @@ public class ProductActivity extends BaseActivity
         }
     }
     private void getAllProducts(){
-        Call<List<Product>> call = businessChainRESTService.getAllProducts();
+        Call<List<Product>> call = businessChainRESTService.GetAllProductsApi(Integer.parseInt(SaveSharedPreference.getChainId(getApplicationContext())), Integer.parseInt(SaveSharedPreference.getStoreId(getApplicationContext())));
 
         call.enqueue(new Callback<List<Product>>() {
             @Override
@@ -236,11 +260,12 @@ public class ProductActivity extends BaseActivity
                     e.printStackTrace();
                 }
                 throwable.printStackTrace();
+                Snackbar.make(productsRecyclerView, R.string.REST_fail, Snackbar.LENGTH_LONG).show();
             }
         });
     }
     private void searchProduct(String query) {
-        Call<List<Product>> call = businessChainRESTService.searchProducts(query);
+        Call<List<Product>> call = businessChainRESTService.GetProductsByNameApi(Integer.parseInt(SaveSharedPreference.getChainId(getApplicationContext())), Integer.parseInt(SaveSharedPreference.getStoreId(getApplicationContext())), query);
         call.enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
@@ -261,6 +286,7 @@ public class ProductActivity extends BaseActivity
             }
             @Override
             public void onFailure(Call<List<Product>> call, Throwable throwable) {
+                Snackbar.make(productsRecyclerView, R.string.REST_fail, Snackbar.LENGTH_LONG).show();
                 throwable.printStackTrace();
             }
         });
@@ -352,6 +378,7 @@ public class ProductActivity extends BaseActivity
             @Override
             public void onFailure(Call<Product> call, Throwable throwable) {
                 Log.e(TAG, throwable.toString());
+                Snackbar.make(productsRecyclerView, R.string.REST_fail, Snackbar.LENGTH_LONG).show();
                 throwable.printStackTrace();
             }
         });
