@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4a42eb</color>
-    <color name="colorPrimaryDark">#0017b7</color>
-    <color name="colorAccent">#ffab00</color>
+    <color name="colorPrimary">#45ADA8</color>
+    <color name="colorPrimaryLightBackground">#F7F7F7</color>
+    <color name="colorPrimaryDark">#547980</color>
+    <color name="colorPrimaryBackground">#0D074D33</color>
+    <color name="colorPrimaryDarkBackground">#E5FCC2</color>
+    <color name="colorAccent">#F7DB4F</color>
+    <color name="colorAccentInvert">#594F4F </color>
     <color name="white_70">#B3FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="VectorColorActiveFocused">#DE000000</color>
-    <color name="VectorColorActiveUnfocused">#8A000000</color>
+    <color name="VectorColorActiveUnfocused">#757575</color>
     <color name="VectorColorInactive">#61000000</color>
     <color name="colorStoreActive">#81C784</color>
-    <color name="colorStoreInActive">#F44336</color>
+    <color name="colorStoreInActive">#EC2020</color>
     <color name="colorFabMenuBackground">#66000000</color>
 </resources>

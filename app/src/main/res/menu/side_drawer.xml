@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:id="@+id/grpSell" android:checkableBehavior="single">
+        <item
+            android:id="@+id/navMain"
+            android:icon="@drawable/ic_home"
+            android:title="Màn hình chính" />
+        <item
+            android:id="@+id/navSelling"
+            android:icon="@drawable/ic_add_shopping_cart"
+            android:title="@string/activity_selling_name" />
+        <item
+            android:id="@+id/navProduct"
+            android:icon="@drawable/ic_payment"
+            android:title="@string/activity_products_name" />
+        <item
+            android:id="@+id/navReturn"
+            android:icon="@drawable/ic_return"
+            android:title="@string/activity_return_name" />
+        <item android:icon="@android:color/transparent"
+            android:title=""/>
+        <item android:icon="@android:color/transparent"
+            android:title=""/>
+        <item android:icon="@android:color/transparent"
+            android:title=""/>
+        <item android:icon="@android:color/transparent"
+            android:title=""/>
+        <item android:icon="@android:color/transparent"
+            android:title=""/>
+        <item android:icon="@android:color/transparent"
+            android:title=""/>
+        <item android:icon="@android:color/transparent"
+            android:title=""/>
+        <item
+            android:id="@+id/navLogout"
+            android:icon="@drawable/ic_exit_to_app"
+            android:title="@string/menu_side_logout"/>
+        <!--<item-->
+            <!--android:id="@+id/navSettings"-->
+            <!--android:icon="@drawable/ic_settings"-->
+            <!--android:title="@string/activity_settings_name" />-->
+    </group>
+    <!--<group android:id="@+id/grpRet" android:checkableBehavior="single">-->
+    <!--</group>-->
+    <!--<group android:id="@+id/grpProd" android:checkableBehavior="single">-->
+    <!--</group>-->
+    <!--<group android:id="@+id/grpSettings" android:checkableBehavior="single">-->
+    <!--</group>-->
+</menu>

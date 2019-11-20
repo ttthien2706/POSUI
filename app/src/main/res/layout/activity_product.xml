@@ -5,17 +5,9 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryBackground"
     android:fitsSystemWindows="false"
     tools:openDrawer="start">
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/navView"
-        android:layout_width="360dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_product"
-        app:menu="@menu/activity_product_drawer" />
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,20 +27,20 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <com.github.clans.fab.FloatingActionButton
-                    android:id="@+id/createButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="4dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginBottom="30dp"
-                    app:fabSize="normal"
-                    app:fab_colorNormal="@color/colorPrimary"
-                    app:fab_colorPressed="@color/colorAccent"
-                    android:src="@drawable/ic_add_white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    />
+                <!--<com.github.clans.fab.FloatingActionButton-->
+                    <!--android:id="@+id/createButton"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:elevation="4dp"-->
+                    <!--android:layout_marginEnd="30dp"-->
+                    <!--android:layout_marginBottom="30dp"-->
+                    <!--app:fabSize="normal"-->
+                    <!--app:fab_colorNormal="@color/colorPrimary"-->
+                    <!--app:fab_colorPressed="@color/colorAccent"-->
+                    <!--android:src="@drawable/ic_add_white"-->
+                    <!--app:layout_constraintEnd_toEndOf="parent"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--/>-->
                 <TextView
                     android:id="@+id/productDetailName"
                     android:layout_width="wrap_content"
@@ -118,4 +110,15 @@
             </RelativeLayout>
         </android.support.v7.widget.CardView>
     </android.support.constraint.ConstraintLayout>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:backgroundTint="@color/primary_color_state"
+        app:itemIconTint="@color/primary_item_color_state"
+        app:itemTextColor="@color/primary_item_color_state"
+        app:itemBackground="@drawable/primary_drawable_background_color_state"
+        app:menu="@menu/side_drawer" />
 </android.support.v4.widget.DrawerLayout>

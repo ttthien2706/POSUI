@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.smb_business_chain_management.R;
+import com.smb_business_chain_management.func_login.SaveSharedPreference;
 import com.smb_business_chain_management.models.Product;
 
 import java.util.List;
@@ -55,10 +56,12 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     public static class ProductsViewHolder extends RecyclerView.ViewHolder {
         private TextView productName;
         private TextView productDetail;
+        private TextView productSKU;
         public ProductsViewHolder(View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.productName);
             productDetail = itemView.findViewById(R.id.productRetailPrice);
+            productSKU = itemView.findViewById(R.id.productSKU);
         }
     }
 
@@ -75,6 +78,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
         holder.productName.setText(mProductList.get(position).getName());
         holder.productDetail.setText(mProductList.get(position).getDetails());
+        holder.productSKU.setText(mProductList.get(position).getSku());
 
         holder.itemView.setOnClickListener(mOnClickListener);
     }
@@ -89,7 +93,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     }
 
     private void getProductDetails(int productId, ProductsViewHolder holder){
-        Call<Product> call = mParentActivity.businessChainRESTService.getProductDetails(productId);
+        Call<Product> call = mParentActivity.businessChainRESTService.GetProductByIdApi(Integer.parseInt(SaveSharedPreference.getChainId(mParentActivity.getApplicationContext())), Integer.parseInt(SaveSharedPreference.getChainId(mParentActivity.getApplicationContext())), productId);
         call.enqueue(new Callback<Product>() {
             @Override
             public void onResponse(Call<Product> call, Response<Product> response) {

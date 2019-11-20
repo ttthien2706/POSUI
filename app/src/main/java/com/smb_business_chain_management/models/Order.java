@@ -14,12 +14,15 @@ public class Order implements Parcelable, Serializable {
     @SerializedName("receiptCode")
     @Expose
     private String receiptCode;
+    @SerializedName("chainId")
+    @Expose
+    private String chainId;
     @SerializedName("shopId")
     @Expose
-    private int shopId;
-    @SerializedName("userId")
+    private String shopId;
+    @SerializedName("createdUser")
     @Expose
-    private int userId;
+    private String userName;
     private String orderDate = "";
     @SerializedName("payment")
     @Expose
@@ -42,7 +45,7 @@ public class Order implements Parcelable, Serializable {
         }
     };
     protected Order(Parcel in) {
-        this.shopId = ((int) in.readValue((int.class.getClassLoader())));
+        this.shopId = ((String) in.readValue((String.class.getClassLoader())));
         this.payment = ((String) in.readValue((String.class.getClassLoader())));
         this.receiptCode = ((String) in.readValue(String.class.getClassLoader()));
         in.readList(this.products, (com.smb_business_chain_management.models.Product.class.getClassLoader()));
@@ -59,7 +62,7 @@ public class Order implements Parcelable, Serializable {
      * @param shopId
      * @param products
      */
-    public Order(int id, int shopId, String payment, List<Product> products) {
+    public Order(int id, String shopId, String payment, List<Product> products) {
         super();
         this.id = id;
         this.shopId = shopId;
@@ -78,17 +81,23 @@ public class Order implements Parcelable, Serializable {
     public void setReceiptCode(String receiptCode) {
         this.receiptCode = receiptCode;
     }
-    public int getShopId() {
+    public String getChainId() {
+        return chainId;
+    }
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+    public String getShopId() {
         return shopId;
     }
-    public void setShopId(int shopId) {
+    public void setShopId(String shopId) {
         this.shopId = shopId;
     }
-    public int getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
     public String getOrderDate() {
         return orderDate;

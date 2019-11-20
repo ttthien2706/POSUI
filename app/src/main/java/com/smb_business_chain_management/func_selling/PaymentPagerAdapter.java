@@ -7,33 +7,35 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.smb_business_chain_management.R;
+import com.smb_business_chain_management.func_selling.fragments.CardPaymentFragment;
 import com.smb_business_chain_management.func_selling.fragments.CashPaymentFragment;
+
+import java.math.BigInteger;
 
 class PaymentPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
+    BigInteger mOrderTotal;
 
-    public PaymentPagerAdapter(Context context, FragmentManager fragmentManager) {
+    public PaymentPagerAdapter(Context context, FragmentManager fragmentManager, BigInteger orderTotal) {
         super(fragmentManager);
         mContext = context;
+        mOrderTotal = orderTotal;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return CashPaymentFragment.newInstance();
+                return CashPaymentFragment.newInstance(mOrderTotal);
             case 1:
-                return CashPaymentFragment.newInstance();
-            case 2:
-                return CashPaymentFragment.newInstance();
-
+                return CardPaymentFragment.newInstance(mOrderTotal);
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     @Nullable
@@ -43,9 +45,7 @@ class PaymentPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return mContext.getResources().getString(R.string.order_payment_cash_label);
             case 1:
-                return mContext.getResources().getString(R.string.order_payment_card_label);
-            case 2:
-                return mContext.getResources().getString(R.string.order_payment_code_label);
+                return "Thẻ";
         }
         return "";
     }

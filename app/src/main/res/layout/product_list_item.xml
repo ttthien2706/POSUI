@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:paddingBottom="18dp">
+    android:paddingTop="0dp"
+    android:paddingBottom="9dp">
     <TextView
         android:id="@+id/productName"
         android:layout_width="wrap_content"
@@ -21,4 +22,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/productName"
         style="@style/Subtitle2"/>
+    <TextView
+        android:id="@+id/productSKU"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/productRetailPrice"
+        style="@style/Subtitle2"
+        android:textStyle="italic"/>
 </android.support.constraint.ConstraintLayout>

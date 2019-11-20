@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="@style/LongFloatingActionButton"
+    android:backgroundTint="@color/white"
+    android:textColor="@color/colorStoreInActive"
+    android:textSize="13sp"
+    android:text="text"
+    android:id="@+id/categoryButton"
+    android:layout_margin="6dp"
+    android:elevation="0dp"/>

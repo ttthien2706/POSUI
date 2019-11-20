@@ -5,5 +5,5 @@ import android.view.View;
 
 public interface RecyclerViewClickListener {
     void recyclerViewListClickListener(View v, int position, ColorStateList mTextColor);
-    void recyclerViewListClickListener(View v, int position);
+    void categoryRecyclerViewListClickListener(View v, int position);
 }

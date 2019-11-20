@@ -2,6 +2,7 @@ package com.smb_business_chain_management.func_selling;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
@@ -31,14 +32,18 @@ class OrderListRecyclerViewAdapter extends RecyclerView.Adapter<OrderListRecycle
     private Context context;
     private List<Product> mOrderList;
     private TextView mOrderTotalText;
+    private TextView mOrderTitle;
     private AlphaAnimation fadeOut;
+    private CustomerScreen customerScreen;
 
-    OrderListRecyclerViewAdapter(List<Product> orderList, TextView totalPriceText) {
+    OrderListRecyclerViewAdapter(List<Product> orderList, TextView totalPriceText, TextView titleText, CustomerScreen customerScreen) {
         mOrderList = orderList;
         mOrderTotalText = totalPriceText;
+        mOrderTitle = titleText;
         fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setDuration(200);
         context = totalPriceText.getContext();
+        this.customerScreen = customerScreen;
     }
 
 
@@ -65,11 +70,16 @@ class OrderListRecyclerViewAdapter extends RecyclerView.Adapter<OrderListRecycle
                 if (Integer.parseInt(quantityText.getText().toString())+1 <= mOrderList.get(getAdapterPosition()).getLimQuantity()) {
                     quantityText.setText(String.valueOf(Integer.parseInt(quantityText.getText().toString())+1));
                     mOrderList.get(getAdapterPosition()).setQuantity(Integer.parseInt(quantityText.getText().toString()));
+                    mOrderTitle.setText(context.getString(R.string.order_title_label, ((SellingActivity) context).getTotalQuantity()));
                     totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(calculateSubTotalPrice(mOrderList.get(getAdapterPosition()).getRetailPrice(), mOrderList.get(getAdapterPosition()).getQuantity())));
+                    customerScreen.orderListCustomerRecyclerViewAdapter.notifyDataSetChanged();
                     notifyDataSetChanged();
+                    customerScreen.orderTitleTextView.setText(context.getString(R.string.order_title_label, ((SellingActivity)context).getTotalQuantity()));
+                    customerScreen.orderTotalTextView.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()),Html.FROM_HTML_MODE_LEGACY));
                     mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()),Html.FROM_HTML_MODE_LEGACY));
+//                    ((SellingActivity) (context)).IOrderTotalListener.getOrderTotal(((SellingActivity) context).calculateOrderTotalPriceNumber());
                 } else {
-                    Toast.makeText(context, "Hàng trong kho không đủ!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(itemView.getContext(), "Hàng trong kho không đủ!", Toast.LENGTH_LONG).show();
                 }
             });
             decrementButton.setOnClickListener(view -> {
@@ -77,17 +87,31 @@ class OrderListRecyclerViewAdapter extends RecyclerView.Adapter<OrderListRecycle
                 if (Integer.parseInt(quantityText.getText().toString())-1 > 0){
                     quantityText.setText(String.valueOf(Integer.parseInt(quantityText.getText().toString())-1));
                     mOrderList.get(getAdapterPosition()).setQuantity(Integer.parseInt(quantityText.getText().toString()));
+                    mOrderTitle.setText(context.getString(R.string.order_title_label, ((SellingActivity) context).getTotalQuantity()));
                     totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(calculateSubTotalPrice(mOrderList.get(getAdapterPosition()).getRetailPrice(), mOrderList.get(getAdapterPosition()).getQuantity())));
+                    customerScreen.orderListCustomerRecyclerViewAdapter.notifyDataSetChanged();
                     notifyDataSetChanged();
+                    customerScreen.orderTitleTextView.setText(context.getString(R.string.order_title_label, ((SellingActivity)context).getTotalQuantity()));
+                    customerScreen.orderTotalTextView.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
                     mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
+//                    ((SellingActivity) (context)).IOrderTotalListener.getOrderTotal(((SellingActivity) context).calculateOrderTotalPriceNumber());
                 }
+                else removeButton.performClick();
             });
             removeButton.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 mOrderList.remove(position);
+                mOrderTitle.setText(context.getString(R.string.order_title_label, ((SellingActivity) context).getTotalQuantity()));
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, mOrderList.size());
+                customerScreen.mOrderListCustomer.remove(position);
+                if (customerScreen.mOrderListCustomer.size() == 0) customerScreen.viewFlipper.showPrevious();
+                customerScreen.orderTitleTextView.setText(context.getString(R.string.order_title_label, ((SellingActivity)context).getTotalQuantity()));
+                customerScreen.orderListCustomerRecyclerViewAdapter.notifyItemRemoved(position);
+                customerScreen.orderListCustomerRecyclerViewAdapter.notifyDataSetChanged();
+                customerScreen.orderTotalTextView.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
                 mOrderTotalText.setText(Html.fromHtml(context.getString(R.string.order_total, ((SellingActivity) context).calculateOrderTotalPrice()), Html.FROM_HTML_MODE_LEGACY));
+//                ((SellingActivity) (context)).IOrderTotalListener.getOrderTotal(((SellingActivity) context).calculateOrderTotalPriceNumber());
             });
         }
     }
@@ -107,7 +131,6 @@ class OrderListRecyclerViewAdapter extends RecyclerView.Adapter<OrderListRecycle
         holder.totalPriceTextView.setText(NumberFormat.getNumberInstance(Locale.GERMANY).format(calculateSubTotalPrice(mOrderList.get(position).getRetailPrice(), mOrderList.get(position).getQuantity())));
         holder.quantityText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
         holder.quantityText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
-
     }
 
     private BigInteger calculateSubTotalPrice(int retailPrice, int quantity){

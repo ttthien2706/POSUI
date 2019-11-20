@@ -7,18 +7,19 @@
     android:background="?android:attr/selectableItemBackground">
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/removeButton"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         app:layout_constraintBottom_toBottomOf="@id/subTotalPrice"
         app:layout_constraintStart_toEndOf="@id/subTotalPrice"
-        android:scaleType="fitCenter"
+        android:scaleType="center"
         android:src="@drawable/ic_close_small"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="4dp"
         android:background="@drawable/ripple_circle"
         android:tint="@color/VectorColorActiveUnfocused"/>
     <TextView
         android:id="@+id/productName"
-        android:layout_width="110dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,17 +28,19 @@
         android:focusableInTouchMode="true"
         android:text="@string/placeholder_text"
         android:layout_marginBottom="10dp"
-        style="@style/Subtitle2"/>
+        style="@style/Subtitle2"
+        android:fontFamily="sans-serif"/>
     <TextView
         android:id="@+id/productRetailPrice"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/productName"
         app:layout_constraintBaseline_toBaselineOf="@id/productName"
         android:clickable="true"
         android:text="@string/placeholder_text"
         android:focusableInTouchMode="true"
-        style="@style/Subtitle2"/>
+        style="@style/Subtitle2"
+        android:fontFamily="sans-serif"/>
     <!--<android.support.design.widget.TextInputLayout-->
         <!--android:id="@+id/subQuantityInputLayout"-->
         <!--android:layout_width="85dp"-->
@@ -56,18 +59,20 @@
     <!--</android.support.design.widget.TextInputLayout>-->
     <TextView
         android:id="@+id/subQuantityText"
-        android:layout_width="60dp"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/productRetailPrice"
+        app:layout_constraintEnd_toStartOf="@id/increment"
         app:layout_constraintBaseline_toBaselineOf="@id/productName"
         android:layout_marginStart="12dp"
         android:textAlignment="center"
-        style="@style/Subtitle2">
+        style="@style/Subtitle2"
+        android:fontFamily="sans-serif">
     </TextView>
     <Button
         android:id="@+id/increment"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         app:layout_constraintStart_toEndOf="@id/subQuantityText"
         app:layout_constraintTop_toTopOf="@id/subQuantityText"
         app:layout_constraintBottom_toTopOf="@id/decrement"
@@ -83,8 +88,8 @@
     </Button>
     <Button
         android:id="@+id/decrement"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         app:layout_constraintStart_toEndOf="@id/subQuantityText"
         app:layout_constraintTop_toBottomOf="@id/increment"
         app:layout_constraintBottom_toBottomOf="@id/subQuantityText"
@@ -92,15 +97,10 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:background="@drawable/ic_arrow_down"
         android:backgroundTint="@color/colorPrimary">
-        <!--<Button-->
-            <!--android:layout_width="22dp"-->
-            <!--android:layout_height="22dp"-->
-            <!--android:background="@drawable/ic_arrow_down"-->
-            <!--android:backgroundTint="@color/colorPrimary"/>-->
     </Button>
     <TextView
         android:id="@+id/subTotalPrice"
-        android:layout_width="110dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/increment"
         app:layout_constraintBaseline_toBaselineOf="@id/productName"
@@ -108,5 +108,6 @@
         android:text="@string/placeholder_text"
         android:focusableInTouchMode="true"
         android:layout_marginBottom="10dp"
-        style="@style/Subtitle2"/>
+        style="@style/Subtitle2"
+        android:fontFamily="sans-serif"/>
 </android.support.constraint.ConstraintLayout>

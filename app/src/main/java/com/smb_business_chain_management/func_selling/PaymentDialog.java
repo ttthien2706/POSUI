@@ -12,10 +12,13 @@ import android.view.ViewGroup;
 
 import com.smb_business_chain_management.R;
 
+import java.math.BigInteger;
+
 public class PaymentDialog extends DialogFragment {
     TabLayout tabLayout;
     ViewPager viewPager;
     PaymentPagerAdapter viewPagerAdapter;
+    BigInteger orderTotal;
 
     @Nullable
     @Override
@@ -30,6 +33,7 @@ public class PaymentDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        orderTotal = (BigInteger) getArguments().getSerializable("orderTotal");
     }
 
     @Override
@@ -46,40 +50,11 @@ public class PaymentDialog extends DialogFragment {
     }
 
     private void pagerSetup(ViewPager viewPager){
-        viewPagerAdapter = new PaymentPagerAdapter(getActivity(), getChildFragmentManager());
+        viewPagerAdapter = new PaymentPagerAdapter(getActivity(), getChildFragmentManager(), orderTotal);
         viewPager.setAdapter(viewPagerAdapter);
     }
 
     private void tabSetup(TabLayout tabLayout){
         tabLayout.setupWithViewPager(viewPager);
-//        tabLayout.getTabAt(0).select();
-//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                switch (tab.getPosition()){
-//                    case 0:
-////                        Toast.makeText(tabLayout.getContext(),"Tab 0", Toast.LENGTH_LONG).show();
-//                        break;
-//                    case 1:
-////                        Toast.makeText(tabLayout.getContext(),"Tab 1", Toast.LENGTH_LONG).show();
-//                        break;
-//                    case 2:
-////                        Toast.makeText(tabLayout.getContext(),"Tab 2", Toast.LENGTH_LONG).show();
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
     }
 }

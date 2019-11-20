@@ -1,8 +1,11 @@
 package com.smb_business_chain_management.models;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
@@ -17,20 +20,23 @@ public class Product implements Parcelable, Serializable
     @SerializedName("categoryId")
     @Expose
     private int categoryId;
+    @SerializedName("categoryName")
+    @Expose
+    private String category;
     @SerializedName("brandId")
     @Expose
     private int brandId;
+    @SerializedName("brandName")
+    @Expose
+    private String brand;
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("measurementId")
+    @SerializedName("photoPath")
     @Expose
+    private String photoPath;
     private int measurementId;
-    @SerializedName("multipleEditions")
-    @Expose
     private boolean multipleEditions;
-    @SerializedName("uniqueEditionPrice")
-    @Expose
     private boolean uniqueEditionPrice;
     @SerializedName("name")
     @Expose
@@ -63,8 +69,10 @@ public class Product implements Parcelable, Serializable
     @SerializedName("productShops")
     @Expose
     private List<Store> stores = new ArrayList<>(0);
-    @SerializedName("subProducts")
+    @SerializedName("productStorehouses")
     @Expose
+    private List<Store> storehouses = new ArrayList<>(0);
+
     private List<SubProduct> subProducts = new ArrayList<>(0);
     private boolean isSub = false;
     private int parentId = -1;
@@ -82,8 +90,11 @@ public class Product implements Parcelable, Serializable
     protected Product(Parcel in) {
         this.id = ((int) in.readValue((int.class.getClassLoader())));
         this.categoryId = ((int) in.readValue((int.class.getClassLoader())));
+        this.category = ((String) in.readValue(String.class.getClassLoader()));
         this.brandId = ((int) in.readValue((int.class.getClassLoader())));
+        this.brand = ((String) in.readValue(String.class.getClassLoader()));
         this.description = ((String) in.readValue((String.class.getClassLoader())));
+        this.photoPath = ((String) in.readValue((String.class.getClassLoader())));
         this.measurementId = ((int) in.readValue((int.class.getClassLoader())));
         this.multipleEditions = ((boolean) in.readValue((boolean.class.getClassLoader())));
         this.uniqueEditionPrice = ((boolean) in.readValue((boolean.class.getClassLoader())));
@@ -96,14 +107,19 @@ public class Product implements Parcelable, Serializable
         this.retailPrice = ((int) in.readValue((int.class.getClassLoader())));
         this.wholesalePrice = ((int) in.readValue((int.class.getClassLoader())));
         this.price = ((int) in.readValue((int.class.getClassLoader())));
+
         in.readList(this.stores, (com.smb_business_chain_management.models.Store.class.getClassLoader()));
+        in.readList(this.storehouses, (com.smb_business_chain_management.models.Store.class.getClassLoader()));
         in.readList(this.subProducts, (com.smb_business_chain_management.models.SubProduct.class.getClassLoader()));
     }
     public Product() {
         this.id = -1;
         this.categoryId = -1;
+        this.category = "";
         this.brandId = -1;
+        this.brand = "";
         this.description = "";
+        this.photoPath = "default.jpg";
         this.measurementId = -1;
         this.multipleEditions = false;
         this.uniqueEditionPrice = false;
@@ -116,19 +132,24 @@ public class Product implements Parcelable, Serializable
         this.retailPrice = -1;
         this.wholesalePrice = -1;
         this.stores = null;
+        this.storehouses = null;
         this.subProducts = null;
     }
 
     public Product(Product product){
         this.id = product.getId();
         this.categoryId = product.getCategoryId();
+        this.category = product.getCategory();
         this.brandId = product.getBrandId();
+        this.brand = product.getBrand();
         this.description = product.getDescription();
+        this.photoPath = product.getPhotoPath();
         this.measurementId = product.getMeasurementId();
         this.multipleEditions = product.isMultipleEditions();
         this.uniqueEditionPrice = product.isUniqueEditionPrice();
         this.name = product.getName();
         this.quantity = product.getQuantity();
+        this.limQuantity = product.getLimQuantity();
         this.isActive = product.isActive();
         this.sku = product.getSku();
         this.barcode = product.getBarcode();
@@ -137,6 +158,7 @@ public class Product implements Parcelable, Serializable
         this.wholesalePrice = product.getWholesalePrice();
         this.price = product.getPrice();
         this.stores = product.getStores();
+        this.storehouses = product.getStorehouses();
         this.subProducts = product.getSubProducts();
         this.isSub = false;
         this.parentId = -1;
@@ -321,11 +343,22 @@ public class Product implements Parcelable, Serializable
         this.limQuantity = limQuantity;
     }
 
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(categoryId);
+        dest.writeValue(category);
         dest.writeValue(brandId);
+        dest.writeValue(brand);
         dest.writeValue(description);
+        dest.writeValue(photoPath);
         dest.writeValue(measurementId);
         dest.writeValue(multipleEditions);
         dest.writeValue(uniqueEditionPrice);
@@ -339,6 +372,7 @@ public class Product implements Parcelable, Serializable
         dest.writeValue(wholesalePrice);
         dest.writeValue(price);
         dest.writeList(stores);
+        dest.writeList(storehouses);
         dest.writeList(subProducts);
     }
 
@@ -346,7 +380,31 @@ public class Product implements Parcelable, Serializable
         return 0;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public List<Store> getStorehouses() {
+        return storehouses;
+    }
+
+    public void setStorehouses(List<Store> storehouses) {
+        this.storehouses = storehouses;
+    }
+
     public String getDetails(){
-        return this.getQuantity() + " in-stock";
+        return (NumberFormat.getNumberInstance(Locale.GERMANY).format(this.getRetailPrice())) + " đ";
     }
 }
