@@ -223,7 +223,7 @@ public class ProductActivity extends BaseActivity
         ScreenManager screenManager = ScreenManager.getInstance();
         screenManager.init(this);
         displays = screenManager.getDisplays();
-        customerScreen = new BaseCustomerScreen(this, displays[1]); // small screen
+        if (displays.length > 1) customerScreen = new BaseCustomerScreen(this, displays[1]); // small screen
     }
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {

@@ -331,7 +331,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         ScreenManager screenManager = ScreenManager.getInstance();
         screenManager.init(this);
         displays = screenManager.getDisplays();
-        customerScreen = new BaseCustomerScreen(this, displays[1]); // small screen
+        if (displays.length >1) customerScreen = new BaseCustomerScreen(this, displays[1]); // small screen
     }
 
     private void setupPrinter() {
